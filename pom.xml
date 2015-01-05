@@ -44,13 +44,11 @@
       <groupId>org.neo4j</groupId>
       <artifactId>neo4j</artifactId>
       <version>2.1.6</version>
-      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.neo4j</groupId>
       <artifactId>neo4j-kernel</artifactId>
       <version>2.1.6</version>
-      <scope>test</scope>
     </dependency>
    
   </dependencies>
