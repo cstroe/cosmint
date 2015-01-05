@@ -11,7 +11,7 @@ public class App
 {
     public static void main( String[] args )
     {
-        GraphDatabaseService graphDb = new GraphDatabaseFactory().newEmbeddedDatabase("var/graphDb");
+        GraphDatabaseService graphDb = new GraphDatabaseFactory().newEmbeddedDatabase("target/graphDb");
         graphDb.shutdown();
         System.out.println( "Hello World after Neo4J!" );
     }
