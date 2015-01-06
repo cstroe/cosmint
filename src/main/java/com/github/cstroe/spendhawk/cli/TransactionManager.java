@@ -5,7 +5,6 @@ import com.github.cstroe.spendhawk.entity.Transaction;
 import com.github.cstroe.spendhawk.util.HibernateUtil;
 import org.hibernate.Session;
 
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
@@ -29,7 +28,8 @@ public class TransactionManager {
                     System.out.println("Transaction Id: " + a.getId() + ", " +
                         "Acct " + a.getAccount().getId() + ", " +
                         "Amount " + a.getAmount() + ", " +
-                        "Effective Date " + a.getEffectiveDate()
+                        "Effective Date " + a.getEffectiveDate() + ", " +
+                        a.getDescription()
                     ));
         }
 
