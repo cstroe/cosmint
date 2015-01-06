@@ -1,26 +1,32 @@
 package com.github.cstroe.spendhawk.entity;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-public class AccountTest extends EntityTestSetup {
+public class AccountTest {
 
-    {
-        accountsTemplate = new String[] {
+    private EntityTestScenario scenario;
+
+    @Before
+    public void setUp() {
+        String[] accountsTemplate = new String[] {
                 // Account ID, Account Name
                 "1", "Account1"
         };
-        transactionsTemplate = new String[] {
+        String[] transactionsTemplate = new String[] {
                 // Transaction ID, Account ID, Amount, Date ("yyMMddHHmmss"), Description
                 "1", "1", "10.99", "010101000000", "Transaction 1",
                 "1", "1", "11.40", "010101000000", "Transaction 2"
         };
+        scenario = new EntityTestScenario(accountsTemplate, transactionsTemplate);
     }
 
     @Test
     public void balance() {
-        Account a1 = accountsList.stream().filter(a -> a.getId() == 1).findFirst().get();
+        Account a1 = scenario.getAccountsList().stream().filter(a -> a.getId() == 1).findFirst().get();
         assertEquals(new Double(22.39d), a1.getBalance());
+        assertEquals(2, a1.getTransactions().size());
     }
 }

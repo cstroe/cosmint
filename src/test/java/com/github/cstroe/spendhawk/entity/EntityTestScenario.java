@@ -1,7 +1,5 @@
 package com.github.cstroe.spendhawk.entity;
 
-import org.junit.Before;
-
 import java.lang.reflect.Field;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -9,16 +7,17 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class EntityTestSetup {
+public class EntityTestScenario {
 
-    protected List<Account> accountsList = new ArrayList<>();
-    protected List<Transaction> transactionList = new ArrayList<>();
+    private List<Account> accountsList = new ArrayList<>();
+    private List<Transaction> transactionList = new ArrayList<>();
 
-    protected String[] accountsTemplate;
-    protected String[] transactionsTemplate;
+    protected final String[] accountsTemplate;
+    protected final String[] transactionsTemplate;
 
-    @Before
-    public void setUp() {
+    public EntityTestScenario(String[] accountsTemplate, String[] transactionsTemplate) {
+        this.accountsTemplate = accountsTemplate;
+        this.transactionsTemplate = transactionsTemplate;
         createAccounts();
         createTransactions();
     }
@@ -78,4 +77,7 @@ public class EntityTestSetup {
         }
     }
 
+    public List<Account> getAccountsList() {
+        return accountsList;
+    }
 }
