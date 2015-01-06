@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.github.cstroe.spendhawk.entity">
+    <class name="Transaction" table="TRANSACTIONS">
+        <id name="id" column="TRANSACTION_ID">
+            <generator class="native"/>
+        </id>
+
+        <!-- properties declared using Hibernate mapping types -->
+        <property name="amount"        type="double"    column="AMOUNT"         not-null="true"/>
+        <property name="effectiveDate" type="timestamp" column="EFFECTIVE_DATE" not-null="true"/>
+        <property name="description"   type="string"    column="DESCRIPTION"    not-null="true"/>
+        <property name="notes"         type="string"    column="NOTES"/>
+        <many-to-one name="account" column="ACCOUNT_ID" not-null="true"/>
+    </class>
+</hibernate-mapping>
