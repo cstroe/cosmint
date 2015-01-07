@@ -29,4 +29,11 @@ public class AccountTest {
         assertEquals(new Double(22.39d), a1.getBalance());
         assertEquals(2, a1.getTransactions().size());
     }
+
+    @Test
+    public void balanceWithoutAnyTransactions() {
+        Account a1 = new Account();
+        a1.setName("Test Account");
+        assertEquals(new Double(0d), a1.getBalance());
+    }
 }

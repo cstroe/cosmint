@@ -20,6 +20,8 @@ import java.util.Date;
  * </ul>
  */
 public class Account {
+    private static final Double ZERO = 0d;
+
     private Long id;
     private String name;
     private Collection<Transaction> transactions;
@@ -53,9 +55,12 @@ public class Account {
      */
     public Double getBalance() {
         final Date now = new Date();
+        if(transactions == null || transactions.isEmpty()) {
+            return ZERO;
+        }
         return transactions.stream()
                 .filter(t -> !t.getEffectiveDate().after(now))
-                .mapToDouble(t -> t.getAmount())
+                .mapToDouble(Transaction::getAmount)
                 .sum();
     }
 }
