@@ -59,6 +59,7 @@
                 <artifactId>wildfly-maven-plugin</artifactId>
                 <version>1.0.2.Final</version>
                 <configuration>
+                    <!-- Change this port to match your configuration -->
                     <port>9995</port>
                 </configuration>
             </plugin>
