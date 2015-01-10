@@ -1,21 +1,8 @@
-<html>
+<#assign page_title="Accounts">
 
-<head>
-    <title>Account Manager</title>
-</head>
+<#include "/layouts/global_header.ftl">
 
-<body>
-
-<p>
-    ${message!""}
-</p>
-
-<h2>Add new account:</h2>
-<form method="POST">
-    <input name="accountName" length="50"/>
-    <br/>
-    <input type="submit" name="action" value="store"/>
-</form>
+<a href="/spendhawk/accounts/manage">Manage Accounts</a>
 
 <h2>Accounts in database:</h2>
 <table border='1'>
@@ -33,5 +20,4 @@
 
 </table>
 
-</body>
-</html>
+<#include "/layouts/global_footer.ftl">

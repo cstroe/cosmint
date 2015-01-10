@@ -10,38 +10,21 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.List;
 
-@WebServlet("/accounts")
+@WebServlet("/accounts/manage")
 public class AccountManagerServlet extends HttpServlet {
 
-    private static final String TEMPLATE = "/accounts.ftl";
+    private static final String TEMPLATE = "/accounts/manage.ftl";
 
     @Override
     protected void doGet( HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        try {
-            // Begin unit of work
-            HibernateUtil.getSessionFactory().getCurrentSession().beginTransaction();
-
-            List result = HibernateUtil.getSessionFactory()
-                    .getCurrentSession().createCriteria(Account.class).list();
-
-            request.setAttribute("accounts", result);
-            request.getRequestDispatcher(TEMPLATE).forward(request,response);
-
-            // End unit of work
-            HibernateUtil.getSessionFactory().getCurrentSession().getTransaction().commit();
-        } catch (Exception ex) {
-            HibernateUtil.getSessionFactory().getCurrentSession().getTransaction().rollback();
-            throw ex;
-        }
+        request.getRequestDispatcher(TEMPLATE).forward(request,response);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
         try {
             // Begin unit of work
             HibernateUtil.getSessionFactory().getCurrentSession().beginTransaction();
@@ -59,18 +42,14 @@ public class AccountManagerServlet extends HttpServlet {
                 }
             }
 
-            List result = HibernateUtil.getSessionFactory()
-                    .getCurrentSession().createCriteria(Account.class).list();
-
-            request.setAttribute("accounts", result);
-            request.getRequestDispatcher(TEMPLATE).forward(request,response);
-
             // End unit of work
             HibernateUtil.getSessionFactory().getCurrentSession().getTransaction().commit();
         } catch (Exception ex) {
             HibernateUtil.getSessionFactory().getCurrentSession().getTransaction().rollback();
             throw ex;
         }
+
+        request.getRequestDispatcher(TEMPLATE).forward(request,response);
     }
 
     protected void createAndStoreAccount(String accountName) {
