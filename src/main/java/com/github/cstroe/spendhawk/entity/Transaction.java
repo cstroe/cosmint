@@ -1,6 +1,8 @@
 package com.github.cstroe.spendhawk.entity;
 
-import javax.persistence.*;
+import com.github.cstroe.spendhawk.util.HibernateUtil;
+import org.hibernate.criterion.Restrictions;
+
 import java.util.Date;
 
 /**
@@ -71,5 +73,21 @@ public class Transaction {
 
     public void setNotes(String notes) {
         this.notes = notes;
+    }
+
+    public boolean isDuplicate() {
+        Transaction t = (Transaction) HibernateUtil.getSessionFactory().getCurrentSession()
+                .createCriteria(Transaction.class)
+                .add(Restrictions.eq("effectiveDate", effectiveDate))
+                .add(Restrictions.eq("amount", amount))
+                .add(Restrictions.eq("account", account))
+                .add(Restrictions.eq("description", description))
+                .uniqueResult();
+        return t != null;
+    }
+
+    public boolean save() {
+        Long id = (Long) HibernateUtil.getSessionFactory().getCurrentSession().save(this);
+        return id != null;
     }
 }
