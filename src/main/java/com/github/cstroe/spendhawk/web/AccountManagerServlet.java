@@ -14,7 +14,7 @@ import java.io.IOException;
 @WebServlet("/accounts/manage")
 public class AccountManagerServlet extends HttpServlet {
 
-    private static final String TEMPLATE = "/accounts/manage.ftl";
+    private static final String TEMPLATE = "/template/accounts/manage.ftl";
 
     @Override
     protected void doGet( HttpServletRequest request, HttpServletResponse response)

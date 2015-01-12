@@ -1,6 +1,6 @@
 <#assign page_title="Accounts">
 
-<#include "/layouts/global_header.ftl">
+<#include "/template/layouts/global_header.ftl">
 
 <a href="/spendhawk/accounts/manage">Manage Accounts</a>
 
@@ -20,4 +20,4 @@
 
 </table>
 
-<#include "/layouts/global_footer.ftl">
+<#include "/template/layouts/global_footer.ftl">

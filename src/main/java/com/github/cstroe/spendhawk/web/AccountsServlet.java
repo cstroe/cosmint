@@ -14,7 +14,7 @@ import java.util.List;
 @WebServlet("/accounts")
 public class AccountsServlet extends HttpServlet {
 
-    private static final String TEMPLATE = "/accounts.ftl";
+    private static final String TEMPLATE = "/template/accounts.ftl";
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)

@@ -1,5 +1,5 @@
 <#assign page_title="Account Manager">
-<#include "/layouts/global_header.ftl">
+<#include "/template/layouts/global_header.ftl">
 
 <a href="/spendhawk/accounts">Back to Accounts</a>
 
@@ -15,4 +15,4 @@ ${message!""}
 </form>
 
 
-<#include "/layouts/global_footer.ftl">
+<#include "/template/layouts/global_footer.ftl">
