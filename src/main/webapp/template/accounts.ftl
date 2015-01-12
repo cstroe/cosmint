@@ -13,7 +13,11 @@
 
 <#list accounts as account>
     <tr>
-        <td>${account.name}</td>
+        <td>
+            <a href="/spendhawk/account?id=${account.id}">
+                ${account.name}
+            </a>
+        </td>
         <td>${account.balance}</td>
     </tr>
 </#list>

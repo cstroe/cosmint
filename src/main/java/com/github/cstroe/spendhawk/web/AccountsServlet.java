@@ -14,6 +14,7 @@ import java.util.List;
 @WebServlet("/accounts")
 public class AccountsServlet extends HttpServlet {
 
+    public static final String PATH = "/accounts";
     private static final String TEMPLATE = "/template/accounts.ftl";
 
     @Override
@@ -32,7 +33,7 @@ public class AccountsServlet extends HttpServlet {
             HibernateUtil.getSessionFactory().getCurrentSession().getTransaction().commit();
         } catch (Exception ex) {
             HibernateUtil.getSessionFactory().getCurrentSession().getTransaction().rollback();
-            throw ex;
+            throw new ServletException(ex);
         }
     }
 }

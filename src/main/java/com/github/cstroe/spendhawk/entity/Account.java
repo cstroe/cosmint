@@ -1,5 +1,8 @@
 package com.github.cstroe.spendhawk.entity;
 
+import com.github.cstroe.spendhawk.util.HibernateUtil;
+import org.hibernate.criterion.Restrictions;
+
 import java.util.Collection;
 import java.util.Date;
 
@@ -62,5 +65,12 @@ public class Account {
                 .filter(t -> !t.getEffectiveDate().after(now))
                 .mapToDouble(Transaction::getAmount)
                 .sum();
+    }
+
+    public static Account findById(Long id) {
+        return (Account) HibernateUtil.getSessionFactory().getCurrentSession()
+            .createCriteria(Account.class)
+            .add(Restrictions.eq("id", id))
+            .uniqueResult();
     }
 }
