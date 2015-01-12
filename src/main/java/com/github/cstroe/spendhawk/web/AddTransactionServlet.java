@@ -83,9 +83,9 @@ public class AddTransactionServlet extends HttpServlet {
         }
 
         if(account == null) {
-            request.getRequestDispatcher(AccountsServlet.PATH).forward(request, response);
+            response.sendRedirect(request.getContextPath() + AccountsServlet.PATH);
         } else {
-            request.getRequestDispatcher(AccountServlet.PATH).forward(request, response);
+            response.sendRedirect(request.getContextPath() + AccountServlet.PATH + "?id=" + account.getId());
         }
     }
 }
