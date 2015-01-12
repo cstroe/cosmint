@@ -24,9 +24,13 @@
 
 <#list transactions as transaction>
     <tr>
-        <td>${transaction.effectiveDate}</td>
-        <td>${transaction.description}</td>
-        <td>${transaction.amount}</td>
+        <td>${transaction.effectiveDate?date?iso("CST")}</td>
+        <td>
+            <a href="/spendhawk/transaction?id=${transaction.id}">
+                ${transaction.description}
+            </a>
+        </td>
+        <td style="text-align: right;">${transaction.amount?string["0.00"]}</td>
         <td>${transaction.notes!""}</td>
     </tr>
 </#list>

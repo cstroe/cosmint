@@ -90,4 +90,15 @@ public class Transaction {
         Long id = (Long) HibernateUtil.getSessionFactory().getCurrentSession().save(this);
         return id != null;
     }
+
+    public void delete() {
+        HibernateUtil.getSessionFactory().getCurrentSession().delete(this);
+    }
+
+    public static Transaction findById(Long id) {
+        return (Transaction) HibernateUtil.getSessionFactory().getCurrentSession()
+                .createCriteria(Transaction.class)
+                .add(Restrictions.eq("id", id))
+                .uniqueResult();
+    }
 }
