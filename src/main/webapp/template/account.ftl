@@ -6,6 +6,14 @@
 <p>
     <a href="/spendhawk/transactions/add?id=${account.id}">Add Transaction</a>
 </p>
+<p>
+    <a href="/spendhawk/transactions/upload?id=${account.id}">Upload Transactions File</a>
+</p>
+
+<p>
+    Balance: ${account.balance}
+</p>
+
 <table border='1'>
     <tr>
         <th>Date</th>
