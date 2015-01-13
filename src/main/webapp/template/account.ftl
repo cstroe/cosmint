@@ -14,6 +14,10 @@
     Balance: ${account.balance}
 </p>
 
+<a href="/spendhawk/account?id=${account.id}&relDate=currentMonth">Current Month</a><br/>
+<a href="/spendhawk/account?id=${account.id}&relDate=${previousMonth}">Previous Month</a><br/>
+<a href="/spendhawk/account?id=${account.id}&relDate=${nextMonth}">Next Month</a><br/>
+
 <table border='1'>
     <tr>
         <th>Date</th>
