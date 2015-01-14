@@ -3,6 +3,7 @@ package com.github.cstroe.spendhawk.entity;
 import com.github.cstroe.spendhawk.util.HibernateUtil;
 import org.hibernate.criterion.Restrictions;
 
+import java.util.Collection;
 import java.util.Date;
 
 /**
@@ -26,6 +27,7 @@ public class Transaction {
     private Date effectiveDate;
     private String description;
     private String notes;
+    private Collection<CategorySpend> categorySpends;
 
     public Transaction() {}
 
@@ -73,6 +75,14 @@ public class Transaction {
 
     public void setNotes(String notes) {
         this.notes = notes;
+    }
+
+    public Collection<CategorySpend> getCategorySpends() {
+        return categorySpends;
+    }
+
+    public void setCategorySpends(Collection<CategorySpend> categorySpends) {
+        this.categorySpends = categorySpends;
     }
 
     public boolean isDuplicate() {

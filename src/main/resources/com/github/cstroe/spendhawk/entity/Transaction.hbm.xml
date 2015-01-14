@@ -15,5 +15,9 @@
         <property name="description"   type="string"    column="DESCRIPTION"    not-null="true"/>
         <property name="notes"         type="string"    column="NOTES"/>
         <many-to-one name="account" column="ACCOUNT_ID" not-null="true"/>
+        <set name="categorySpends" inverse="true">
+            <key column="TRANSACTION_ID"/>
+            <one-to-many class="CategorySpend"/>
+        </set>
     </class>
 </hibernate-mapping>
