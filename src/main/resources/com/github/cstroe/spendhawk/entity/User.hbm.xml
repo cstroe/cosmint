@@ -4,17 +4,20 @@
         "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 
 <hibernate-mapping package="com.github.cstroe.spendhawk.entity">
-    <class name="Account" table="ACCOUNTS">
-        <id name="id" column="ACCOUNT_ID">
+    <class name="User" table="USERS">
+        <id name="id" column="USER_ID">
             <generator class="native"/>
         </id>
 
         <!-- properties declared using Hibernate mapping types -->
         <property name="name" type="string" column="NAME"/>
-        <many-to-one name="user" column="USER_ID" not-null="true"/>
-        <set name="transactions" inverse="true">
-            <key column="ACCOUNT_ID"/>
-            <one-to-many class="Transaction"/>
+        <set name="accounts" inverse="true">
+            <key column="USER_ID"/>
+            <one-to-many class="Account"/>
+        </set>
+        <set name="categories" inverse="true">
+            <key column="USER_ID"/>
+            <one-to-many class="Category"/>
         </set>
     </class>
 </hibernate-mapping>

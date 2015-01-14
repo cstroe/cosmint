@@ -1,7 +1,8 @@
 package com.github.cstroe.spendhawk.web;
 
-import com.github.cstroe.spendhawk.entity.Account;
+import com.github.cstroe.spendhawk.entity.User;
 import com.github.cstroe.spendhawk.util.HibernateUtil;
+import org.hibernate.criterion.Restrictions;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -9,9 +10,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.List;
 
-@WebServlet("/accounts")
+@WebServlet(AccountsServlet.PATH)
 public class AccountsServlet extends HttpServlet {
 
     public static final String PATH = "/accounts";
@@ -20,20 +20,22 @@ public class AccountsServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
+        Long userId = Long.parseLong(request.getParameter("id"));
+
         try {
-            // Begin unit of work
             HibernateUtil.getSessionFactory().getCurrentSession().beginTransaction();
-            List result = HibernateUtil.getSessionFactory()
-                    .getCurrentSession().createCriteria(Account.class).list();
+            User user = (User) HibernateUtil.getSessionFactory().getCurrentSession()
+                    .createCriteria(User.class)
+                    .add(Restrictions.eq("id", userId))
+                    .uniqueResult();
 
-            request.setAttribute("accounts", result);
+            request.setAttribute("accounts", user.getAccounts());
             request.getRequestDispatcher(TEMPLATE).forward(request,response);
-
-            // End unit of work
             HibernateUtil.getSessionFactory().getCurrentSession().getTransaction().commit();
-        } catch (Exception ex) {
+        } catch(Exception ex) {
             HibernateUtil.getSessionFactory().getCurrentSession().getTransaction().rollback();
-            throw new ServletException(ex);
+            throw ex;
         }
     }
 }

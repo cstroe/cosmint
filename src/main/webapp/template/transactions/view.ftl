@@ -3,7 +3,12 @@
 
 <form method="post">
     <input type="hidden" name="id" value="${transaction.id}"/>
-    <input type="submit" value="Delete" name="delete"/>
+    Delete this transaction: <input type="submit" value="Delete" name="delete"/>
+</form>
+
+<form method="post">
+    <input type="hidden" name="id" value="${transaction.id}"/>
+
 </form>
 
 <#include "/template/layouts/global_footer.ftl">

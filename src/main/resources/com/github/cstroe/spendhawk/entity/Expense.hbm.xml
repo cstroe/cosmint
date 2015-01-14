@@ -4,8 +4,8 @@
         "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 
 <hibernate-mapping package="com.github.cstroe.spendhawk.entity">
-    <class name="CategorySpend" table="CATEGORY_SPEND">
-        <id name="id" column="CATEGORY_SPEND_ID">
+    <class name="Expense" table="EXPENSES">
+        <id name="id" column="EXPENSE_ID">
             <generator class="native"/>
         </id>
 

@@ -17,7 +17,7 @@
         <many-to-one name="account" column="ACCOUNT_ID" not-null="true"/>
         <set name="categorySpends" inverse="true">
             <key column="TRANSACTION_ID"/>
-            <one-to-many class="CategorySpend"/>
+            <one-to-many class="com.github.cstroe.spendhawk.entity.Expense"/>
         </set>
     </class>
 </hibernate-mapping>

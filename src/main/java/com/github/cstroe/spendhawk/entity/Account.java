@@ -1,6 +1,7 @@
 package com.github.cstroe.spendhawk.entity;
 
 import com.github.cstroe.spendhawk.util.HibernateUtil;
+import com.sun.istack.internal.NotNull;
 import org.hibernate.criterion.Restrictions;
 
 import java.util.Collection;
@@ -22,10 +23,11 @@ import java.util.Date;
  *     account has no transactions, the balance will be $0.</li>
  * </ul>
  */
-public class Account {
+public class Account implements Comparable<Account> {
     private static final Double ZERO = 0d;
 
     private Long id;
+    private User user;
     private String name;
     private Collection<Transaction> transactions;
 
@@ -35,6 +37,14 @@ public class Account {
 
     private void setId(Long id) {
         this.id = id;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public String getName() {
@@ -72,5 +82,10 @@ public class Account {
             .createCriteria(Account.class)
             .add(Restrictions.eq("id", id))
             .uniqueResult();
+    }
+
+    @Override
+    public int compareTo(Account o) {
+        return this.getName().compareTo(o.getName());
     }
 }

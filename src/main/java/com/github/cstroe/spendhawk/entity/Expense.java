@@ -3,15 +3,14 @@ package com.github.cstroe.spendhawk.entity;
 /**
  * A categorized expenditure.
  */
-public class CategorySpend {
-
+public class Expense {
     private Long id;
     private Transaction transaction;
     private Double amount;
     private String category;
     private String merchant;
 
-    public CategorySpend() {}
+    public Expense() {}
 
     public Long getId() {
         return id;

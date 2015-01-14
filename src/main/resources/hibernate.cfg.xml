@@ -31,9 +31,11 @@
         <!-- Drop and re-create the database schema on startup -->
         <property name="hibernate.hbm2ddl.auto">update</property>
 
+        <mapping resource="com/github/cstroe/spendhawk/entity/User.hbm.xml"/>
         <mapping resource="com/github/cstroe/spendhawk/entity/Account.hbm.xml"/>
         <mapping resource="com/github/cstroe/spendhawk/entity/Transaction.hbm.xml"/>
-        <mapping resource="com/github/cstroe/spendhawk/entity/CategorySpend.hbm.xml"/>
+        <mapping resource="com/github/cstroe/spendhawk/entity/Expense.hbm.xml"/>
+        <mapping resource="com/github/cstroe/spendhawk/entity/Category.hbm.xml"/>
 
     </session-factory>
 

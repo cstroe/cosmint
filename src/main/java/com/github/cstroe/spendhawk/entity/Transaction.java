@@ -27,7 +27,7 @@ public class Transaction {
     private Date effectiveDate;
     private String description;
     private String notes;
-    private Collection<CategorySpend> categorySpends;
+    private Collection<Expense> categorySpends;
 
     public Transaction() {}
 
@@ -77,11 +77,11 @@ public class Transaction {
         this.notes = notes;
     }
 
-    public Collection<CategorySpend> getCategorySpends() {
+    public Collection<Expense> getCategorySpends() {
         return categorySpends;
     }
 
-    public void setCategorySpends(Collection<CategorySpend> categorySpends) {
+    public void setCategorySpends(Collection<Expense> categorySpends) {
         this.categorySpends = categorySpends;
     }
 
