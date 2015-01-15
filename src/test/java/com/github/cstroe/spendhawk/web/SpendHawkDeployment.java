@@ -20,6 +20,7 @@ public class SpendHawkDeployment {
 
     private static final String WEBAPP_SRC = "src/main/webapp";
     private static final String RESOURCES_SRC = "src/main/resources";
+    private static final String TEST_RESOURCES_SRC = "src/test/resources";
 
     @Deployment
     @OverProtocol("Servlet 3.0")
@@ -36,11 +37,20 @@ public class SpendHawkDeployment {
                         Filters.exclude(".*/SpendHawkDeployment\\.class")
                 ), SpendHawk.class.getPackage());
 
-        WebArchive hibernate = ShrinkWrap.create(WebArchive.class).as(ExplodedImporter.class)
-                .importDirectory(RESOURCES_SRC).as(WebArchive.class);
 
-        war.merge(hibernate,
-                "/WEB-INF/classes/", Filters.includeAll());
+        WebArchive hibernateMappingFiles = ShrinkWrap.create(WebArchive.class)
+                .as(ExplodedImporter.class)
+                .importDirectory(RESOURCES_SRC, Filters.exclude(".*/hibernate.cfg.xml"))
+                .as(WebArchive.class);
+
+        war.merge(hibernateMappingFiles, "/WEB-INF/classes", Filters.includeAll());
+
+        WebArchive hibernate = ShrinkWrap.create(WebArchive.class)
+            .as(ExplodedImporter.class)
+            .importDirectory(TEST_RESOURCES_SRC, Filters.include(".*/hibernate.cfg.xml"))
+            .as(WebArchive.class);
+
+        war.merge(hibernate, "/WEB-INF/classes", Filters.includeAll());
 
         File[] files = Maven.resolver()
                 .loadPomFromFile("pom.xml").resolve(
