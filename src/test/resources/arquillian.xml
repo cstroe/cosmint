@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<arquillian xmlns="http://jboss.org/schema/arquillian"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation="http://jboss.org/schema/arquillian http://jboss.org/schema/arquillian/arquillian_1_0.xsd">
+
+    <container qualifier="wildfly-remote-8" default="true">
+        <configuration>
+            <!-- These settings are specific to my computer -->
+            <property name="managementAddress">localhost</property>
+            <property name="managementPort">9995</property>
+            <property name="username">testuser</property>
+            <property name="password">test12345user!@#$%</property>
+        </configuration>
+    </container>
+
+</arquillian>
