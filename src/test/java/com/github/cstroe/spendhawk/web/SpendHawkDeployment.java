@@ -35,9 +35,12 @@ public class SpendHawkDeployment {
                         Filters.exclude(".*/testutil/.*"),
                         Filters.exclude(".*/SpendHawkDeployment\\.class")
                 ), SpendHawk.class.getPackage());
-        war.merge(ShrinkWrap.create(GenericArchive.class).as(ExplodedImporter.class)
-                        .importDirectory(RESOURCES_SRC).as(GenericArchive.class),
-                "/", Filters.includeAll());
+
+        WebArchive hibernate = ShrinkWrap.create(WebArchive.class).as(ExplodedImporter.class)
+                .importDirectory(RESOURCES_SRC).as(WebArchive.class);
+
+        war.merge(hibernate,
+                "/WEB-INF/classes/", Filters.includeAll());
 
         File[] files = Maven.resolver()
                 .loadPomFromFile("pom.xml").resolve(
@@ -52,7 +55,7 @@ public class SpendHawkDeployment {
     }
 
     @Test
-    public void testArchive() {
+    public void showDeploymentContents() {
         WebArchive archive = deploy();
         System.out.println(archive.toString(true));
     }

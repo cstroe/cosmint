@@ -42,6 +42,7 @@ public class WelcomeServletIT {
         HttpURLConnection http = (HttpURLConnection)url.openConnection();
         int statusCode = http.getResponseCode();
 
+        //String response = StreamReaderUtil.readAllAndClose(http.getErrorStream());
         assertEquals(200, statusCode);
     }
 
