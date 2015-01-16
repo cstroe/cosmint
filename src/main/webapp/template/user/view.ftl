@@ -2,7 +2,7 @@
 
 <#include "/template/layouts/global_header.ftl">
 
-<a href="/spendhawk/users/manage">Manage Users</a>
+<a href="${fw.url('/users/manage')}">Manage Users</a>
 
 <h2>Users in database:</h2>
 <table border='1'>
