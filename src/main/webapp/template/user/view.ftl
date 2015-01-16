@@ -13,7 +13,8 @@
 <#list users as user>
     <tr>
         <td>
-            <a href="/spendhawk/accounts?id=${user.id}">
+            <a class="userLink"
+               href="${fw.url('/account', 'id', user.id, 'relDate', 'currentMonth')}">
             ${user.name}
             </a>
         </td>

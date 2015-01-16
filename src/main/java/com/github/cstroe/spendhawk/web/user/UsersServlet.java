@@ -2,6 +2,7 @@ package com.github.cstroe.spendhawk.web.user;
 
 import com.github.cstroe.spendhawk.entity.User;
 import com.github.cstroe.spendhawk.util.HibernateUtil;
+import com.github.cstroe.spendhawk.util.TemplateForwarder;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -25,6 +26,7 @@ public class UsersServlet extends HttpServlet {
                     .createCriteria(User.class)
                     .list();
 
+            req.setAttribute("fw", new TemplateForwarder(req));
             req.setAttribute("users", users);
             HibernateUtil.getSessionFactory().getCurrentSession().getTransaction().commit();
         } catch(Exception ex) {
