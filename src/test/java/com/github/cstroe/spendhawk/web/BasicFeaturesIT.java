@@ -24,9 +24,10 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(Arquillian.class)
-public class WelcomeServletIT {
+public class BasicFeaturesIT {
 
     @ArquillianResource
     URL deploymentUrl;
@@ -83,6 +84,8 @@ public class WelcomeServletIT {
 
         Element link = links.get(0);
         userDetailUrl = link.attr("href");
+
+        assertTrue(userDetailUrl.contains(AccountsServlet.PATH + "?"));
     }
 
     @Test
