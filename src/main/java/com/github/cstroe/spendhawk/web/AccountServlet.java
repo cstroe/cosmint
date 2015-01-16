@@ -30,8 +30,6 @@ public class AccountServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
-            HibernateUtil.getSessionFactory().getCurrentSession().beginTransaction();
-
             LocalDate startDate = null;
             LocalDate endDate = null;
 
@@ -85,9 +83,9 @@ public class AccountServlet extends HttpServlet {
                 request.setAttribute("transactions", result);
                 setNavigationDates(request, startDate);
                 request.getRequestDispatcher(TEMPLATE).forward(request,response);
+                // End unit of work
+                HibernateUtil.getSessionFactory().getCurrentSession().getTransaction().commit();
             }
-            // End unit of work
-            HibernateUtil.getSessionFactory().getCurrentSession().getTransaction().commit();
         } catch (Exception ex) {
             HibernateUtil.getSessionFactory().getCurrentSession().getTransaction().rollback();
             throw ex;
