@@ -1,9 +1,9 @@
 package com.github.cstroe.spendhawk.entity;
 
 import com.github.cstroe.spendhawk.util.HibernateUtil;
-import com.sun.istack.internal.NotNull;
 import org.hibernate.criterion.Restrictions;
 
+import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.Date;
 
@@ -85,7 +85,7 @@ public class Account implements Comparable<Account> {
     }
 
     @Override
-    public int compareTo(Account o) {
+    public int compareTo(@Nonnull Account o) {
         return this.getName().compareTo(o.getName());
     }
 }
