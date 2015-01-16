@@ -56,7 +56,9 @@ public class SpendHawkDeployment {
                 .loadPomFromFile("pom.xml").resolve(
                         "org.freemarker:freemarker",
                         "org.hsqldb:hsqldb",
-                        "org.hibernate:hibernate-core:4.3.5.Final"
+                        "org.hibernate:hibernate-core",
+                        "org.apache.commons:commons-lang3",
+                        "org.apache.commons:commons-csv"
                 ).withTransitivity().asFile();
 
         war.addAsLibraries(files);
