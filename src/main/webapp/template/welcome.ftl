@@ -2,6 +2,6 @@
 
 <#include "/template/layouts/global_header.ftl">
 
-Welcome.  Go to <a href="/spendhawk/users">users</a>
+Welcome.  Go to <a href="${fw.url('/users')}">users</a>
 
 <#include "/template/layouts/global_footer.ftl">
