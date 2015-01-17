@@ -48,6 +48,13 @@ public class BasicFeaturesIT {
         Document doc = Jsoup.parse(response.getBody());
         boolean usersLinkExists = findLink(fullServletPath(UsersServlet.class), doc);
         assertEquals("A link from the welcome page to the users page must exist.", usersLinkExists, true);
+
+        String welcomePage = response.getBody();
+
+        response = connect(""); // connect to the context root
+        assertResponseStatus(200, response);
+
+        assertEquals("The welcome page should be served at the context root.", welcomePage, response.getBody());
     }
 
     @Test
