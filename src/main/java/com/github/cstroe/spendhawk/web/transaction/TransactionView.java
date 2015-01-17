@@ -12,6 +12,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+import static com.github.cstroe.spendhawk.util.ServletUtil.servletPath;
+
 @WebServlet("/transaction")
 public class TransactionView extends HttpServlet {
 
@@ -65,6 +67,6 @@ public class TransactionView extends HttpServlet {
             throw new ServletException(ex);
         }
 
-        response.sendRedirect(request.getContextPath() + AccountServlet.PATH + "?id=" + account.getId());
+        response.sendRedirect(request.getContextPath() + servletPath(AccountServlet.class) + "?id=" + account.getId());
     }
 }

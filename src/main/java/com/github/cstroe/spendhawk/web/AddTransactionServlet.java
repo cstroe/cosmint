@@ -15,6 +15,8 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import static com.github.cstroe.spendhawk.util.ServletUtil.servletPath;
+
 @WebServlet("/transactions/add")
 public class AddTransactionServlet extends HttpServlet {
 
@@ -83,9 +85,9 @@ public class AddTransactionServlet extends HttpServlet {
         }
 
         if(account == null) {
-            response.sendRedirect(request.getContextPath() + AccountsServlet.PATH);
+            response.sendRedirect(request.getContextPath() + servletPath(AccountsServlet.class));
         } else {
-            response.sendRedirect(request.getContextPath() + AccountServlet.PATH + "?id=" + account.getId());
+            response.sendRedirect(request.getContextPath() + servletPath(AccountsServlet.class) + "?id=" + account.getId());
         }
     }
 }

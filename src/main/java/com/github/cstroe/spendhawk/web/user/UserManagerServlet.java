@@ -13,9 +13,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet(UserManagerServlet.PATH)
+import static com.github.cstroe.spendhawk.util.ServletUtil.servletPath;
+
+@WebServlet("/users/manage")
 public class UserManagerServlet extends HttpServlet {
-    public static final String PATH = "/users/manage";
+
     private static final String TEMPLATE = "/template/user/manager.ftl";
 
     @Override
@@ -30,7 +32,7 @@ public class UserManagerServlet extends HttpServlet {
         if("Add User".equals(action)) {
             User newUser = doAddUser(request);
             if(newUser != null) {
-                response.sendRedirect(request.getContextPath() + AccountsServlet.PATH + "?id=" + newUser.getId());
+                response.sendRedirect(request.getContextPath() + servletPath(AccountsServlet.class) + "?id=" + newUser.getId());
             } else {
                 request.getRequestDispatcher(TEMPLATE).forward(request, response);
             }

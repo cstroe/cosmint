@@ -19,10 +19,9 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAdjusters;
 import java.util.List;
 
-@WebServlet(AccountServlet.PATH)
+@WebServlet("/account")
 public class AccountServlet extends HttpServlet {
 
-    public static final String PATH = "/account";
     public static final String TEMPLATE = "/template/account.ftl";
 
     public static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd-yyyy");
