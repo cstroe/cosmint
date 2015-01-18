@@ -1,5 +1,8 @@
 package com.github.cstroe.spendhawk.entity;
 
+import com.github.cstroe.spendhawk.util.HibernateUtil;
+import org.hibernate.criterion.Restrictions;
+
 import java.util.Collection;
 
 /**
@@ -42,4 +45,12 @@ public class User {
     public void setCategories(Collection<Category> categories) {
         this.categories = categories;
     }
+
+    public static User findById(Long id) {
+        return (User) HibernateUtil.getSessionFactory().getCurrentSession()
+                .createCriteria(User.class)
+                .add(Restrictions.eq("id", id))
+                .uniqueResult();
+    }
+
 }
