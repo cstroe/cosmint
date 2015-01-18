@@ -1,6 +1,7 @@
 package com.github.cstroe.spendhawk.web;
 
 import com.github.cstroe.spendhawk.entity.Account;
+import com.github.cstroe.spendhawk.entity.User;
 import com.github.cstroe.spendhawk.util.HibernateUtil;
 import org.apache.commons.lang3.StringEscapeUtils;
 
@@ -19,25 +20,40 @@ public class AccountManagerServlet extends HttpServlet {
     @Override
     protected void doGet( HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.getRequestDispatcher(TEMPLATE).forward(request,response);
+        String userId = StringEscapeUtils.escapeHtml4(request.getParameter("user.id"));
+
+        try {
+            HibernateUtil.getSessionFactory().getCurrentSession().beginTransaction();
+            User currentUser = User.findById(Long.parseLong(userId));
+
+            request.setAttribute("user", currentUser);
+            request.getRequestDispatcher(TEMPLATE).forward(request, response);
+            HibernateUtil.getSessionFactory().getCurrentSession().getTransaction().commit();
+        } catch (Exception ex) {
+            HibernateUtil.getSessionFactory().getCurrentSession().getTransaction().rollback();
+            throw ex;
+        }
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        String accountName = StringEscapeUtils.escapeHtml4(request.getParameter("account.name"));
+        String userId = StringEscapeUtils.escapeHtml4(request.getParameter("user.id"));
+
         try {
             // Begin unit of work
             HibernateUtil.getSessionFactory().getCurrentSession().beginTransaction();
+
+            User currentUser = User.findById(Long.parseLong(userId));
+            request.setAttribute("user", currentUser);
+
             // Handle actions
             if ( "store".equals(request.getParameter("action")) ) {
-
-                String accountName = StringEscapeUtils.escapeHtml4(request.getParameter("accountName"));
-
                 if ("".equals(accountName)) {
                     request.setAttribute("message", "<b><i>Please enter account name.</i></b>");
-                }
-                else {
-                    createAndStoreAccount(accountName);
+                } else {
+                    createAndStoreAccount(currentUser, accountName);
                     request.setAttribute("message", "<b><i>Added account.</i></b>");
                 }
             }
@@ -46,15 +62,16 @@ public class AccountManagerServlet extends HttpServlet {
             HibernateUtil.getSessionFactory().getCurrentSession().getTransaction().commit();
         } catch (Exception ex) {
             HibernateUtil.getSessionFactory().getCurrentSession().getTransaction().rollback();
-            throw new ServletException(ex);
+            throw ex;
         }
 
         request.getRequestDispatcher(TEMPLATE).forward(request,response);
     }
 
-    protected void createAndStoreAccount(String accountName) {
+    protected void createAndStoreAccount(User currentUser, String accountName) {
         Account theAccount = new Account();
         theAccount.setName(accountName);
+        theAccount.setUser(currentUser);
 
         HibernateUtil.getSessionFactory()
                 .getCurrentSession().save(theAccount);

@@ -9,8 +9,9 @@ ${message!""}
 
 <h2>Add new account:</h2>
 <form method="POST">
-    <input name="accountName" length="50"/>
+    Account Name: <input type="text" name="account.name" length="50"/>
     <br/>
+    <input type="hidden" name="user.id" value="${user.id}"/>
     <input type="submit" name="action" value="store"/>
 </form>
 
