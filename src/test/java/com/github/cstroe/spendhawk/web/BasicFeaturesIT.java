@@ -5,6 +5,7 @@ import com.github.cstroe.spendhawk.web.user.UsersServlet;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
+import org.hibernate.cfg.NotYetImplementedException;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.junit.InSequence;
@@ -22,12 +23,28 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static com.github.cstroe.spendhawk.util.ServletUtil.servletPath;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.*;
 
+/**
+ * These tests are run in sequence, which goes against testing best practices.
+ * Because of this, they should not be seen as individual tests, but this whole
+ * class should be seen as one test.
+ *
+ * Other frameworks allow for nested contexts in tests, however JUnit does not
+ * support nested contexts, which means it would be very expensive if these
+ * tests were independent; each test would have to redo the work of the tests
+ * before it.
+ *
+ * The other option is to have one large test that combines all these sequential
+ * tests.  But we would lose the granularity we get when we split them up in
+ * separate tests.
+ */
 @RunWith(Arquillian.class)
 public class BasicFeaturesIT {
 
@@ -35,6 +52,7 @@ public class BasicFeaturesIT {
     URL deploymentUrl;
 
     private static String userDetailPath;
+    private static Long userId;
 
     private HttpResponse<String> response;
 
@@ -46,7 +64,7 @@ public class BasicFeaturesIT {
         assertResponseStatus(200, response);
 
         Document doc = Jsoup.parse(response.getBody());
-        boolean usersLinkExists = findLink(fullServletPath(UsersServlet.class), doc);
+        boolean usersLinkExists = findLink(doc, fullServletPath(UsersServlet.class));
         assertEquals("A link from the welcome page to the users page must exist.", usersLinkExists, true);
 
         String welcomePage = response.getBody();
@@ -104,7 +122,8 @@ public class BasicFeaturesIT {
         Element link = links.get(0);
         userDetailPath = link.attr("href");
 
-        assertTrue(userDetailPath.startsWith(fullServletPath(AccountsServlet.class) + "?"));
+        assertTrue("The user detail link points to the AccountsServlet and takes params",
+                userDetailPath.startsWith(fullServletPath(AccountsServlet.class) + "?"));
     }
 
     @Test
@@ -115,8 +134,37 @@ public class BasicFeaturesIT {
         assertResponseStatus(200, response);
 
         Document doc = Jsoup.parse(response.getBody());
-        boolean accountManagerLinkExists = findLink(fullServletPath(AccountManagerServlet.class), doc);
-        assertEquals("A link from the accounts page to the account manager page must exist.", accountManagerLinkExists, true);
+        assertTrue("A link from the accounts page to the account manager page must exist.",
+                findLink(doc, fullServletPath(AccountManagerServlet.class)));
+    }
+
+    @Test
+    @RunAsClient
+    @InSequence(600)
+    public void addAccount() throws Exception {
+        Matcher m = Pattern.compile("id=(.*)").matcher(userDetailPath);
+        if(m.find()) {
+            userId = Long.parseLong(m.group(1));
+        } else {
+            fail("User id not found in user detail path.");
+        }
+
+        response = Unirest.post(url(AccountManagerServlet.class))
+            .field("action", "store")
+            .field("account.name", "Account 1")
+            .field("user.id", userId.toString())
+            .asString();
+
+        assertResponseStatus(200, response);
+
+        response = Unirest.get(url(AccountsServlet.class, "user.id", userId.toString()))
+                .asString();
+
+        assertResponseStatus(200, response);
+
+        Document doc = Jsoup.parse(response.getBody());
+        assertTrue("The accounts page must link to the individual account.",
+                findLink(doc, fullServletPath(AccountServlet.class)) );
     }
 
     /**
@@ -191,25 +239,63 @@ public class BasicFeaturesIT {
                fullServletPath(servlet);
     }
 
+    private String url(Class<? extends HttpServlet> servlet, String... params) {
+        StringBuilder url = new StringBuilder();
+        url.append("http://")
+           .append(deploymentUrl.getHost())
+           .append(":")
+           .append(deploymentUrl.getPort())
+           .append(fullServletPath(servlet));
+
+        for(int i = 0; i < params.length; i=i+2) {
+            if(i == 0) {
+                url.append("?");
+            } else {
+                url.append("&");
+            }
+            url.append(params[i])
+               .append("=")
+               .append(params[i+1]);
+        }
+
+        return url.toString();
+    }
+
     /**
      * Find a link to the given path.
      * @return true if the path was found as one of the links' href, false if none was found
      */
-    private static boolean findLink(String path, Document doc) {
-        Elements links = doc.getElementsByTag("a");
-        if(path == null || links == null) {
-            return false;
+    private static boolean findLink(Document doc, String path, String... arguments) {
+        return getLink(doc, path, arguments) != null;
+    }
+
+    private static String getLink(Document doc, String path, String... arguments) {
+        // TODO: Make arguments check work.
+        if(arguments.length != 0) {
+            throw new NotYetImplementedException();
         }
 
-        boolean linkFound = false;
+        Elements links = doc.getElementsByTag("a");
+        if(path == null || links == null) {
+            return null;
+        }
+
+        String linkHref = null;
         for(Element link : links) {
             String currentLinkPath = link.attr("href");
+            String currentArguments;
+            int qmark = currentLinkPath.indexOf("?");
+            if(qmark > -1) {
+                currentArguments = currentLinkPath.substring(qmark);
+                currentLinkPath = currentLinkPath.substring(0, qmark);
+            }
             if(currentLinkPath.equals(path)) {
-                linkFound = true;
+                linkHref = link.attr("href");
+                break;
             }
         }
 
-        if(!linkFound) {
+        if(linkHref == null) {
             try {
                 File tempFile = File.createTempFile("integrationTest", ".html");
                 FileWriter writer = new FileWriter(tempFile);
@@ -221,7 +307,7 @@ public class BasicFeaturesIT {
             }
         }
 
-        return linkFound;
+        return linkHref;
     }
 
 

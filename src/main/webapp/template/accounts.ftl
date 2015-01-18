@@ -14,7 +14,7 @@
 <#list accounts as account>
     <tr>
         <td>
-            <a href="/spendhawk/account?id=${account.id}&relDate=currentMonth">
+            <a href="${fw.url('/account', 'id', account.id, 'relDate', 'currentMonth')}">
                 ${account.name}
             </a>
         </td>
