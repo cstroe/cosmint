@@ -2,7 +2,7 @@
 
 <#include "/template/layouts/global_header.ftl">
 
-<a href="${fw.url('/accounts/manage')}">Manage Accounts</a>
+<a href="${fw.url('/accounts/manage', "user.id", user.id)}">Manage Accounts</a>
 
 <h2>Accounts in database:</h2>
 <table border='1'>

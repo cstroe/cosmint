@@ -31,6 +31,7 @@ public class AccountsServlet extends HttpServlet {
                     .uniqueResult();
 
             request.setAttribute("fw", new TemplateForwarder(request));
+            request.setAttribute("user", user);
             request.setAttribute("accounts", user.getAccounts());
             request.getRequestDispatcher(TEMPLATE).forward(request,response);
             HibernateUtil.getSessionFactory().getCurrentSession().getTransaction().commit();
