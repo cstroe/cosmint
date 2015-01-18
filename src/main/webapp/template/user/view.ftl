@@ -14,7 +14,7 @@
     <tr>
         <td>
             <a class="userLink"
-               href="${fw.url('/accounts', 'id', user.id)}">
+               href="${fw.url('/accounts', 'user.id', user.id)}">
             ${user.name}
             </a>
         </td>

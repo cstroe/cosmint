@@ -21,7 +21,7 @@ public class AccountsServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        Long userId = Long.parseLong(request.getParameter("id"));
+        Long userId = Long.parseLong(request.getParameter("user.id"));
 
         try {
             HibernateUtil.getSessionFactory().getCurrentSession().beginTransaction();
