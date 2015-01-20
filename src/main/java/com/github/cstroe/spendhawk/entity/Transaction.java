@@ -27,7 +27,7 @@ public class Transaction {
     private Date effectiveDate;
     private String description;
     private String notes;
-    private Collection<Expense> categorySpends;
+    private Collection<Expense> expenses;
 
     public Transaction() {}
 
@@ -77,12 +77,12 @@ public class Transaction {
         this.notes = notes;
     }
 
-    public Collection<Expense> getCategorySpends() {
-        return categorySpends;
+    public Collection<Expense> getExpenses() {
+        return expenses;
     }
 
-    public void setCategorySpends(Collection<Expense> categorySpends) {
-        this.categorySpends = categorySpends;
+    public void setExpenses(Collection<Expense> expenses) {
+        this.expenses = expenses;
     }
 
     public boolean isDuplicate() {
