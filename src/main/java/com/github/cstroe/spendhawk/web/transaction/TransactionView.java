@@ -32,6 +32,7 @@ public class TransactionView extends HttpServlet {
                     throw new IllegalArgumentException("Transaction not found.");
                 }
                 request.setAttribute("transaction", transaction);
+                request.setAttribute("expenses", transaction.getExpenses());
                 request.getRequestDispatcher(TEMPLATE).forward(request,response);
             }
             // End unit of work
