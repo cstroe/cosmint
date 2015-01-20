@@ -1,5 +1,7 @@
 package com.github.cstroe.spendhawk.entity;
 
+import com.github.cstroe.spendhawk.util.HibernateUtil;
+
 /**
  * The category for an expense.  Categories are at the user level, so that
  * many accounts can use the same categories to categorize their expenditures.
@@ -32,4 +34,10 @@ public class Category {
     public void setName(String name) {
         this.name = name;
     }
+
+    public boolean save() {
+        Long id = (Long) HibernateUtil.getSessionFactory().getCurrentSession().save(this);
+        return id != null;
+    }
+
 }
