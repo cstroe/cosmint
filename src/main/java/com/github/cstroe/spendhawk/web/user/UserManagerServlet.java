@@ -2,7 +2,6 @@ package com.github.cstroe.spendhawk.web.user;
 
 import com.github.cstroe.spendhawk.entity.User;
 import com.github.cstroe.spendhawk.util.HibernateUtil;
-import com.github.cstroe.spendhawk.web.AccountsServlet;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.hibernate.Session;
 
@@ -32,7 +31,7 @@ public class UserManagerServlet extends HttpServlet {
         if("Add User".equals(action)) {
             User newUser = doAddUser(request);
             if(newUser != null) {
-                response.sendRedirect(request.getContextPath() + servletPath(AccountsServlet.class) + "?id=" + newUser.getId());
+                response.sendRedirect(request.getContextPath() + servletPath(UserSummaryServlet.class) + "?id=" + newUser.getId());
             } else {
                 request.getRequestDispatcher(TEMPLATE).forward(request, response);
             }
