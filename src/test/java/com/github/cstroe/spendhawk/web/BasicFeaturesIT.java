@@ -1,6 +1,7 @@
 package com.github.cstroe.spendhawk.web;
 
 import com.github.cstroe.spendhawk.web.user.UserManagerServlet;
+import com.github.cstroe.spendhawk.web.user.UserSummaryServlet;
 import com.github.cstroe.spendhawk.web.user.UsersServlet;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
@@ -109,7 +110,7 @@ public class BasicFeaturesIT {
         // location header takes you to accounts page for that user
         String redirectUrl = response.getHeaders().getFirst("location");
         String urlPath = new URL(redirectUrl).getPath();
-        assertTrue(urlPath.startsWith(fullServletPath(AccountsServlet.class)));
+        assertTrue(urlPath.startsWith(fullServletPath(UserSummaryServlet.class)));
 
         String viewUsersUrl = url(UsersServlet.class);
         response = Unirest.get(viewUsersUrl).asString();
@@ -123,7 +124,7 @@ public class BasicFeaturesIT {
         userDetailPath = link.attr("href");
 
         assertTrue("The user detail link points to the AccountsServlet and takes params",
-                userDetailPath.startsWith(fullServletPath(AccountsServlet.class) + "?"));
+                userDetailPath.startsWith(fullServletPath(UserSummaryServlet.class) + "?"));
     }
 
     @Test
@@ -157,7 +158,7 @@ public class BasicFeaturesIT {
 
         assertResponseStatus(200, response);
 
-        response = Unirest.get(url(AccountsServlet.class, "user.id", userId.toString()))
+        response = Unirest.get(url(UserSummaryServlet.class, "user.id", userId.toString()))
                 .asString();
 
         assertResponseStatus(200, response);
