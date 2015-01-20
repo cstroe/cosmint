@@ -1,4 +1,4 @@
-package com.github.cstroe.spendhawk.web;
+package com.github.cstroe.spendhawk.web.user;
 
 import com.github.cstroe.spendhawk.entity.User;
 import com.github.cstroe.spendhawk.util.HibernateUtil;
@@ -13,9 +13,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @WebServlet("/accounts")
-public class AccountsServlet extends HttpServlet {
+public class UserSummaryServlet extends HttpServlet {
 
-    private static final String TEMPLATE = "/template/accounts.ftl";
+    private static final String TEMPLATE = "/template/user/summary.ftl";
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -33,6 +33,7 @@ public class AccountsServlet extends HttpServlet {
             request.setAttribute("fw", new TemplateForwarder(request));
             request.setAttribute("user", user);
             request.setAttribute("accounts", user.getAccounts());
+            request.setAttribute("categories", user.getCategories());
             request.getRequestDispatcher(TEMPLATE).forward(request,response);
             HibernateUtil.getSessionFactory().getCurrentSession().getTransaction().commit();
         } catch(Exception ex) {
