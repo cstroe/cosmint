@@ -1,6 +1,10 @@
 package com.github.cstroe.spendhawk.entity;
 
 import com.github.cstroe.spendhawk.util.HibernateUtil;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
+
+import java.util.List;
 
 /**
  * The category for an expense.  Categories are at the user level, so that
@@ -38,6 +42,21 @@ public class Category {
     public boolean save() {
         Long id = (Long) HibernateUtil.getSessionFactory().getCurrentSession().save(this);
         return id != null;
+    }
+
+    @SuppressWarnings("unchecked")
+    public static List<Category> findAll() {
+        return (List<Category>) HibernateUtil.getSessionFactory().getCurrentSession()
+                .createCriteria(Category.class)
+                .addOrder(Order.asc("name"))
+                .list();
+    }
+
+    public static Category findById(Long id) {
+        return (Category) HibernateUtil.getSessionFactory().getCurrentSession()
+                .createCriteria(Category.class)
+                .add(Restrictions.eq("id", id))
+                .uniqueResult();
     }
 
 }
