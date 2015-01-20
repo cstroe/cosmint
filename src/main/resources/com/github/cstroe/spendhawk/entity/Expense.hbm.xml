@@ -11,8 +11,8 @@
 
         <!-- properties declared using Hibernate mapping types -->
         <property name="amount"     type="double"    column="AMOUNT"      not-null="true"/>
-        <property name="category"   type="string"    column="CATEGORY"    not-null="true"/>
         <property name="merchant"   type="string"    column="MERCHANT"/>
+        <many-to-one name="category" column="CATEGORY_ID" not-null="true"/>
         <many-to-one name="transaction" column="TRANSACTION_ID" not-null="true"/>
     </class>
 </hibernate-mapping>
