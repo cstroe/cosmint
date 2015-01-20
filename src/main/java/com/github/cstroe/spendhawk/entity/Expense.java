@@ -1,5 +1,7 @@
 package com.github.cstroe.spendhawk.entity;
 
+import com.github.cstroe.spendhawk.util.HibernateUtil;
+
 /**
  * A categorized expenditure.
  */
@@ -51,4 +53,10 @@ public class Expense {
     public void setMerchant(String merchant) {
         this.merchant = merchant;
     }
+
+    public boolean save() {
+        Long id = (Long) HibernateUtil.getSessionFactory().getCurrentSession().save(this);
+        return id != null;
+    }
+
 }
