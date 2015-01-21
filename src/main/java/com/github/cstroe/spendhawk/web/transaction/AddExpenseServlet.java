@@ -45,7 +45,7 @@ public class AddExpenseServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String amountRaw = StringEscapeUtils.escapeHtml4(req.getParameter("expense.amount"));
         String categoryId = StringEscapeUtils.escapeHtml4(req.getParameter("category.id"));
-        String merchant = StringEscapeUtils.escapeHtml4(req.getParameter("merchant"));
+        String merchant = StringEscapeUtils.escapeHtml4(req.getParameter("expense.merchant"));
         String transactionId = StringEscapeUtils.escapeHtml4(req.getParameter("transaction.id"));
         String action = StringEscapeUtils.escapeHtml4(req.getParameter("action"));
 
