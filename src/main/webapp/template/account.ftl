@@ -2,25 +2,34 @@
 
 <#include "/template/layouts/global_header.ftl">
 
-<a href="/spendhawk/accounts?user.id=${account.user.id}">Back to User Summary</a>
+<div class="accountnav">
+    <a class="navlink" href="/spendhawk/accounts?user.id=${account.user.id}">
+        <img class="navbutton" src="/spendhawk/images/previous.svg"/>Accounts
+    </a>
+    <a class="navlink" href="/spendhawk/transactions/add?id=${account.id}">
+        <img class="navbutton" src="/spendhawk/images/add.svg"/>Add Transaction
+    </a>
+    <a class="navlink" href="/spendhawk/transactions/upload?id=${account.id}">
+        <img class="navbutton" src="/spendhawk/images/upload.svg">Upload Transactions
+    </a>
+</div>
 
-<h2>${account.name}</h2>
-<p>
-    <a href="/spendhawk/transactions/add?id=${account.id}">Add Transaction</a>
-</p>
-<p>
-    <a href="/spendhawk/transactions/upload?id=${account.id}">Upload Transactions File</a>
-</p>
+${account.name}<br/>
+Balance: ${account.balance}<br/>
 
-<p>
-    Balance: ${account.balance}
-</p>
+<div class="accountnav">
+    <a class="navlink" href="/spendhawk/account?id=${account.id}&relDate=${previousMonth}">
+        <img class="navbutton" src="/spendhawk/images/back.svg"/>Previous Month
+    </a>
+    <a class="navlink" href="/spendhawk/account?id=${account.id}&relDate=currentMonth">
+        <img class="navbutton" src="/spendhawk/images/calendar.svg"/>Current Month
+    </a>
+    <a class="navlink" href="/spendhawk/account?id=${account.id}&relDate=${nextMonth}">
+        <img class="navbutton" src="/spendhawk/images/forward.svg"/>Next Month
+    </a>
+</div>
 
-<a href="/spendhawk/account?id=${account.id}&relDate=currentMonth">Current Month</a><br/>
-<a href="/spendhawk/account?id=${account.id}&relDate=${previousMonth}">Previous Month</a><br/>
-<a href="/spendhawk/account?id=${account.id}&relDate=${nextMonth}">Next Month</a><br/>
-
-<table border='1'>
+<table border='1' style="margin-left: auto; margin-right: auto;">
     <tr>
         <th>Date</th>
         <th>Description</th>
