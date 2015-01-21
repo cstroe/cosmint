@@ -2,6 +2,8 @@
 
 <#include "/template/layouts/global_header.ftl">
 
+<a href="/spendhawk/accounts?user.id=${account.user.id}">Back to User Summary</a>
+
 <h2>${account.name}</h2>
 <p>
     <a href="/spendhawk/transactions/add?id=${account.id}">Add Transaction</a>
@@ -24,6 +26,7 @@
         <th>Description</th>
         <th>Amount</th>
         <th>Notes</th>
+        <th>Categories</th>
     </tr>
 
 <#list transactions as transaction>
@@ -36,6 +39,11 @@
         </td>
         <td style="text-align: right;">${transaction.amount?string["0.00"]}</td>
         <td>${transaction.notes!""}</td>
+        <td style="font-size: 75%;">
+            <#list transaction.expenses as expense>
+                <span style="color: white; background-color: RoyalBlue; border-radius: 5px; border: solid RoyalBlue 1px; padding: 1px;">${expense.category.name}</span> (${expense.amount})
+            </#list>
+        </td>
     </tr>
 </#list>
 
