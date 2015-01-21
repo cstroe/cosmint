@@ -1,7 +1,7 @@
 <#assign page_title="Manage Categories">
 <#include "/template/layouts/global_header.ftl">
 
-<a href="/spendhawk/accounts">Back to User Summary</a>
+<a href="/spendhawk/accounts?user.id=${user.id}">Back to User Summary</a>
 
 <p>
 ${message!""}

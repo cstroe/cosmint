@@ -1,7 +1,7 @@
 <#assign page_title="Account Manager">
 <#include "/template/layouts/global_header.ftl">
 
-<a href="/spendhawk/accounts">Back to Accounts</a>
+<a href="/spendhawk/accounts?user.id=${user.id}">Back to Accounts</a>
 
 <p>
 ${message!""}
