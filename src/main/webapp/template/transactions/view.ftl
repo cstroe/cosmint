@@ -2,7 +2,8 @@
 <#include "/template/layouts/global_header.ftl">
 
 <p>
-    <a href="/spendhawk/account?id=${transaction.account.id}&relDate=currentMonth">Back to Account</a>
+    <#assign transactionDate = transaction.effectiveDate?date?string("MM-dd-yyyy")>
+    <a href="/spendhawk/account?id=${transaction.account.id}&relDate=${transactionDate}">Back to Account</a>
 </p>
 
 <form method="post">
