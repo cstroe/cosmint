@@ -3,7 +3,7 @@
 <#include "/template/layouts/global_header.ftl">
 
 <form method="post">
-    Date: <input type="text" name="date"/><br/>
+    Date (MM/dd/yyyy): <input type="text" name="date"/><br/>
     Amount: <input type="text" name="amount"/><br/>
     Description: <input type="text" name="description"/><br/>
     Notes: <input type="text" name="notes"/><br/>

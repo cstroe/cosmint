@@ -2,8 +2,8 @@ package com.github.cstroe.spendhawk.web;
 
 import com.github.cstroe.spendhawk.entity.Account;
 import com.github.cstroe.spendhawk.entity.Transaction;
+import com.github.cstroe.spendhawk.util.DateUtil;
 import com.github.cstroe.spendhawk.util.HibernateUtil;
-import com.github.cstroe.spendhawk.web.user.UserSummaryServlet;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.hibernate.criterion.Restrictions;
 
@@ -53,6 +53,7 @@ public class AddTransactionServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Account account;
+        Transaction t;
         try {
             // Begin unit of work
             HibernateUtil.getSessionFactory().getCurrentSession().beginTransaction();
@@ -70,7 +71,7 @@ public class AddTransactionServlet extends HttpServlet {
 
             account = Account.findById(accountId);
 
-            Transaction t = new Transaction();
+            t = new Transaction();
             t.setEffectiveDate(date);
             t.setAmount(amount);
             t.setDescription(description);
@@ -86,9 +87,10 @@ public class AddTransactionServlet extends HttpServlet {
         }
 
         if(account == null) {
-            response.sendRedirect(request.getContextPath() + servletPath(UserSummaryServlet.class));
+            response.sendRedirect(request.getContextPath() + servletPath(WelcomeServlet.class));
         } else {
-            response.sendRedirect(request.getContextPath() + servletPath(UserSummaryServlet.class) + "?id=" + account.getId());
+            response.sendRedirect(request.getContextPath() + servletPath(AccountServlet.class) +
+                    "?id=" + account.getId() + "&relDate=" + AccountServlet.formatter.format(DateUtil.asLocalDate(t.getEffectiveDate())));
         }
     }
 }
