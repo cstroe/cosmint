@@ -4,8 +4,11 @@ A webapp to watch your spending like a hawk.
 
 ## Running SpendHawk
 
-SpendHawk requires Java 8 installed.  The commands were tested on a Debian Linux
-system.
+SpendHawk requires 
+<a href="http://www.webupd8.org/2012/09/install-oracle-java-8-in-ubuntu-via-ppa.html">Java 8</a> 
+installed.  The commands were tested on a Debian-based Linux system (my personal
+recommendation is <a href="http://www.linuxmint.com/edition.php?id=174">Linux Mint Mate Edition</a>).
+It also runs well in a <a href="https://www.virtualbox.org">Virtual Machine</a>.
 
 1. Clone the SpendHawk repository somewhere on your computer:
 
