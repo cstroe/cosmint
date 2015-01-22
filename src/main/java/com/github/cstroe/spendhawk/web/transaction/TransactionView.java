@@ -2,6 +2,7 @@ package com.github.cstroe.spendhawk.web.transaction;
 
 import com.github.cstroe.spendhawk.entity.Account;
 import com.github.cstroe.spendhawk.entity.Transaction;
+import com.github.cstroe.spendhawk.util.DateUtil;
 import com.github.cstroe.spendhawk.util.HibernateUtil;
 import com.github.cstroe.spendhawk.web.AccountServlet;
 
@@ -11,6 +12,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Date;
 
 import static com.github.cstroe.spendhawk.util.ServletUtil.servletPath;
 
@@ -46,6 +48,7 @@ public class TransactionView extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Account account;
+        Date effectiveDate;
         try {
             String transactionIdRaw = request.getParameter("id");
             if(transactionIdRaw != null) {
@@ -56,6 +59,7 @@ public class TransactionView extends HttpServlet {
                 if(transaction == null) {
                     throw new IllegalArgumentException("Transaction not found.");
                 }
+                effectiveDate = transaction.getEffectiveDate();
                 account = transaction.getAccount();
                 transaction.delete();
             } else {
@@ -68,6 +72,7 @@ public class TransactionView extends HttpServlet {
             throw new ServletException(ex);
         }
 
-        response.sendRedirect(request.getContextPath() + servletPath(AccountServlet.class) + "?id=" + account.getId());
+        response.sendRedirect(request.getContextPath() + servletPath(AccountServlet.class) +
+                "?id=" + account.getId() + "&relDate=" + AccountServlet.formatter.format(DateUtil.asLocalDate(effectiveDate)));
     }
 }
