@@ -5,6 +5,7 @@ import org.hibernate.criterion.Restrictions;
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 /**
  * <p>
@@ -110,5 +111,17 @@ public class Transaction {
                 .createCriteria(Transaction.class)
                 .add(Restrictions.eq("id", id))
                 .uniqueResult();
+    }
+
+    /**
+     * Allows searching of transactions by description.
+     */
+    @SuppressWarnings("unchecked")
+    public static List<Transaction> findByString(Account account, String query) {
+        return (List<Transaction>) HibernateUtil.getSessionFactory().getCurrentSession()
+                .createCriteria(Transaction.class)
+                .add(Restrictions.eq("account", account))
+                .add(Restrictions.ilike("description", query))
+                .list();
     }
 }

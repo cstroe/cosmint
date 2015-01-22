@@ -1,0 +1,15 @@
+<#assign page_title="Search Transactions">
+
+<#include "/template/layouts/global_header.ftl"/>
+
+${account.name}<br/>
+Balance: ${account.balance}<br/>
+
+<div class="accountnav">
+    <a class="navlink" href="/spendhawk/account?id=${account.id}&relDate=currentMonth">
+        <img class="navbutton" src="/spendhawk/images/previous.svg"/>Back to Account
+    </a>
+</div>
+
+<#include "/template/accounts/transactions_table.ftl"/>
+<#include "/template/layouts/global_footer.ftl"/>
