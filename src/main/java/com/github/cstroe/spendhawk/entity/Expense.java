@@ -59,4 +59,7 @@ public class Expense {
         return id != null;
     }
 
+    public void delete() {
+        HibernateUtil.getSessionFactory().getCurrentSession().delete(this);
+    }
 }

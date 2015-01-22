@@ -1,6 +1,7 @@
 package com.github.cstroe.spendhawk.web.transaction;
 
 import com.github.cstroe.spendhawk.entity.Account;
+import com.github.cstroe.spendhawk.entity.Expense;
 import com.github.cstroe.spendhawk.entity.Transaction;
 import com.github.cstroe.spendhawk.util.DateUtil;
 import com.github.cstroe.spendhawk.util.HibernateUtil;
@@ -61,6 +62,10 @@ public class TransactionView extends HttpServlet {
                 }
                 effectiveDate = transaction.getEffectiveDate();
                 account = transaction.getAccount();
+
+                for(Expense expense : transaction.getExpenses()) {
+                    expense.delete();
+                }
                 transaction.delete();
             } else {
                 throw new IllegalAccessException("Transaction id is required.");
