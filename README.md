@@ -47,6 +47,8 @@ temporary directory for our standalone WildFly server and start the server:
   mvn wildfly:run -Dwildfly.deployment.targetDir=wildfly
   ```
   
+  NOTE: If you would like to attach a debugger to the WildFly server, see below.
+  
   The reason for creating a separate directory for the wildfly server is so that
   we can clean, rebuild, and redeploy the application without having to restart 
   the WildFly server that is running.
@@ -68,3 +70,16 @@ temporary directory for our standalone WildFly server and start the server:
   ```
   
   to redeploy the application and see your changes.
+  
+## Debugging
+
+To debug SpendHawk, you need to start the WildFly server with a listening debugger
+session.  Use the following command instead of the normal one from step 3 above:
+
+  ```
+  mvn wildfly:run -Dwildfly.deployment.targetDir=wildfly \
+  -Dwildfly.jvmArgs="-Xms64m -Xmx512m -XX:MaxPermSize=256m -Djava.net.preferIPv4Stack=true -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8787"
+  ```
+  
+  WildFly will open a debugging port at 8787 to which you can connect from your
+  IDE.
