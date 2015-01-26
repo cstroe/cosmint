@@ -11,11 +11,11 @@
 
         <!-- properties declared using Hibernate mapping types -->
         <property name="name" type="string" column="NAME"/>
-        <set name="accounts" inverse="true">
+        <set name="accounts" inverse="true" order-by="name">
             <key column="USER_ID"/>
             <one-to-many class="Account"/>
         </set>
-        <set name="categories" inverse="true">
+        <set name="categories" inverse="true" order-by="name">
             <key column="USER_ID"/>
             <one-to-many class="Category"/>
         </set>
