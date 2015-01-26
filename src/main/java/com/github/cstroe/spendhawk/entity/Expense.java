@@ -1,6 +1,9 @@
 package com.github.cstroe.spendhawk.entity;
 
 import com.github.cstroe.spendhawk.util.HibernateUtil;
+import org.hibernate.criterion.Restrictions;
+
+import java.util.List;
 
 /**
  * A categorized expenditure.
@@ -61,5 +64,13 @@ public class Expense {
 
     public void delete() {
         HibernateUtil.getSessionFactory().getCurrentSession().delete(this);
+    }
+
+    @SuppressWarnings("unchecked")
+    public static List<Expense> findByCategory(Category category) {
+        return (List<Expense>) HibernateUtil.getSessionFactory().getCurrentSession()
+                .createCriteria(Expense.class)
+                .add(Restrictions.eq("category", category))
+                .list();
     }
 }
