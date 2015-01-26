@@ -1,7 +1,6 @@
 package com.github.cstroe.spendhawk.web.transaction;
 
 import com.github.cstroe.spendhawk.entity.Account;
-import com.github.cstroe.spendhawk.entity.Transaction;
 import com.github.cstroe.spendhawk.util.HibernateUtil;
 import org.hibernate.Session;
 
@@ -20,7 +19,6 @@ public class TransactionSearchServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String searchString = req.getParameter("q");
-        searchString = "%" + searchString + "%";
         String accountId = req.getParameter("account.id");
 
         Session currentSession = HibernateUtil.getSessionFactory().getCurrentSession();
@@ -28,7 +26,7 @@ public class TransactionSearchServlet extends HttpServlet {
             currentSession.beginTransaction();
             Account account = Account.findById(Long.parseLong(accountId));
             req.setAttribute("account", account);
-            req.setAttribute("transactions", Transaction.findByString(account, searchString));
+            req.setAttribute("transactions", account.findTransactions(searchString));
             req.getRequestDispatcher(TEMPLATE).forward(req,resp);
             currentSession.getTransaction().commit();
         } catch(Exception ex) {

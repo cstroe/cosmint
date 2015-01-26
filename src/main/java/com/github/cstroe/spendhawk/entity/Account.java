@@ -1,11 +1,13 @@
 package com.github.cstroe.spendhawk.entity;
 
 import com.github.cstroe.spendhawk.util.HibernateUtil;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 /**
  * <p>
@@ -63,6 +65,11 @@ public class Account implements Comparable<Account> {
         this.transactions = transactions;
     }
 
+    @Override
+    public String toString() {
+        return "Account " + name;
+    }
+
     /**
      * @return The balance of the account as of the current date and time.
      */
@@ -87,5 +94,20 @@ public class Account implements Comparable<Account> {
     @Override
     public int compareTo(@Nonnull Account o) {
         return this.getName().compareTo(o.getName());
+    }
+
+    /**
+     * Find transactions whose description match the search string.
+     * @param query SQL LIKE parameter
+     */
+    @SuppressWarnings("unchecked")
+    public List<Transaction> findTransactions(String query) {
+        query = "%" + query + "%";
+        return (List<Transaction>) HibernateUtil.getSessionFactory().getCurrentSession()
+                .createCriteria(Transaction.class)
+                .add(Restrictions.eq("account", this))
+                .add(Restrictions.ilike("description", query))
+                .addOrder(Order.desc("effectiveDate"))
+                .list();
     }
 }
