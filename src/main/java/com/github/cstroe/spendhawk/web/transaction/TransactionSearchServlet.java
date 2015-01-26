@@ -26,6 +26,7 @@ public class TransactionSearchServlet extends HttpServlet {
             currentSession.beginTransaction();
             Account account = Account.findById(Long.parseLong(accountId));
             req.setAttribute("account", account);
+            req.setAttribute("query", searchString);
             req.setAttribute("transactions", account.findTransactions(searchString));
             req.getRequestDispatcher(TEMPLATE).forward(req,resp);
             currentSession.getTransaction().commit();

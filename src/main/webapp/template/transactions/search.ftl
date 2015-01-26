@@ -9,6 +9,9 @@ Balance: ${account.balance}<br/>
     <a class="navlink" href="/spendhawk/account?id=${account.id}&relDate=currentMonth">
         <img class="navbutton" src="/spendhawk/images/previous.svg"/>Back to Account
     </a>
+    <a class="navlink" href="/spendhawk/category/bulk?account.id=${account.id}&q=${query}">
+        <img class="navbutton" src="/spendhawk/images/add.svg">Bulk Categorization
+    </a>
 </div>
 
 <#include "/template/accounts/transactions_table.ftl"/>

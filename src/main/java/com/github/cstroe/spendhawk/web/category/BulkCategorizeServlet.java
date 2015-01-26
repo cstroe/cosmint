@@ -27,6 +27,7 @@ public class BulkCategorizeServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Long accountId = Long.parseLong(req.getParameter("account.id"));
+        String queryString = req.getParameter("q");
         try {
             HibernateUtil.getSessionFactory().getCurrentSession().beginTransaction();
             Account account = Account.findById(accountId);
@@ -36,6 +37,7 @@ public class BulkCategorizeServlet extends HttpServlet {
 
             User user = account.getUser();
             req.setAttribute("account", account);
+            req.setAttribute("query", queryString);
             req.setAttribute("categories", user.getCategories());
             req.getRequestDispatcher(CONFIGURE_TEMPLATE).forward(req,resp);
             // End unit of work

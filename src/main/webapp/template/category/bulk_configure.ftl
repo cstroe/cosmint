@@ -7,7 +7,7 @@
 Account: ${account.name}<br/>
 
 <form method="post">
-    Search string:<input type="text" name="q"/><br/>
+    Search string:<input type="text" name="q"/ value="${query!""}"><br/>
     Category to apply:
     <select name="category.id">
         <#list categories as category>
