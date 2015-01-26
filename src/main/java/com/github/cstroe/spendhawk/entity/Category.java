@@ -44,6 +44,10 @@ public class Category {
         return id != null;
     }
 
+    public void delete() {
+        HibernateUtil.getSessionFactory().getCurrentSession().delete(this);
+    }
+
     @SuppressWarnings("unchecked")
     public static List<Category> findAll() {
         return (List<Category>) HibernateUtil.getSessionFactory().getCurrentSession()
