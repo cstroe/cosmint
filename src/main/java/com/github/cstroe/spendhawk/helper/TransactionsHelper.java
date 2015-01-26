@@ -1,6 +1,8 @@
 package com.github.cstroe.spendhawk.helper;
 
 import com.github.cstroe.spendhawk.entity.Account;
+import com.github.cstroe.spendhawk.entity.Category;
+import com.github.cstroe.spendhawk.entity.Expense;
 import com.github.cstroe.spendhawk.entity.Transaction;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
@@ -130,5 +132,45 @@ public class TransactionsHelper {
         }
 
         return messages;
+    }
+
+    /**
+     * Creates expenses for the given transactions with the given category.  The
+     * expense amount will be the entire amount of the Transaction.
+     *
+     * @param duplicateCheck If true, checks to see if an expense with the given
+     *                       category already exists.  If the expense exists, it
+     *                       will not enter another expense with the same category.
+     */
+    public static List<Transaction> createExpenses(List<Transaction> transactions, Category category, String merchant, boolean duplicateCheck, boolean persist) {
+        for(Transaction currentTransaction : transactions) {
+            boolean expenseExists = false;
+            if(duplicateCheck) {
+                for (Expense currentExpense : currentTransaction.getExpenses()) {
+                    if (currentExpense.getCategory().getId().equals(category.getId())) {
+                        expenseExists = true;
+                        break;
+                    }
+                }
+            }
+
+            if(expenseExists) {
+                continue;
+            }
+
+            Expense newExpense = new Expense();
+            newExpense.setAmount(currentTransaction.getAmount());
+            newExpense.setCategory(category);
+            newExpense.setTransaction(currentTransaction);
+            newExpense.setMerchant(merchant);
+            if(persist) {
+                newExpense.save();
+            } else {
+                // just for preview purposes
+                currentTransaction.getExpenses().add(newExpense);
+            }
+        }
+
+        return transactions;
     }
 }

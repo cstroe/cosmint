@@ -12,6 +12,9 @@
     <a class="navlink" href="/spendhawk/transactions/upload?id=${account.id}">
         <img class="navbutton" src="/spendhawk/images/upload.svg">Upload Transactions
     </a>
+    <a class="navlink" href="/spendhawk/category/bulk?account.id=${account.id}">
+        <img class="navbutton" src="/spendhawk/images/add.svg">Bulk Categorization
+    </a>
 </div>
 
 ${account.name}<br/>
