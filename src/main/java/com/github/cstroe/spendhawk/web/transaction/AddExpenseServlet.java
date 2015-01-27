@@ -30,7 +30,7 @@ public class AddExpenseServlet extends HttpServlet {
 
             Transaction transaction = Transaction.findById(Long.parseLong(transactionId));
             req.setAttribute("transaction", transaction);
-            req.setAttribute("categories", Category.findAll());
+            req.setAttribute("categories", Category.findAll(transaction.getAccount().getUser()));
             req.getRequestDispatcher(TEMPLATE).forward(req, resp);
 
             // End unit of work
@@ -55,7 +55,8 @@ public class AddExpenseServlet extends HttpServlet {
 
             if("store".equals(action)) {
                 Transaction transaction = Transaction.findById(Long.parseLong(transactionId));
-                Category category = Category.findById(Long.parseLong(categoryId));
+                Category category =
+                        Category.findById(transaction.getAccount().getUser(), Long.parseLong(categoryId));
                 Double amount = Double.parseDouble(amountRaw);
 
                 Expense newExpense = new Expense();
@@ -72,7 +73,7 @@ public class AddExpenseServlet extends HttpServlet {
                 } else {
                     req.setAttribute("message", "Could not add expense.");
                     req.setAttribute("transaction", transaction);
-                    req.setAttribute("categories", Category.findAll());
+                    req.setAttribute("categories", Category.findAll(transaction.getAccount().getUser()));
                     req.getRequestDispatcher(TEMPLATE).forward(req, resp);
                 }
             }

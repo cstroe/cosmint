@@ -69,7 +69,7 @@ public class BulkCategorizeServlet extends HttpServlet {
             HibernateUtil.getSessionFactory().getCurrentSession().beginTransaction();
 
             Account account = Account.findById(accountId);
-            Category category = Category.findById(categoryId);
+            Category category = Category.findById(account.getUser(), categoryId);
 
             List<Transaction> transactions = account.findTransactions(query);
 
@@ -102,7 +102,7 @@ public class BulkCategorizeServlet extends HttpServlet {
             HibernateUtil.getSessionFactory().getCurrentSession().beginTransaction();
 
             Account account = Account.findById(accountId);
-            Category category = Category.findById(categoryId);
+            Category category = Category.findById(account.getUser(), categoryId);
 
             List<Transaction> transactions = account.findTransactions(query);
             TransactionsHelper.createExpenses(transactions, category, merchant, duplicateCheck, true);

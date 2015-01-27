@@ -49,9 +49,10 @@ public class Category {
     }
 
     @SuppressWarnings("unchecked")
-    public static List<Category> findAll() {
+    public static List<Category> findAll(User currentUser) {
         return (List<Category>) HibernateUtil.getSessionFactory().getCurrentSession()
                 .createCriteria(Category.class)
+                .add(Restrictions.eq("user", currentUser))
                 .addOrder(Order.asc("name"))
                 .list();
     }
@@ -60,6 +61,14 @@ public class Category {
         return (Category) HibernateUtil.getSessionFactory().getCurrentSession()
                 .createCriteria(Category.class)
                 .add(Restrictions.eq("id", id))
+                .uniqueResult();
+    }
+
+    public static Category findById(User currentUser, Long id) {
+        return (Category) HibernateUtil.getSessionFactory().getCurrentSession()
+                .createCriteria(Category.class)
+                .add(Restrictions.eq("id", id))
+                .add(Restrictions.eq("user", currentUser))
                 .uniqueResult();
     }
 
