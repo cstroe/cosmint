@@ -5,6 +5,7 @@ import com.github.cstroe.spendhawk.entity.User;
 import com.github.cstroe.spendhawk.util.HibernateUtil;
 import com.github.cstroe.spendhawk.web.user.UserSummaryServlet;
 import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -53,6 +54,14 @@ public class CategoryManagerServlet extends HttpServlet {
             User currentUser = User.findById(Long.parseLong(userId));
 
             if("store".equals(action)) {
+                if(StringUtils.isBlank(categoryName)) {
+                    req.setAttribute("message", "Category name is blank.");
+                    req.setAttribute("user", currentUser);
+                    req.getRequestDispatcher(TEMPLATE).forward(req, resp);
+                    HibernateUtil.getSessionFactory().getCurrentSession().getTransaction().rollback();
+                    return;
+                }
+
                 Category newCategory = new Category();
                 newCategory.setName(categoryName);
                 newCategory.setUser(currentUser);
