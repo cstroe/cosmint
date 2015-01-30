@@ -4,6 +4,7 @@ import com.github.cstroe.spendhawk.entity.Account;
 import com.github.cstroe.spendhawk.entity.Category;
 import com.github.cstroe.spendhawk.entity.Transaction;
 import com.github.cstroe.spendhawk.entity.User;
+import com.github.cstroe.spendhawk.helper.TListTotaler;
 import com.github.cstroe.spendhawk.helper.TransactionsHelper;
 import com.github.cstroe.spendhawk.util.HibernateUtil;
 import com.github.cstroe.spendhawk.web.AccountServlet;
@@ -81,7 +82,8 @@ public class BulkCategorizeServlet extends HttpServlet {
             req.setAttribute("q", query);
             req.setAttribute("duplicateCheck", duplicateCheck ? "yes" : "no");
             req.setAttribute("merchant", merchant);
-            req.setAttribute("transactions", updatedTransactions);
+            req.setAttribute("transactions",updatedTransactions);
+            req.setAttribute("totaler", new TListTotaler(updatedTransactions));
             req.getRequestDispatcher(PREVIEW_TEMPLATE).forward(req, resp);
 
             HibernateUtil.getSessionFactory().getCurrentSession().getTransaction().commit();

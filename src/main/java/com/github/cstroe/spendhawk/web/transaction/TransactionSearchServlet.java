@@ -1,6 +1,8 @@
 package com.github.cstroe.spendhawk.web.transaction;
 
 import com.github.cstroe.spendhawk.entity.Account;
+import com.github.cstroe.spendhawk.entity.Transaction;
+import com.github.cstroe.spendhawk.helper.TListTotaler;
 import com.github.cstroe.spendhawk.util.HibernateUtil;
 import org.hibernate.Session;
 
@@ -10,6 +12,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Collection;
 
 @WebServlet("/transaction/search")
 public class TransactionSearchServlet extends HttpServlet {
@@ -17,7 +20,9 @@ public class TransactionSearchServlet extends HttpServlet {
     private static final String TEMPLATE = "/template/transactions/search.ftl";
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException
+    {
         String searchString = req.getParameter("q");
         String accountId = req.getParameter("account.id");
 
@@ -27,7 +32,9 @@ public class TransactionSearchServlet extends HttpServlet {
             Account account = Account.findById(Long.parseLong(accountId));
             req.setAttribute("account", account);
             req.setAttribute("query", searchString);
-            req.setAttribute("transactions", account.findTransactions(searchString));
+            Collection<Transaction> tList = account.findTransactions(searchString);
+            req.setAttribute("transactions", tList);
+            req.setAttribute("totaler", new TListTotaler(tList));
             req.getRequestDispatcher(TEMPLATE).forward(req,resp);
             currentSession.getTransaction().commit();
         } catch(Exception ex) {

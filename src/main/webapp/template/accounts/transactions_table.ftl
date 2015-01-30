@@ -3,8 +3,8 @@
         <th>Date</th>
         <th>Description</th>
         <th>Amount</th>
-        <th>Notes</th>
         <th>Categories</th>
+        <th>Notes</th>
     </tr>
 
 <#list transactions as transaction>
@@ -16,13 +16,20 @@
             </a>
         </td>
         <td style="text-align: right;">${transaction.amount?string["0.00"]}</td>
-        <td>${transaction.notes!""}</td>
         <td style="font-size: 75%;">
             <#list transaction.expenses as expense>
                 <span style="color: white; background-color: RoyalBlue; border-radius: 5px; border: solid RoyalBlue 1px; padding: 1px;">${expense.category.name}</span> (${expense.amount})
             </#list>
         </td>
+        <td>${transaction.notes!""}</td>
     </tr>
 </#list>
+    <tr>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td style="text-align: right;">${totaler.total}</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+    </tr>
 
 </table>
