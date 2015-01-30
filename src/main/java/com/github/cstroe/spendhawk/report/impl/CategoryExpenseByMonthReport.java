@@ -3,8 +3,10 @@ package com.github.cstroe.spendhawk.report.impl;
 import com.github.cstroe.spendhawk.entity.Category;
 import com.github.cstroe.spendhawk.entity.Expense;
 import com.github.cstroe.spendhawk.report.ReportParameter;
+import com.github.cstroe.spendhawk.report.ReportParameter.ReportParameterType;
 import com.github.cstroe.spendhawk.report.ReportResult;
 import com.github.cstroe.spendhawk.report.ReportRunner;
+import com.github.cstroe.spendhawk.util.DateUtil;
 import com.github.cstroe.spendhawk.util.HibernateUtil;
 import org.hibernate.criterion.Restrictions;
 
@@ -22,9 +24,9 @@ public class CategoryExpenseByMonthReport implements ReportRunner {
 
     public CategoryExpenseByMonthReport() {
         List<ReportParameter> parameters = new LinkedList<>();
-        parameters.add(new ReportParameter("category", "Category", ReportParameter.ReportParameterType.CATEGORY));
-        parameters.add(new ReportParameter("startDate", "Start Date", ReportParameter.ReportParameterType.DATE));
-        parameters.add(new ReportParameter("endDate", "End Date", ReportParameter.ReportParameterType.DATE));
+        parameters.add(rp("category", "Category", ReportParameterType.CATEGORY));
+        parameters.add(rp("startDate", "Start Date", ReportParameterType.DATE));
+        parameters.add(rp("endDate", "End Date", ReportParameterType.DATE));
         reportParameters = Collections.unmodifiableList(parameters);
     }
 
@@ -35,7 +37,8 @@ public class CategoryExpenseByMonthReport implements ReportRunner {
 
     @Override
     public String getHelpfulDescription() {
-        return "Calculates the expense for a single category starting from a start date to and end date.";
+        return "Calculates the expense for a single category starting from a " +
+               "start date to and end date.";
     }
 
     @Override
@@ -63,17 +66,20 @@ public class CategoryExpenseByMonthReport implements ReportRunner {
         Date startDate = dateFormatter.parse(startDateParam.getValue());
         Date endDate = dateFormatter.parse(endDateParam.getValue());
 
+        // move date up by one day to make search inclusive to end date
+        endDate = DateUtil.addDays(endDate, 1);
+
         @SuppressWarnings("unchecked")
-        List<Expense> expenses = (List<Expense>) HibernateUtil.getSessionFactory().getCurrentSession()
+        List<Expense> expenses =
+            (List<Expense>) HibernateUtil.getSessionFactory().getCurrentSession()
                 .createCriteria(Expense.class)
                 .add(Restrictions.eq("category", c))
+                .createCriteria("transaction")
+                    .add(Restrictions.ge("effectiveDate", startDate))
+                    .add(Restrictions.lt("effectiveDate", endDate))
                 .list();
 
-        Double sum = expenses.stream()
-            .filter(ex ->
-                ex.getTransaction().getEffectiveDate().after(startDate) &&
-                ex.getTransaction().getEffectiveDate().before(endDate))
-            .mapToDouble(Expense::getAmount).sum();
+        Double sum = expenses.stream().mapToDouble(Expense::getAmount).sum();
 
         result.setCell(0, 0, c.getName());
         result.setCell(0, 1, Double.toString(sum));

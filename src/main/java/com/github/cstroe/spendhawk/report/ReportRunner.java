@@ -27,4 +27,10 @@ public interface ReportRunner {
     public void runReport() throws Exception;
 
     public ReportResult getResult();
+
+    /** Helper method to make code shorter. */
+    default ReportParameter rp(String id, String displayName, ReportParameter.ReportParameterType type) {
+        return new ReportParameter(id, displayName, type);
+    }
+
 }
