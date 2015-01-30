@@ -1,5 +1,6 @@
 package com.github.cstroe.spendhawk.web;
 
+import com.github.cstroe.spendhawk.web.category.CategoryManagerServlet;
 import com.github.cstroe.spendhawk.web.user.UserManagerServlet;
 import com.github.cstroe.spendhawk.web.user.UserSummaryServlet;
 import com.github.cstroe.spendhawk.web.user.UsersServlet;
@@ -107,10 +108,10 @@ public class BasicFeaturesIT {
             .asString();
         assertResponseStatus(302, response);
 
-        // location header takes you to accounts page for that user
         String redirectUrl = response.getHeaders().getFirst("location");
         String urlPath = new URL(redirectUrl).getPath();
-        assertTrue(urlPath.startsWith(fullServletPath(UserSummaryServlet.class)));
+        assertTrue("Creating a user should take you to the summary page for that user.",
+                urlPath.startsWith(fullServletPath(UserSummaryServlet.class)));
 
         String viewUsersUrl = url(UsersServlet.class);
         response = Unirest.get(viewUsersUrl).asString();
@@ -168,6 +169,48 @@ public class BasicFeaturesIT {
                 findLink(doc, fullServletPath(AccountServlet.class)) );
     }
 
+    @Test
+    @RunAsClient
+    @InSequence(700)
+    public void shouldBeAbleToAddCategory() throws Exception {
+        response = connect(CategoryManagerServlet.class,
+                "user.id", Long.toString(userId));
+        assertResponseStatus(200, response);
+
+        Document doc = Jsoup.parse(response.getBody());
+        Elements forms = doc.getElementsByTag("form");
+        assertThat("A form must exist on the category management page.", forms.size(), is(1));
+
+        response = Unirest.post(url(CategoryManagerServlet.class))
+            .field("user.id", userId)
+            .field("category.name", "New Category")
+            .field("action", "store")
+            .asString();
+
+        assertResponseStatus(302, response);
+
+        String redirectUrl = response.getHeaders().getFirst("location");
+        String urlPath = new URL(redirectUrl).getPath();
+        assertTrue("Creating a category should take you to the summary page for that user.",
+                urlPath.startsWith(fullServletPath(UserSummaryServlet.class)));
+    }
+    @Test
+    @RunAsClient
+    @InSequence(800)
+    public void shouldNotAddBlankCategory() throws Exception {
+        response = Unirest.post(url(CategoryManagerServlet.class))
+                .field("user.id", userId)
+                .field("action", "store")
+                .asString();
+
+        assertResponseStatus(200, response);
+
+        Document doc = Jsoup.parse(response.getBody());
+        Element errorMessage = doc.getElementById("errorMessage");
+        assertThat("The error must be described to the user.",
+                errorMessage.ownText().trim(),
+                is("Category name is blank."));
+    }
     /**
      * Add the deployment context path to a servlet's path to create an absolute path.
      *
@@ -191,6 +234,18 @@ public class BasicFeaturesIT {
     private HttpResponse<String> connect(Class<? extends HttpServlet> servlet) {
         try {
             return Unirest.get(url(servlet)).asString();
+        } catch (UnirestException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    /**
+     * A helper method to connect to a specific servlet on the test deployment.
+     */
+    private HttpResponse<String> connect(Class<? extends HttpServlet> servlet, String... params) {
+        try {
+            return Unirest.get(url(servlet, params)).asString();
         } catch (UnirestException e) {
             e.printStackTrace();
             return null;
