@@ -3,7 +3,7 @@
 
 <a href="/spendhawk/accounts?user.id=${user.id}">Back to User Summary</a>
 
-<p style="color: red;">
+<p id="errorMessage" style="color: red;">
 ${message!""}
 </p>
 
