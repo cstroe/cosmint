@@ -31,7 +31,7 @@ public class UserManagerServlet extends HttpServlet {
         if("Add User".equals(action)) {
             User newUser = doAddUser(request);
             if(newUser != null) {
-                response.sendRedirect(request.getContextPath() + servletPath(UserSummaryServlet.class) + "?id=" + newUser.getId());
+                response.sendRedirect(request.getContextPath() + servletPath(UserSummaryServlet.class) + "?user.id=" + newUser.getId());
             } else {
                 request.getRequestDispatcher(TEMPLATE).forward(request, response);
             }
