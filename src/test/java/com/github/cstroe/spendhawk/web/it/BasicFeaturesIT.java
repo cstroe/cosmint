@@ -112,9 +112,10 @@ public class BasicFeaturesIT {
         assertResponseStatus(302, response);
 
         String redirectUrl = response.getHeaders().getFirst("location");
-        String urlPath = new URL(redirectUrl).getPath();
+        URL url = new URL(redirectUrl);
         assertTrue("Creating a user should take you to the summary page for that user.",
-                urlPath.startsWith(fullServletPath(UserSummaryServlet.class)));
+                url.getPath().startsWith(fullServletPath(UserSummaryServlet.class)) &&
+                url.getQuery().contains("user.id="));
 
         String viewUsersUrl = url(UsersServlet.class);
         response = Unirest.get(viewUsersUrl).asString();
