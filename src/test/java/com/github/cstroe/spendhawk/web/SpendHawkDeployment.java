@@ -31,9 +31,6 @@ public class SpendHawkDeployment {
                 "/", Filters.includeAll());
         war.addPackages(true,
                 new AggregateFilter(
-                        Filters.exclude(".*Test\\.class"),
-                        Filters.exclude(".*IT\\.class"),
-                        Filters.exclude(".*/testutil/.*"),
                         Filters.exclude(".*/SpendHawkDeployment\\.class")
                 ), SpendHawk.class.getPackage());
 
@@ -47,8 +44,7 @@ public class SpendHawkDeployment {
 
         WebArchive hibernate = ShrinkWrap.create(WebArchive.class)
             .as(ExplodedImporter.class)
-            .importDirectory(TEST_RESOURCES_SRC, Filters.include(".*/hibernate.cfg.xml"))
-            .as(WebArchive.class);
+            .importDirectory(TEST_RESOURCES_SRC).as(WebArchive.class);
 
         war.merge(hibernate, "/WEB-INF/classes", Filters.includeAll());
 
@@ -58,7 +54,8 @@ public class SpendHawkDeployment {
                         "org.hsqldb:hsqldb",
                         "org.hibernate:hibernate-core",
                         "org.apache.commons:commons-lang3",
-                        "org.apache.commons:commons-csv"
+                        "org.apache.commons:commons-csv",
+                        "org.dbunit:dbunit"
                 ).withTransitivity().asFile();
 
         war.addAsLibraries(files);
