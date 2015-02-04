@@ -15,6 +15,19 @@ import java.text.SimpleDateFormat;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * The transactions helper parses CSV files of transactions.
+ *
+ * Currently supported formats are:
+ * <ul>
+ *     <li>Chase: (Type,Date,Description,Amount,Check or Slip #)</li>
+ *     <li>Capital One: (Date,Account No.,Description,Debit Amount,Credit Amount)</li>
+ * </ul>
+ *
+ * Each of these is mapped to our {@link com.github.cstroe.spendhawk.entity.Transaction Transaction} class.
+ *
+ * Also, creates expenses for a set of transactions.
+ */
 public class TransactionsHelper {
 
     public static final String CHASE = "chase";
