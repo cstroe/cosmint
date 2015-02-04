@@ -84,6 +84,13 @@ public class Account implements Comparable<Account> {
                 .sum();
     }
 
+    @SuppressWarnings("unchecked")
+    public static List<Account> findAll() {
+        return (List<Account>) HibernateUtil.getSessionFactory().getCurrentSession()
+            .createCriteria(Account.class)
+            .list();
+    }
+
     public static Account findById(Long id) {
         return (Account) HibernateUtil.getSessionFactory().getCurrentSession()
             .createCriteria(Account.class)

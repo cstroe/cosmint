@@ -1,5 +1,8 @@
-package com.github.cstroe.spendhawk.web;
+package com.github.cstroe.spendhawk.web.it;
 
+import com.github.cstroe.spendhawk.web.AccountManagerServlet;
+import com.github.cstroe.spendhawk.web.AccountServlet;
+import com.github.cstroe.spendhawk.web.WelcomeServlet;
 import com.github.cstroe.spendhawk.web.category.CategoryManagerServlet;
 import com.github.cstroe.spendhawk.web.user.UserManagerServlet;
 import com.github.cstroe.spendhawk.web.user.UserSummaryServlet;
