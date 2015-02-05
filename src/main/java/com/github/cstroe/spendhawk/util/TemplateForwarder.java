@@ -2,6 +2,9 @@ package com.github.cstroe.spendhawk.util;
 
 import javax.servlet.http.HttpServletRequest;
 
+/**
+ * A utility class used to create well formed urls to be inserted in our templates.
+ */
 public class TemplateForwarder {
     String contextPath0;
     String contextPath;
