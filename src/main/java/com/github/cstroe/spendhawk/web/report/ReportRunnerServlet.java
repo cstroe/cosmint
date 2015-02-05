@@ -2,8 +2,9 @@ package com.github.cstroe.spendhawk.web.report;
 
 import com.github.cstroe.spendhawk.entity.User;
 import com.github.cstroe.spendhawk.report.ReportFormGenerator;
+import com.github.cstroe.spendhawk.report.ReportResultRenderer;
 import com.github.cstroe.spendhawk.report.ReportRunner;
-import com.github.cstroe.spendhawk.report.impl.PreformattedTextRenderer;
+import com.github.cstroe.spendhawk.report.impl.TableRenderer;
 import com.github.cstroe.spendhawk.util.HibernateUtil;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.reflections.Reflections;
@@ -70,7 +71,7 @@ public class ReportRunnerServlet extends HttpServlet {
 
                 report.runReport();
 
-                PreformattedTextRenderer renderer = new PreformattedTextRenderer(report.getResult());
+                ReportResultRenderer renderer = new TableRenderer(report.getResult());
 
                 req.setAttribute("user", User.findById(Long.parseLong(userId)));
                 req.setAttribute("renderer", renderer);
