@@ -3,6 +3,9 @@ package com.github.cstroe.spendhawk.report.impl;
 import com.github.cstroe.spendhawk.report.ReportResult;
 import com.github.cstroe.spendhawk.report.ReportResultRenderer;
 
+/**
+ * Renders a result as an HTML table.
+ */
 public class TableRenderer implements ReportResultRenderer {
 
     private final ReportResult result;
