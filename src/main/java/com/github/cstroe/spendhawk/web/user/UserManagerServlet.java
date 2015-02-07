@@ -1,21 +1,25 @@
 package com.github.cstroe.spendhawk.web.user;
 
+import com.github.cstroe.spendhawk.bean.UserManagerBean;
 import com.github.cstroe.spendhawk.entity.User;
-import com.github.cstroe.spendhawk.util.HibernateUtil;
 import org.apache.commons.lang3.StringEscapeUtils;
-import org.hibernate.Session;
 
+import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Optional;
 
 import static com.github.cstroe.spendhawk.util.ServletUtil.servletPath;
 
 @WebServlet("/users/manage")
 public class UserManagerServlet extends HttpServlet {
+
+    @EJB
+    private UserManagerBean userManager;
 
     private static final String TEMPLATE = "/template/user/manager.ftl";
 
@@ -29,40 +33,17 @@ public class UserManagerServlet extends HttpServlet {
         String action = request.getParameter("action");
 
         if("Add User".equals(action)) {
-            User newUser = doAddUser(request);
-            if(newUser != null) {
-                response.sendRedirect(request.getContextPath() + servletPath(UserSummaryServlet.class) + "?user.id=" + newUser.getId());
+            String username = StringEscapeUtils.escapeHtml4(request.getParameter("user.name"));
+            Optional<User> newUser = userManager.addUser(username);
+            if(newUser.isPresent()) {
+                response.sendRedirect(request.getContextPath() +
+                    servletPath(UserSummaryServlet.class, "user.id", newUser.get().getId()));
             } else {
+                request.setAttribute("message", userManager.getMessage());
                 request.getRequestDispatcher(TEMPLATE).forward(request, response);
             }
         } else {
             request.getRequestDispatcher(TEMPLATE).forward(request, response);
-        }
-    }
-
-    /**
-     * @return null if there was an error
-     */
-    private User doAddUser(HttpServletRequest request) {
-        String username = StringEscapeUtils.escapeHtml4(request.getParameter("user.name"));
-
-        if(username == null || username.isEmpty()) {
-            request.setAttribute("message", "User name is empty.");
-            return null;
-        }
-
-        User newUser = new User();
-        newUser.setName(username);
-
-        Session currentSession = HibernateUtil.getSessionFactory().getCurrentSession();
-        try {
-            currentSession.beginTransaction();
-            currentSession.save(newUser);
-            currentSession.getTransaction().commit();
-            return newUser;
-        } catch(Exception ex) {
-            currentSession.getTransaction().rollback();
-            throw ex;
         }
     }
 }
