@@ -125,6 +125,14 @@
         </dependency>
 
         <dependency>
+            <!-- Enterprise Java Beans (EJB) ... woo!
+                 Provided by WildFly -->
+            <groupId>org.jboss.spec.javax.ejb</groupId>
+            <artifactId>jboss-ejb-api_3.2_spec</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
             <version>3.3.2</version>
