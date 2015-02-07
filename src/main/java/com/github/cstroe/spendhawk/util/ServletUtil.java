@@ -11,7 +11,7 @@ public class ServletUtil {
         return urlPaths[0]; // return the first one
     }
 
-    public static String servletPath(Class<? extends HttpServlet> servlet, String... args) {
+    public static String servletPath(Class<? extends HttpServlet> servlet, Object... args) {
         StringBuilder path = new StringBuilder();
         path.append(servletPath(servlet));
 
