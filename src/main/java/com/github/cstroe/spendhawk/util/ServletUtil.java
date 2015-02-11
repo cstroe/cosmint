@@ -3,7 +3,7 @@ package com.github.cstroe.spendhawk.util;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 
-public class ServletUtil {
+public final class ServletUtil {
 
     public static String servletPath(Class<? extends HttpServlet> servlet) {
         WebServlet servletAnnotation = servlet.getAnnotation(WebServlet.class);
