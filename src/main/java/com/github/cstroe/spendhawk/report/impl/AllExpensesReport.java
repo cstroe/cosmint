@@ -1,5 +1,6 @@
 package com.github.cstroe.spendhawk.report.impl;
 
+import com.github.cstroe.spendhawk.bean.DateBean;
 import com.github.cstroe.spendhawk.entity.Category;
 import com.github.cstroe.spendhawk.entity.Expense;
 import com.github.cstroe.spendhawk.report.ReportParameter;
@@ -10,11 +11,13 @@ import com.github.cstroe.spendhawk.util.HibernateUtil;
 import org.hibernate.criterion.Restrictions;
 
 import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 @SuppressWarnings("unused")
 public class AllExpensesReport implements ReportRunner {
+
+    // because this class is not container managed, we can't use CDI annotations
+    DateBean dateBean = new DateBean();
 
     private final List<ReportParameter> reportParameters;
     private SimpleReportResult result;
@@ -43,16 +46,14 @@ public class AllExpensesReport implements ReportRunner {
 
     @Override
     public void runReport() throws Exception {
-        SimpleDateFormat dateFormatter = new SimpleDateFormat("MM/dd/yyyy");
-
         ReportParameter startDateParam = reportParameters.stream()
                 .filter(t -> t.getId().equals("startDate")).findFirst().get();
 
         ReportParameter endDateParam = reportParameters.stream()
                 .filter(t -> t.getId().equals("endDate")).findFirst().get();
 
-        Date startDate = dateFormatter.parse(startDateParam.getValue());
-        Date endDate = dateFormatter.parse(endDateParam.getValue());
+        Date startDate = dateBean.parse(startDateParam.getValue());
+        Date endDate = dateBean.parse(endDateParam.getValue());
 
         // move date up by one day to make search inclusive to end date
         endDate = DateUtil.addDays(endDate, 1);
