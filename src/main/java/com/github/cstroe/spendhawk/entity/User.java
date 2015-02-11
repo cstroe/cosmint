@@ -6,7 +6,13 @@ import org.hibernate.criterion.Restrictions;
 import java.util.Collection;
 
 /**
- * A user has many accounts.
+ * A user has:
+ * <ul>
+ *     <li>A unique database id.</li>
+ *     <li>A user name.  Used for identification in the system.</li>
+ *     <li>Many accounts.</li>
+ *     <li>Many expense categories.</li>
+ * </ul>
  */
 public class User {
     private Long id;
