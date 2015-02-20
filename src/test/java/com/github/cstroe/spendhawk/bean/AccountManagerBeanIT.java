@@ -19,7 +19,7 @@ public class AccountManagerBeanIT extends BaseIT {
     private AccountManagerBean accountManager;
 
     @Test
-    public void doSomething() {
+    public void testCreateAccount() {
         String accountName = "Test Created Account";
         Optional<Account> account = accountManager.createAccount(1l, accountName);
 
