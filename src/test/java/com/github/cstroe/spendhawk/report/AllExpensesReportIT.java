@@ -2,7 +2,9 @@ package com.github.cstroe.spendhawk.report;
 
 import com.github.cstroe.spendhawk.report.impl.AllExpensesReport;
 import com.github.cstroe.spendhawk.util.BaseIT;
+import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,6 +13,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 
+@RunWith(Arquillian.class)
 public class AllExpensesReportIT extends BaseIT {
 
     @Test
