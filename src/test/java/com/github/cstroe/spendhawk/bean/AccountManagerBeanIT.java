@@ -28,7 +28,7 @@ public class AccountManagerBeanIT extends BaseIT {
         Account retrieved = Account.findById(account.get().getId());
 
         assertEquals("Account name should be correctly persisted.", accountName, retrieved.getName());
-        assertEquals("Account user should be the same.", 1l, (long)retrieved.getUser().getId());
+        assertEquals("Account user should be correctly persisted.", 1l, (long)retrieved.getUser().getId());
         assertEquals("Empty account should have 0 transactions.", 0, retrieved.getTransactions().size());
         assertEquals("Empty account should have a 0 balance.", 0d, retrieved.getBalance(), 0.0001);
         commitTransaction();
@@ -39,6 +39,8 @@ public class AccountManagerBeanIT extends BaseIT {
         String accountName = "";
         Optional<Account> account = accountManager.createAccount(1l, accountName);
         assertFalse("Account with blank name should not be created.", account.isPresent());
+        assertEquals("There should be a message when an account is not created.",
+                "Account name cannot be blank.", accountManager.getMessage());
 
         accountName = "   ";
         account = accountManager.createAccount(1l, accountName);
@@ -60,6 +62,6 @@ public class AccountManagerBeanIT extends BaseIT {
     public void testSQLInjectionInAccountName() {
         String accountName = "' or 1";
         Account account = accountManager.createAccount(1l, accountName).get();
-        assertNotEquals("HTML should not show up in the account name.", account.getName(), accountName);
+        assertFalse("HTML should not show up in the account name.", account.getName().contains("'"));
     }
 }

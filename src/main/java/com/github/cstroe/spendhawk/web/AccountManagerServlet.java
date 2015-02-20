@@ -60,7 +60,10 @@ public class AccountManagerServlet extends HttpServlet {
             request.setAttribute("user", newAccount.get().getUser());
             request.setAttribute("message", "Added account <b>" + newAccount.get().getName() + "</b>.");
         } else {
+            HibernateUtil.getSessionFactory().getCurrentSession().beginTransaction();
+            request.setAttribute("user", User.findById(userId));
             request.setAttribute("message", accountManager.getMessage());
+            HibernateUtil.getSessionFactory().getCurrentSession().getTransaction().commit();
         }
 
         request.getRequestDispatcher(TEMPLATE).forward(request,response);

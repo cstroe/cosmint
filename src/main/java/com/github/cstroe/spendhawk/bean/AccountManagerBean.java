@@ -6,13 +6,13 @@ import com.github.cstroe.spendhawk.util.HibernateUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Transaction;
 
-import javax.ejb.Stateless;
+import javax.ejb.Stateful;
 import java.util.Optional;
 
-import static org.apache.commons.lang3.StringEscapeUtils.escapeEcmaScript;
+import static org.apache.commons.lang3.StringEscapeUtils.escapeXml10;
 import static org.apache.commons.lang3.StringEscapeUtils.escapeHtml4;
 
-@Stateless
+@Stateful
 public class AccountManagerBean {
 
     private String message;
@@ -23,10 +23,11 @@ public class AccountManagerBean {
 
     public Optional<Account> createAccount(Long userId, String accountName) {
         if(StringUtils.isBlank(accountName)) {
+            message = "Account name cannot be blank.";
             return Optional.empty();
         }
 
-        accountName = escapeEcmaScript(escapeHtml4(accountName));
+        accountName = escapeXml10(escapeHtml4(accountName));
 
         Transaction currentTransaction = null;
         try {
