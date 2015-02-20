@@ -9,8 +9,7 @@ import org.junit.runner.RunWith;
 import javax.inject.Inject;
 import java.util.Optional;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 @RunWith(Arquillian.class)
 public class AccountManagerBeanIT extends BaseIT {
@@ -35,4 +34,32 @@ public class AccountManagerBeanIT extends BaseIT {
         commitTransaction();
     }
 
+    @Test
+    public void testCreateAccountWithBlankName() {
+        String accountName = "";
+        Optional<Account> account = accountManager.createAccount(1l, accountName);
+        assertFalse("Account with blank name should not be created.", account.isPresent());
+
+        accountName = "   ";
+        account = accountManager.createAccount(1l, accountName);
+        assertFalse("Account with only spaces in name should not be created.", account.isPresent());
+
+        accountName = "\t\t\t";
+        account = accountManager.createAccount(1l, accountName);
+        assertFalse("Account with only tabs in name should not be created.", account.isPresent());
+    }
+
+    @Test
+    public void testHTMLCodeInAccountName() {
+        String accountName = "</a><a href=\"bad_place.com\">";
+        Account account = accountManager.createAccount(1l, accountName).get();
+        assertNotEquals("HTML should not show up in the account name.", account.getName(), accountName);
+    }
+
+    @Test
+    public void testSQLInjectionInAccountName() {
+        String accountName = "' or 1";
+        Account account = accountManager.createAccount(1l, accountName).get();
+        assertNotEquals("HTML should not show up in the account name.", account.getName(), accountName);
+    }
 }

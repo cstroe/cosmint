@@ -3,10 +3,14 @@ package com.github.cstroe.spendhawk.bean;
 import com.github.cstroe.spendhawk.entity.Account;
 import com.github.cstroe.spendhawk.entity.User;
 import com.github.cstroe.spendhawk.util.HibernateUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Transaction;
 
 import javax.ejb.Stateless;
 import java.util.Optional;
+
+import static org.apache.commons.lang3.StringEscapeUtils.escapeEcmaScript;
+import static org.apache.commons.lang3.StringEscapeUtils.escapeHtml4;
 
 @Stateless
 public class AccountManagerBean {
@@ -18,6 +22,12 @@ public class AccountManagerBean {
     }
 
     public Optional<Account> createAccount(Long userId, String accountName) {
+        if(StringUtils.isBlank(accountName)) {
+            return Optional.empty();
+        }
+
+        accountName = escapeEcmaScript(escapeHtml4(accountName));
+
         Transaction currentTransaction = null;
         try {
             if(!HibernateUtil.getSessionFactory().getCurrentSession().getTransaction().isActive()) {
