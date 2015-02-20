@@ -1,7 +1,7 @@
 package com.github.cstroe.spendhawk.web.it;
 
+import com.github.cstroe.spendhawk.testutil.web.DBUnitServlet;
 import com.github.cstroe.spendhawk.web.AccountManagerServlet;
-import com.github.cstroe.spendhawk.web.AccountServlet;
 import com.github.cstroe.spendhawk.web.WelcomeServlet;
 import com.github.cstroe.spendhawk.web.category.CategoryManagerServlet;
 import com.github.cstroe.spendhawk.web.user.UserManagerServlet;
@@ -10,7 +10,6 @@ import com.github.cstroe.spendhawk.web.user.UsersServlet;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
-import org.hibernate.cfg.NotYetImplementedException;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.junit.InSequence;
@@ -32,6 +31,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static com.github.cstroe.spendhawk.util.ServletUtil.servletPath;
+import static com.github.cstroe.spendhawk.util.TestUtil.getLink;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.*;
@@ -63,21 +63,30 @@ public class BasicFeaturesIT {
 
     @Test
     @RunAsClient
+    @InSequence(50)
+    public void seedDatabase() throws Exception {
+        response = connect(DBUnitServlet.class);
+        assertResponseStatus(200, response);
+    }
+
+    @Test
+    @RunAsClient
     @InSequence(100)
     public void connectToWelcomeServlet() throws Exception {
         response = connect(WelcomeServlet.class);
         assertResponseStatus(200, response);
 
         Document doc = Jsoup.parse(response.getBody());
-        boolean usersLinkExists = findLink(doc, fullServletPath(UsersServlet.class));
-        assertEquals("A link from the welcome page to the users page must exist.", usersLinkExists, true);
+        assertTrue("A link from the welcome page to the users page must exist.",
+            hasLink(doc, fullServletPath(UsersServlet.class)));
 
         String welcomePage = response.getBody();
 
         response = connect(""); // connect to the context root
         assertResponseStatus(200, response);
 
-        assertEquals("The welcome page should be served at the context root.", welcomePage, response.getBody());
+        assertEquals("The welcome page should be served at the context root.",
+            welcomePage, response.getBody());
     }
 
     @Test
@@ -90,7 +99,8 @@ public class BasicFeaturesIT {
         Document doc = Jsoup.parse(response.getBody());
         Elements links = doc.getElementsByClass("userLink");
 
-        assertThat(links.size(), is(equalTo(0)));
+        // DBUnit seed data contains 1 user.
+        assertThat(links.size(), is(equalTo(1)));
     }
 
     @Test
@@ -123,13 +133,20 @@ public class BasicFeaturesIT {
         Document doc = Jsoup.parse(response.getBody());
         Elements links = doc.getElementsByClass("userLink");
 
-        assertThat(links.size(), is(equalTo(1)));
+        assertThat(links.size(), is(equalTo(2)));
 
-        Element link = links.get(0);
-        userDetailPath = link.attr("href");
+        userDetailPath = findLinkByText(links, "testuser");
 
         assertTrue("The user detail link points to the AccountsServlet and takes params",
                 userDetailPath.startsWith(fullServletPath(UserSummaryServlet.class) + "?"));
+
+        Matcher m = Pattern.compile("user\\.id=(.*)").matcher(userDetailPath);
+        if(m.find()) {
+            userId = Long.parseLong(m.group(1));
+        } else {
+            fail("User id not found in user detail path.");
+        }
+
     }
 
     @Test
@@ -141,36 +158,32 @@ public class BasicFeaturesIT {
 
         Document doc = Jsoup.parse(response.getBody());
         assertTrue("A link from the accounts page to the account manager page must exist.",
-                findLink(doc, fullServletPath(AccountManagerServlet.class)));
+            hasLink(doc, fullServletPath(AccountManagerServlet.class), "user.id", userId.toString()));
     }
 
     @Test
     @RunAsClient
     @InSequence(600)
     public void addAccount() throws Exception {
-        Matcher m = Pattern.compile("id=(.*)").matcher(userDetailPath);
-        if(m.find()) {
-            userId = Long.parseLong(m.group(1));
-        } else {
-            fail("User id not found in user detail path.");
-        }
-
+        String accountName = "Account 1";
         response = Unirest.post(url(AccountManagerServlet.class))
             .field("action", "store")
-            .field("account.name", "Account 1")
+            .field("account.name", accountName)
             .field("user.id", userId.toString())
             .asString();
 
         assertResponseStatus(200, response);
 
         response = Unirest.get(url(UserSummaryServlet.class, "user.id", userId.toString()))
-                .asString();
+            .asString();
 
         assertResponseStatus(200, response);
 
         Document doc = Jsoup.parse(response.getBody());
+        Elements links = doc.getElementsByTag("a");
+
         assertTrue("The accounts page must link to the individual account.",
-                findLink(doc, fullServletPath(AccountServlet.class)) );
+            findLinkByText(links, accountName) != null );
     }
 
     @Test
@@ -281,8 +294,9 @@ public class BasicFeaturesIT {
             url.append(deploymentUrl.getPath());
             if(requestPath.startsWith("/")) {
                 url.append(requestPath.substring(1));
+            } else {
+                url.append(requestPath);
             }
-            url.append(requestPath);
         }
 
         return url.toString();
@@ -325,51 +339,22 @@ public class BasicFeaturesIT {
      * Find a link to the given path.
      * @return true if the path was found as one of the links' href, false if none was found
      */
-    private static boolean findLink(Document doc, String path, String... arguments) {
+    private static boolean hasLink(Document doc, String path, String... arguments) {
         return getLink(doc, path, arguments) != null;
     }
 
-    private static String getLink(Document doc, String path, String... arguments) {
-        // TODO: Make arguments check work.
-        if(arguments.length != 0) {
-            throw new NotYetImplementedException();
-        }
-
-        Elements links = doc.getElementsByTag("a");
-        if(path == null || links == null) {
-            return null;
-        }
-
-        String linkHref = null;
-        for(Element link : links) {
-            String currentLinkPath = link.attr("href");
-            String currentArguments;
-            int qmark = currentLinkPath.indexOf("?");
-            if(qmark > -1) {
-                currentArguments = currentLinkPath.substring(qmark);
-                currentLinkPath = currentLinkPath.substring(0, qmark);
-            }
-            if(currentLinkPath.equals(path)) {
-                linkHref = link.attr("href");
-                break;
+    /**
+     * @return the link url that has the given text, null if a link with that
+     *         text is not found
+     */
+    private static String findLinkByText(Elements links, String text) {
+        for(Element e : links) {
+            if(e.ownText().equals(text)) {
+                return e.attr("href");
             }
         }
-
-        if(linkHref == null) {
-            try {
-                File tempFile = File.createTempFile("integrationTest", ".html");
-                FileWriter writer = new FileWriter(tempFile);
-                writer.write(doc.toString());
-                writer.close();
-                System.out.println("Saved response page to: file://" + tempFile.getAbsolutePath());
-            } catch(Exception ex) {
-                ex.printStackTrace();
-            }
-        }
-
-        return linkHref;
+        return null;
     }
-
 
     /**
      * Save response output to a file if the response status assertion fails.
