@@ -12,6 +12,11 @@ import org.hibernate.Transaction;
 import org.junit.After;
 import org.junit.Before;
 
+import javax.enterprise.context.spi.CreationalContext;
+import javax.enterprise.inject.spi.Bean;
+import javax.enterprise.inject.spi.BeanManager;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import java.io.InputStream;
 import java.sql.SQLException;
 
@@ -96,5 +101,25 @@ public class BaseIT {
 
     public void commitTransaction() {
         currentSession.getTransaction().commit();
+    }
+
+    public BeanManager getBeanManager()
+    {
+        try {
+            InitialContext initialContext = new InitialContext();
+            return (BeanManager) initialContext.lookup("java:comp/BeanManager");
+        } catch (NamingException e) {
+            return null;
+        }
+    }
+
+    // CDI-based lookup of the bean.
+    // See: http://dominikdorn.com/2010/04/cdi-weld-manual-bean-lookup/
+    @SuppressWarnings({"unused", "unchecked"})
+    public <T> T manualInject(Class<T> beanClass) {
+        BeanManager bm = getBeanManager();
+        Bean<T> bean = (Bean<T>) bm.getBeans(beanClass).iterator().next();
+        CreationalContext<T> ctx = bm.createCreationalContext(bean);
+        return (T) bm.getReference(bean, beanClass, ctx); // this could be inlined, but intentionally left this way
     }
 }
