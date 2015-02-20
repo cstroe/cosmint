@@ -11,6 +11,7 @@ import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.importer.ExplodedImporter;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.resolver.api.maven.Maven;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
@@ -64,6 +65,7 @@ public class SpendHawkDeployment {
     }
 
     @Test
+    @Ignore
     public void showDeploymentContents() {
         WebArchive archive = deploy();
         System.out.println(archive.toString(true));
