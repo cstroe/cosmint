@@ -68,6 +68,7 @@ public class AccountManagerBean extends DatabaseBean {
                 t.delete();
             });
 
+            currentUser.getAccounts().remove(account);
             account.delete();
             commitTransaction();
             return true;

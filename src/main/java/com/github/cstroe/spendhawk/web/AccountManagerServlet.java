@@ -46,28 +46,51 @@ public class AccountManagerServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String accountName = StringEscapeUtils.escapeHtml4(request.getParameter("account.name"));
-        String userIdRaw = StringEscapeUtils.escapeHtml4(request.getParameter("user.id"));
+        String userIdRaw = Optional.ofNullable(request.getParameter("user.id"))
+                .map(StringEscapeUtils::escapeHtml4)
+                .orElseThrow(Exceptions::userIdRequired);
+        String actionRaw = Optional.ofNullable(request.getParameter("action"))
+                .orElseThrow(Exceptions::userIdRequired);
 
-        Long userId;
+        Long userId, accountId;
         try {
             userId = Long.parseLong(userIdRaw);
         } catch (NumberFormatException ex) {
-            throw new ServletException("User id is not a valid long number.", ex);
+            throw new ServletException(ex);
         }
 
-        Optional<Account> newAccount = accountManager.createAccount(userId, accountName);
+        HibernateUtil.getSessionFactory().getCurrentSession().beginTransaction();
 
-        if(newAccount.isPresent()) {
-            request.setAttribute("user", newAccount.get().getUser());
-            request.setAttribute("message", "Added account <b>" + newAccount.get().getName() + "</b>.");
-        } else {
-            HibernateUtil.getSessionFactory().getCurrentSession().beginTransaction();
-            request.setAttribute("user", User.findById(userId));
-            request.setAttribute("message", accountManager.getMessage());
-            HibernateUtil.getSessionFactory().getCurrentSession().getTransaction().commit();
+        if("store".equals(actionRaw)) {
+            String accountName = Optional.ofNullable(request.getParameter("account.name"))
+                    .map(StringEscapeUtils::escapeHtml4)
+                    .orElseThrow(Exceptions::accountNameRequired);
+
+            Optional<Account> newAccount = accountManager.createAccount(userId, accountName);
+
+            request.setAttribute("user", User.findById(userId).orElseThrow(Exceptions::userNotFound));
+            if(newAccount.isPresent()) {
+                request.setAttribute("message", "Added account <b>" + newAccount.get().getName() + "</b>.");
+            } else {
+                request.setAttribute("message", accountManager.getMessage());
+            }
+        } else if("delete".equals(actionRaw)) {
+            String accountIdRaw = Optional.ofNullable(request.getParameter("account.id"))
+                    .map(StringEscapeUtils::escapeHtml4)
+                    .orElseThrow(Exceptions::accountIdRequired);
+
+            accountId = Long.parseLong(accountIdRaw);
+            boolean deleteSuccessful = accountManager.deleteAccount(userId, accountId);
+
+            request.setAttribute("user", User.findById(userId).orElseThrow(Exceptions::userNotFound));
+            if(deleteSuccessful) {
+                request.setAttribute("message", "Account deleted.");
+            } else {
+                request.setAttribute("message", accountManager.getMessage());
+            }
         }
 
         request.getRequestDispatcher(TEMPLATE).forward(request,response);
+        HibernateUtil.getSessionFactory().getCurrentSession().getTransaction().commit();
     }
 }

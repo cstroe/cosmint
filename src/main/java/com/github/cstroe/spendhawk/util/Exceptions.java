@@ -8,6 +8,14 @@ public class Exceptions {
         return new RuntimeException("Transaction id is required.");
     }
 
+    public static RuntimeException accountNameRequired() {
+        return new RuntimeException("Account name is required.");
+    }
+
+    public static RuntimeException accountIdRequired() {
+        return new RuntimeException("Account id is required.");
+    }
+
     public static RuntimeException transactionNotFound() {
         return new RuntimeException("Transaction not found.");
     }
@@ -18,6 +26,10 @@ public class Exceptions {
 
     public static RuntimeException userNotFound() {
         return new RuntimeException("User not found.");
+    }
+
+    public static RuntimeException userIdRequired() {
+        return new RuntimeException("User id required.");
     }
 
     public static String getDescriptiveMessage(Throwable ex) {
