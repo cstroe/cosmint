@@ -2,6 +2,10 @@
 <#include "/template/layouts/global_header.ftl">
 
 <p>
+    <a href="/spendhawk/account?id=${account.id}&relDate=currentMonth">Back to Account</a>
+</p>
+
+<p>
 <#list messages as message>
     ${message}<br/>
 </#list>
