@@ -3,6 +3,7 @@ package com.github.cstroe.spendhawk.web.transaction;
 import com.github.cstroe.spendhawk.entity.Category;
 import com.github.cstroe.spendhawk.entity.Expense;
 import com.github.cstroe.spendhawk.entity.Transaction;
+import com.github.cstroe.spendhawk.util.Exceptions;
 import com.github.cstroe.spendhawk.util.HibernateUtil;
 import org.apache.commons.lang3.StringEscapeUtils;
 
@@ -28,7 +29,9 @@ public class AddExpenseServlet extends HttpServlet {
             // Begin unit of work
             HibernateUtil.getSessionFactory().getCurrentSession().beginTransaction();
 
-            Transaction transaction = Transaction.findById(Long.parseLong(transactionId));
+            Transaction transaction = Transaction.findById(Long.parseLong(transactionId))
+                .orElseThrow(Exceptions::transactionNotFound);
+
             req.setAttribute("transaction", transaction);
             req.setAttribute("categories", Category.findAll(transaction.getAccount().getUser()));
             req.getRequestDispatcher(TEMPLATE).forward(req, resp);
@@ -37,7 +40,7 @@ public class AddExpenseServlet extends HttpServlet {
             HibernateUtil.getSessionFactory().getCurrentSession().getTransaction().commit();
         } catch (Exception ex) {
             HibernateUtil.getSessionFactory().getCurrentSession().getTransaction().rollback();
-            throw ex;
+            throw new ServletException(ex);
         }
     }
 
@@ -54,7 +57,8 @@ public class AddExpenseServlet extends HttpServlet {
             HibernateUtil.getSessionFactory().getCurrentSession().beginTransaction();
 
             if("store".equals(action)) {
-                Transaction transaction = Transaction.findById(Long.parseLong(transactionId));
+                Transaction transaction = Transaction.findById(Long.parseLong(transactionId))
+                    .orElseThrow(Exceptions::transactionNotFound);
                 Category category =
                         Category.findById(transaction.getAccount().getUser(), Long.parseLong(categoryId));
                 Double amount = Double.parseDouble(amountRaw);

@@ -2,6 +2,7 @@ package com.github.cstroe.spendhawk.web.category;
 
 import com.github.cstroe.spendhawk.entity.Category;
 import com.github.cstroe.spendhawk.entity.User;
+import com.github.cstroe.spendhawk.util.Exceptions;
 import com.github.cstroe.spendhawk.util.HibernateUtil;
 import com.github.cstroe.spendhawk.web.user.UserSummaryServlet;
 import org.apache.commons.lang3.StringEscapeUtils;
@@ -29,7 +30,8 @@ public class CategoryManagerServlet extends HttpServlet {
             // Begin unit of work
             HibernateUtil.getSessionFactory().getCurrentSession().beginTransaction();
 
-            User currentUser = User.findById(Long.parseLong(userId));
+            User currentUser = User.findById(Long.parseLong(userId))
+                .orElseThrow(Exceptions::userNotFound);
             req.setAttribute("user", currentUser);
             req.getRequestDispatcher(TEMPLATE).forward(req, resp);
 
@@ -51,7 +53,8 @@ public class CategoryManagerServlet extends HttpServlet {
             // Begin unit of work
             HibernateUtil.getSessionFactory().getCurrentSession().beginTransaction();
 
-            User currentUser = User.findById(Long.parseLong(userId));
+            User currentUser = User.findById(Long.parseLong(userId))
+                .orElseThrow(Exceptions::userNotFound);
 
             if("store".equals(action)) {
                 if(StringUtils.isBlank(categoryName)) {

@@ -6,6 +6,7 @@ import com.github.cstroe.spendhawk.entity.Transaction;
 import com.github.cstroe.spendhawk.entity.User;
 import com.github.cstroe.spendhawk.helper.TListTotaler;
 import com.github.cstroe.spendhawk.helper.TransactionsHelper;
+import com.github.cstroe.spendhawk.util.Exceptions;
 import com.github.cstroe.spendhawk.util.HibernateUtil;
 import com.github.cstroe.spendhawk.web.AccountServlet;
 import org.apache.commons.lang3.StringEscapeUtils;
@@ -31,7 +32,8 @@ public class BulkCategorizeServlet extends HttpServlet {
         String queryString = req.getParameter("q");
         try {
             HibernateUtil.getSessionFactory().getCurrentSession().beginTransaction();
-            Account account = Account.findById(accountId);
+            Account account = Account.findById(accountId)
+                .orElseThrow(Exceptions::accountNotFound);
             if(account == null) {
                 throw new IllegalArgumentException("Account not found.");
             }
@@ -69,7 +71,8 @@ public class BulkCategorizeServlet extends HttpServlet {
         try {
             HibernateUtil.getSessionFactory().getCurrentSession().beginTransaction();
 
-            Account account = Account.findById(accountId);
+            Account account = Account.findById(accountId)
+                .orElseThrow(Exceptions::accountNotFound);
             Category category = Category.findById(account.getUser(), categoryId);
 
             List<Transaction> transactions = account.findTransactions(query);
@@ -103,7 +106,8 @@ public class BulkCategorizeServlet extends HttpServlet {
         try {
             HibernateUtil.getSessionFactory().getCurrentSession().beginTransaction();
 
-            Account account = Account.findById(accountId);
+            Account account = Account.findById(accountId)
+                .orElseThrow(Exceptions::accountNotFound);
             Category category = Category.findById(account.getUser(), categoryId);
 
             List<Transaction> transactions = account.findTransactions(query);

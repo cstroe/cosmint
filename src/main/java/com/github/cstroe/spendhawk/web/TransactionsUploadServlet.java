@@ -2,6 +2,7 @@ package com.github.cstroe.spendhawk.web;
 
 import com.github.cstroe.spendhawk.entity.Account;
 import com.github.cstroe.spendhawk.helper.TransactionsHelper;
+import com.github.cstroe.spendhawk.util.Exceptions;
 import com.github.cstroe.spendhawk.util.HibernateUtil;
 
 import javax.servlet.ServletException;
@@ -28,7 +29,8 @@ public class TransactionsUploadServlet extends HttpServlet {
             HibernateUtil.getSessionFactory().getCurrentSession().beginTransaction();
 
             Long accountId = Long.parseLong(req.getParameter("id"));
-            Account account = Account.findById(accountId);
+            Account account = Account.findById(accountId)
+                .orElseThrow(Exceptions::accountNotFound);
             req.setAttribute("messages", new LinkedList<String>());
             req.setAttribute("account", account);
 
@@ -51,7 +53,8 @@ public class TransactionsUploadServlet extends HttpServlet {
         try {
             HibernateUtil.getSessionFactory().getCurrentSession().beginTransaction();
             InputStream filecontent = filePart.getInputStream();
-            Account account = Account.findById(accountId);
+            Account account = Account.findById(accountId)
+                .orElseThrow(Exceptions::accountNotFound);
 
             List<String> messages = TransactionsHelper.processFile(filecontent, account, duplicateCheck, fileFormat);
 

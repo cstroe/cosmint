@@ -3,6 +3,7 @@ package com.github.cstroe.spendhawk.web;
 import com.github.cstroe.spendhawk.bean.AccountManagerBean;
 import com.github.cstroe.spendhawk.entity.Account;
 import com.github.cstroe.spendhawk.entity.User;
+import com.github.cstroe.spendhawk.util.Exceptions;
 import com.github.cstroe.spendhawk.util.HibernateUtil;
 import org.apache.commons.lang3.StringEscapeUtils;
 
@@ -30,7 +31,8 @@ public class AccountManagerServlet extends HttpServlet {
 
         try {
             HibernateUtil.getSessionFactory().getCurrentSession().beginTransaction();
-            User currentUser = User.findById(Long.parseLong(userId));
+            User currentUser = User.findById(Long.parseLong(userId))
+                .orElseThrow(Exceptions::userNotFound);
 
             request.setAttribute("user", currentUser);
             request.getRequestDispatcher(TEMPLATE).forward(request, response);

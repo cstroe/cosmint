@@ -61,7 +61,7 @@ public class BaseIT {
 
     @After
     public void tearDown() {
-        if(currentSession.isOpen() && currentSession.getTransaction().isActive()) {
+        if(currentSession != null && currentSession.isOpen() && currentSession.getTransaction().isActive()) {
             currentSession.getTransaction().rollback();
         }
 

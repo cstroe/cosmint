@@ -4,6 +4,7 @@ import com.github.cstroe.spendhawk.util.HibernateUtil;
 import org.hibernate.criterion.Restrictions;
 
 import java.util.Collection;
+import java.util.Optional;
 
 /**
  * A user has:
@@ -52,11 +53,11 @@ public class User {
         this.categories = categories;
     }
 
-    public static User findById(Long id) {
-        return (User) HibernateUtil.getSessionFactory().getCurrentSession()
+    public static Optional<User> findById(Long id) {
+        return Optional.ofNullable((User) HibernateUtil.getSessionFactory().getCurrentSession()
                 .createCriteria(User.class)
                 .add(Restrictions.eq("id", id))
-                .uniqueResult();
+                .uniqueResult());
     }
 
 }

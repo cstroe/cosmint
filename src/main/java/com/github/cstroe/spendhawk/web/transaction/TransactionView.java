@@ -4,6 +4,7 @@ import com.github.cstroe.spendhawk.entity.Account;
 import com.github.cstroe.spendhawk.entity.Expense;
 import com.github.cstroe.spendhawk.entity.Transaction;
 import com.github.cstroe.spendhawk.util.DateUtil;
+import com.github.cstroe.spendhawk.util.Exceptions;
 import com.github.cstroe.spendhawk.util.HibernateUtil;
 import com.github.cstroe.spendhawk.web.AccountServlet;
 
@@ -14,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Date;
+import java.util.Optional;
 
 import static com.github.cstroe.spendhawk.util.ServletUtil.servletPath;
 
@@ -30,10 +32,10 @@ public class TransactionView extends HttpServlet {
                 Long transactionId = Long.parseLong(transactionIdRaw);
                 // Begin unit of work
                 HibernateUtil.getSessionFactory().getCurrentSession().beginTransaction();
-                Transaction transaction = Transaction.findById(transactionId);
-                if(transaction == null) {
-                    throw new IllegalArgumentException("Transaction not found.");
-                }
+
+                Transaction transaction = Transaction.findById(transactionId)
+                    .orElseThrow(Exceptions::transactionNotFound);
+
                 request.setAttribute("transaction", transaction);
                 request.setAttribute("expenses", transaction.getExpenses());
                 request.getRequestDispatcher(TEMPLATE).forward(request,response);
@@ -51,25 +53,23 @@ public class TransactionView extends HttpServlet {
         Account account;
         Date effectiveDate;
         try {
-            String transactionIdRaw = request.getParameter("id");
-            if(transactionIdRaw != null) {
-                Long transactionId = Long.parseLong(transactionIdRaw);
-                // Begin unit of work
-                HibernateUtil.getSessionFactory().getCurrentSession().beginTransaction();
-                Transaction transaction = Transaction.findById(transactionId);
-                if(transaction == null) {
-                    throw new IllegalArgumentException("Transaction not found.");
-                }
-                effectiveDate = transaction.getEffectiveDate();
-                account = transaction.getAccount();
+            String transactionIdRaw = Optional.ofNullable(request.getParameter("id"))
+                .orElseThrow(Exceptions::transactionIdRequired);
+            Long transactionId = Long.parseLong(transactionIdRaw);
 
-                for(Expense expense : transaction.getExpenses()) {
-                    expense.delete();
-                }
-                transaction.delete();
-            } else {
-                throw new IllegalAccessException("Transaction id is required.");
+            // Begin unit of work
+            HibernateUtil.getSessionFactory().getCurrentSession().beginTransaction();
+            Transaction transaction = Transaction.findById(transactionId)
+                .orElseThrow(Exceptions::transactionNotFound);
+
+            effectiveDate = transaction.getEffectiveDate();
+            account = transaction.getAccount();
+
+            for(Expense expense : transaction.getExpenses()) {
+                expense.delete();
             }
+            transaction.delete();
+
             // End unit of work
             HibernateUtil.getSessionFactory().getCurrentSession().getTransaction().commit();
         } catch (Exception ex) {

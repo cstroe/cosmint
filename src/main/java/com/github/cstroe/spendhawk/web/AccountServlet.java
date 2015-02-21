@@ -59,7 +59,7 @@ public class AccountServlet extends HttpServlet {
                 Long accountId = Long.parseLong(accountIdRaw);
                 // Begin unit of work
                 HibernateUtil.getSessionFactory().getCurrentSession().beginTransaction();
-                Account account = Account.findById(accountId);
+                Account account = Account.findById(accountId).orElseThrow(() -> new RuntimeException("Account not found."));
                 if(account == null) {
                     throw new IllegalArgumentException("Account not found.");
                 }

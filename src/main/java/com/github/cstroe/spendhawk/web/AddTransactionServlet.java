@@ -3,6 +3,7 @@ package com.github.cstroe.spendhawk.web;
 import com.github.cstroe.spendhawk.entity.Account;
 import com.github.cstroe.spendhawk.entity.Transaction;
 import com.github.cstroe.spendhawk.util.DateUtil;
+import com.github.cstroe.spendhawk.util.Exceptions;
 import com.github.cstroe.spendhawk.util.HibernateUtil;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.hibernate.criterion.Restrictions;
@@ -69,7 +70,8 @@ public class AddTransactionServlet extends HttpServlet {
             Double amount = Double.parseDouble(amountRaw);
             Long accountId = Long.parseLong(accountIdRaw);
 
-            account = Account.findById(accountId);
+            account = Account.findById(accountId)
+                .orElseThrow(Exceptions::accountNotFound);
 
             t = new Transaction();
             t.setEffectiveDate(date);

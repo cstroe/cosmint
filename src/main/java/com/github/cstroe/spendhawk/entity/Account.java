@@ -8,6 +8,7 @@ import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * <p>
@@ -91,11 +92,11 @@ public class Account implements Comparable<Account> {
             .list();
     }
 
-    public static Account findById(Long id) {
-        return (Account) HibernateUtil.getSessionFactory().getCurrentSession()
+    public static Optional<Account> findById(Long id) {
+        return Optional.ofNullable((Account) HibernateUtil.getSessionFactory().getCurrentSession()
             .createCriteria(Account.class)
             .add(Restrictions.eq("id", id))
-            .uniqueResult();
+            .uniqueResult());
     }
 
     @Override
@@ -116,5 +117,9 @@ public class Account implements Comparable<Account> {
                 .add(Restrictions.ilike("description", query))
                 .addOrder(Order.desc("effectiveDate"))
                 .list();
+    }
+
+    public void delete() {
+        HibernateUtil.getSessionFactory().getCurrentSession().delete(this);
     }
 }

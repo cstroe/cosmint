@@ -5,6 +5,7 @@ import org.hibernate.criterion.Restrictions;
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.Optional;
 
 /**
  * <p>
@@ -105,10 +106,10 @@ public class Transaction {
         HibernateUtil.getSessionFactory().getCurrentSession().delete(this);
     }
 
-    public static Transaction findById(Long id) {
-        return (Transaction) HibernateUtil.getSessionFactory().getCurrentSession()
-                .createCriteria(Transaction.class)
-                .add(Restrictions.eq("id", id))
-                .uniqueResult();
+    public static Optional<Transaction> findById(Long id) {
+        return Optional.ofNullable((Transaction) HibernateUtil.getSessionFactory().getCurrentSession()
+            .createCriteria(Transaction.class)
+            .add(Restrictions.eq("id", id))
+            .uniqueResult());
     }
 }
