@@ -13,6 +13,9 @@ import java.util.Optional;
 import static org.apache.commons.lang3.StringEscapeUtils.escapeHtml4;
 import static org.apache.commons.lang3.StringEscapeUtils.escapeXml10;
 
+/**
+ * Operations on accounts.
+ */
 @Stateful
 public class AccountManagerBean extends DatabaseBean {
 
