@@ -3,6 +3,7 @@ package com.github.cstroe.spendhawk.web.category;
 import com.github.cstroe.spendhawk.entity.Category;
 import com.github.cstroe.spendhawk.entity.Expense;
 import com.github.cstroe.spendhawk.entity.User;
+import com.github.cstroe.spendhawk.util.Exceptions;
 import com.github.cstroe.spendhawk.util.HibernateUtil;
 import com.github.cstroe.spendhawk.web.user.UserSummaryServlet;
 
@@ -28,7 +29,8 @@ public class CategoryViewServlet extends HttpServlet {
             // Begin unit of work
             HibernateUtil.getSessionFactory().getCurrentSession().beginTransaction();
 
-            Category currentCategory = Category.findById(Long.parseLong(categoryId));
+            Category currentCategory = Category.findById(Long.parseLong(categoryId))
+                .orElseThrow(Exceptions::categoryNotFound);
             req.setAttribute("category", currentCategory);
             req.getRequestDispatcher(TEMPLATE).forward(req, resp);
 
@@ -36,7 +38,7 @@ public class CategoryViewServlet extends HttpServlet {
             HibernateUtil.getSessionFactory().getCurrentSession().getTransaction().commit();
         } catch (Exception ex) {
             HibernateUtil.getSessionFactory().getCurrentSession().getTransaction().rollback();
-            throw ex;
+            throw new ServletException(ex);
         }
     }
 
@@ -50,7 +52,8 @@ public class CategoryViewServlet extends HttpServlet {
             HibernateUtil.getSessionFactory().getCurrentSession().beginTransaction();
 
             if("Delete".equals(action)) {
-                Category currentCategory = Category.findById(Long.parseLong(categoryId));
+                Category currentCategory = Category.findById(Long.parseLong(categoryId))
+                    .orElseThrow(Exceptions::categoryNotFound);
 
                 User currentUser = currentCategory.getUser();
 

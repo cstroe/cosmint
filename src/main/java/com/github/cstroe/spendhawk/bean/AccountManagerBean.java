@@ -5,13 +5,10 @@ import com.github.cstroe.spendhawk.entity.Expense;
 import com.github.cstroe.spendhawk.entity.User;
 import com.github.cstroe.spendhawk.util.Exceptions;
 import com.github.cstroe.spendhawk.util.HibernateUtil;
-import org.apache.commons.lang3.StringUtils;
 
 import javax.ejb.Stateful;
+import javax.inject.Inject;
 import java.util.Optional;
-
-import static org.apache.commons.lang3.StringEscapeUtils.escapeHtml4;
-import static org.apache.commons.lang3.StringEscapeUtils.escapeXml10;
 
 /**
  * Operations on accounts.
@@ -21,17 +18,20 @@ public class AccountManagerBean extends DatabaseBean {
 
     private String message;
 
+    @Inject
+    private JanitorBean janitor;
+
     public String getMessage() {
         return message;
     }
 
     public Optional<Account> createAccount(Long userId, String accountName) {
-        if(StringUtils.isBlank(accountName)) {
+        if(janitor.isBlank(accountName)) {
             message = "Account name cannot be blank.";
             return Optional.empty();
         }
 
-        accountName = escapeXml10(escapeHtml4(accountName));
+        accountName = janitor.sanitize(accountName);
 
         try {
             startTransaction();

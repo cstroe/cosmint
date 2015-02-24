@@ -44,4 +44,12 @@ public class Exceptions {
         }
         return sb.toString();
     }
+
+    public static RuntimeException categoryNotFound() {
+        return new RuntimeException("Category not found.");
+    }
+
+    public static RuntimeException cannotCreateCategory() {
+        return new RuntimeException("Cannot create category.");
+    }
 }

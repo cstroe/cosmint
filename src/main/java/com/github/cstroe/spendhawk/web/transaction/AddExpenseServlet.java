@@ -59,8 +59,8 @@ public class AddExpenseServlet extends HttpServlet {
             if("store".equals(action)) {
                 Transaction transaction = Transaction.findById(Long.parseLong(transactionId))
                     .orElseThrow(Exceptions::transactionNotFound);
-                Category category =
-                        Category.findById(transaction.getAccount().getUser(), Long.parseLong(categoryId));
+                Category category = Category.findById(transaction.getAccount().getUser(), Long.parseLong(categoryId))
+                    .orElseThrow(Exceptions::categoryNotFound);
                 Double amount = Double.parseDouble(amountRaw);
 
                 Expense newExpense = new Expense();

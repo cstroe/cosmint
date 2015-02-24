@@ -7,6 +7,7 @@ import com.github.cstroe.spendhawk.report.ReportParameter.ReportParameterType;
 import com.github.cstroe.spendhawk.report.ReportResult;
 import com.github.cstroe.spendhawk.report.ReportRunner;
 import com.github.cstroe.spendhawk.util.DateUtil;
+import com.github.cstroe.spendhawk.util.Exceptions;
 import com.github.cstroe.spendhawk.util.HibernateUtil;
 import org.hibernate.criterion.Restrictions;
 
@@ -61,7 +62,8 @@ public class CategoryExpenseByMonthReport implements ReportRunner {
         ReportParameter endDateParam = reportParameters.stream()
                 .filter(t -> t.getId().equals("endDate")).findFirst().get();
 
-        Category c = Category.findById(Long.parseLong(categoryParam.getValue()));
+        Category c = Category.findById(Long.parseLong(categoryParam.getValue()))
+            .orElseThrow(Exceptions::categoryNotFound);
 
         Date startDate = dateFormatter.parse(startDateParam.getValue());
         Date endDate = dateFormatter.parse(endDateParam.getValue());

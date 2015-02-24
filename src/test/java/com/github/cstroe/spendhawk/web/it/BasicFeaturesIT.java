@@ -226,7 +226,7 @@ public class BasicFeaturesIT {
         Element errorMessage = doc.getElementById("errorMessage");
         assertThat("The error must be described to the user.",
                 errorMessage.ownText().trim(),
-                is("Category name is blank."));
+                is("Category name cannot be blank."));
     }
     /**
      * Add the deployment context path to a servlet's path to create an absolute path.

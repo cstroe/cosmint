@@ -73,7 +73,8 @@ public class BulkCategorizeServlet extends HttpServlet {
 
             Account account = Account.findById(accountId)
                 .orElseThrow(Exceptions::accountNotFound);
-            Category category = Category.findById(account.getUser(), categoryId);
+            Category category = Category.findById(account.getUser(), categoryId)
+                .orElseThrow(Exceptions::categoryNotFound);
 
             List<Transaction> transactions = account.findTransactions(query);
 
@@ -108,7 +109,8 @@ public class BulkCategorizeServlet extends HttpServlet {
 
             Account account = Account.findById(accountId)
                 .orElseThrow(Exceptions::accountNotFound);
-            Category category = Category.findById(account.getUser(), categoryId);
+            Category category = Category.findById(account.getUser(), categoryId)
+                .orElseThrow(Exceptions::categoryNotFound);
 
             List<Transaction> transactions = account.findTransactions(query);
             TransactionsHelper.createExpenses(transactions, category, merchant, duplicateCheck, true);

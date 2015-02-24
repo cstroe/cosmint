@@ -1,19 +1,20 @@
 package com.github.cstroe.spendhawk.web.category;
 
+import com.github.cstroe.spendhawk.bean.CategoryManagerBean;
 import com.github.cstroe.spendhawk.entity.Category;
 import com.github.cstroe.spendhawk.entity.User;
 import com.github.cstroe.spendhawk.util.Exceptions;
 import com.github.cstroe.spendhawk.util.HibernateUtil;
 import com.github.cstroe.spendhawk.web.user.UserSummaryServlet;
-import org.apache.commons.lang3.StringEscapeUtils;
-import org.apache.commons.lang3.StringUtils;
 
+import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Optional;
 
 import static com.github.cstroe.spendhawk.util.ServletUtil.servletPath;
 
@@ -22,16 +23,20 @@ public class CategoryManagerServlet extends HttpServlet {
 
     private final static String TEMPLATE = "/template/category/manage.ftl";
 
+    @EJB
+    private CategoryManagerBean categoryManager;
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String userId = StringEscapeUtils.escapeHtml4(req.getParameter("user.id"));
+        Long userId = Optional.ofNullable(req.getParameter("user.id"))
+                .map(Long::parseLong)
+                .orElseThrow(Exceptions::userIdRequired);
 
         try {
             // Begin unit of work
             HibernateUtil.getSessionFactory().getCurrentSession().beginTransaction();
 
-            User currentUser = User.findById(Long.parseLong(userId))
-                .orElseThrow(Exceptions::userNotFound);
+            User currentUser = User.findById(userId).orElseThrow(Exceptions::userNotFound);
             req.setAttribute("user", currentUser);
             req.getRequestDispatcher(TEMPLATE).forward(req, resp);
 
@@ -45,35 +50,26 @@ public class CategoryManagerServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String userId = StringEscapeUtils.escapeHtml4(req.getParameter("user.id"));
-        String categoryName = StringEscapeUtils.escapeHtml4(req.getParameter("category.name"));
-        String action = StringEscapeUtils.escapeHtml4(req.getParameter("action"));
+        Long userId = Optional.ofNullable(req.getParameter("user.id"))
+                .map(Long::parseLong)
+                .orElseThrow(Exceptions::userIdRequired);
+
+        String categoryName = req.getParameter("category.name");
+        String action = req.getParameter("action");
 
         try {
             // Begin unit of work
             HibernateUtil.getSessionFactory().getCurrentSession().beginTransaction();
 
-            User currentUser = User.findById(Long.parseLong(userId))
-                .orElseThrow(Exceptions::userNotFound);
+            User currentUser = User.findById(userId).orElseThrow(Exceptions::userNotFound);
 
             if("store".equals(action)) {
-                if(StringUtils.isBlank(categoryName)) {
-                    req.setAttribute("message", "Category name is blank.");
-                    req.setAttribute("user", currentUser);
-                    req.getRequestDispatcher(TEMPLATE).forward(req, resp);
-                    HibernateUtil.getSessionFactory().getCurrentSession().getTransaction().rollback();
-                    return;
-                }
+                Optional<Category> categoryOptional = categoryManager.createCategory(userId, categoryName);
 
-                Category newCategory = new Category();
-                newCategory.setName(categoryName);
-                newCategory.setUser(currentUser);
-                boolean saveSuccess = newCategory.save();
-
-                if (saveSuccess) {
-                    resp.sendRedirect(req.getContextPath() + servletPath(UserSummaryServlet.class) + "?user.id=" + currentUser.getId().toString());
+                if(categoryOptional.isPresent()) {
+                    resp.sendRedirect(req.getContextPath() + servletPath(UserSummaryServlet.class) + "?user.id=" + userId.toString());
                 } else {
-                    req.setAttribute("message", "Could not add category.");
+                    req.setAttribute("message", categoryManager.getMessage());
                     req.setAttribute("user", currentUser);
                     req.getRequestDispatcher(TEMPLATE).forward(req, resp);
                 }
@@ -83,7 +79,7 @@ public class CategoryManagerServlet extends HttpServlet {
             HibernateUtil.getSessionFactory().getCurrentSession().getTransaction().commit();
         } catch (Exception ex) {
             HibernateUtil.getSessionFactory().getCurrentSession().getTransaction().rollback();
-            throw ex;
+            throw new ServletException(ex);
         }
     }
 }

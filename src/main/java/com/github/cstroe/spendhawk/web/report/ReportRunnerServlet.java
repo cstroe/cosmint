@@ -36,8 +36,9 @@ public class ReportRunnerServlet extends HttpServlet {
 
         try {
             HibernateUtil.getSessionFactory().getCurrentSession().beginTransaction();
-
-            req.setAttribute("user", User.findById(Long.parseLong(userId)));
+            User currentUser = User.findById(Long.parseLong(userId))
+                .orElseThrow(Exceptions::userNotFound);
+            req.setAttribute("user", currentUser);
             req.setAttribute("reports", getReports());
             req.getRequestDispatcher(TEMPLATE_SELECT_REPORT).forward(req, resp);
             HibernateUtil.getSessionFactory().getCurrentSession().getTransaction().commit();
@@ -76,7 +77,7 @@ public class ReportRunnerServlet extends HttpServlet {
 
                 ReportResultRenderer renderer = new TableRenderer(report.getResult());
 
-                req.setAttribute("user", User.findById(Long.parseLong(userId)));
+                req.setAttribute("user", currentUser);
                 req.setAttribute("renderer", renderer);
                 req.getRequestDispatcher(TEMPLATE_RESULT).forward(req, resp);
             }

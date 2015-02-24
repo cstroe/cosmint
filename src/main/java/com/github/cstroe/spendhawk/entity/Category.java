@@ -5,6 +5,7 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * The category for an expense.  Categories are at the user level, so that
@@ -57,19 +58,19 @@ public class Category {
                 .list();
     }
 
-    public static Category findById(Long id) {
-        return (Category) HibernateUtil.getSessionFactory().getCurrentSession()
+    public static Optional<Category> findById(Long id) {
+        return Optional.ofNullable((Category) HibernateUtil.getSessionFactory().getCurrentSession()
                 .createCriteria(Category.class)
                 .add(Restrictions.eq("id", id))
-                .uniqueResult();
+                .uniqueResult());
     }
 
-    public static Category findById(User currentUser, Long id) {
-        return (Category) HibernateUtil.getSessionFactory().getCurrentSession()
+    public static Optional<Category> findById(User currentUser, Long id) {
+        return Optional.ofNullable((Category) HibernateUtil.getSessionFactory().getCurrentSession()
                 .createCriteria(Category.class)
                 .add(Restrictions.eq("id", id))
                 .add(Restrictions.eq("user", currentUser))
-                .uniqueResult();
+                .uniqueResult());
     }
 
 }
