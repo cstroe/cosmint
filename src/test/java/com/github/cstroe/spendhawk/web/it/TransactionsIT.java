@@ -1,7 +1,9 @@
 package com.github.cstroe.spendhawk.web.it;
 
 import com.github.cstroe.spendhawk.entity.Account;
+import com.github.cstroe.spendhawk.entity.User;
 import com.github.cstroe.spendhawk.util.BaseIT;
+import com.github.cstroe.spendhawk.util.Exceptions;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.junit.InSequence;
 import org.junit.Test;
@@ -21,7 +23,8 @@ public class TransactionsIT extends BaseIT {
     @InSequence(100)
     public void seedDatabaseWorks() {
         startTransaction();
-        List<Account> accounts = Account.findAll();
+        User currentUser = User.findById(1l).orElseThrow(Exceptions::userNotFound);
+        List<Account> accounts = Account.findAll(currentUser);
         assertEquals(1, accounts.size());
         Account firstAccount = accounts.get(0);
         assertEquals("Main Checking", firstAccount.getName());
@@ -32,7 +35,8 @@ public class TransactionsIT extends BaseIT {
     @InSequence(200)
     public void seedDatabaseWorks2() {
         startTransaction();
-        List<Account> accounts = Account.findAll();
+        User currentUser = User.findById(1l).orElseThrow(Exceptions::userNotFound);
+        List<Account> accounts = Account.findAll(currentUser);
         assertEquals(1, accounts.size());
         Account firstAccount = accounts.get(0);
         assertEquals("Main Checking", firstAccount.getName());

@@ -1,7 +1,9 @@
 package com.github.cstroe.spendhawk.report;
 
+import com.github.cstroe.spendhawk.entity.User;
 import com.github.cstroe.spendhawk.report.impl.AllExpensesReport;
 import com.github.cstroe.spendhawk.util.BaseIT;
+import com.github.cstroe.spendhawk.util.Exceptions;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,7 +21,8 @@ public class AllExpensesReportIT extends BaseIT {
     @Test
     public void testReport() throws Exception {
         startTransaction();
-        ReportRunner runner = new AllExpensesReport();
+        User currentUser = User.findById(1l).orElseThrow(Exceptions::userNotFound);
+        ReportRunner runner = new AllExpensesReport(currentUser);
 
         runner.getParameters().stream().forEach(p -> {
             switch(p.getId()) {

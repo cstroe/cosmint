@@ -22,6 +22,10 @@ public class CategoryManagerBean extends DatabaseBean {
     }
 
     public Optional<Category> createCategory(Long userId, String categoryName) {
+        return createCategory(userId, categoryName, null);
+    }
+
+    public Optional<Category> createCategory(Long userId, String categoryName, Category parentCategory) {
         if(janitor.isBlank(categoryName)) {
             message = "Category name cannot be blank.";
             return Optional.empty();
@@ -35,8 +39,12 @@ public class CategoryManagerBean extends DatabaseBean {
             Category newCategory = new Category();
             newCategory.setName(categoryName);
             newCategory.setUser(user);
+            newCategory.setParent(parentCategory);
             newCategory.save();
             commitTransaction();
+            if(parentCategory != null) {
+                parentCategory.getChildren().add(newCategory);
+            }
             return Optional.of(newCategory);
         } catch(Exception ex) {
             rollbackTransaction();

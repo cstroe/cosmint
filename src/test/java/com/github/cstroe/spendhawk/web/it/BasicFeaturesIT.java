@@ -64,7 +64,7 @@ public class BasicFeaturesIT {
     @Test
     @RunAsClient
     @InSequence(50)
-    public void seedDatabase() throws Exception {
+    public void t0050_seedDatabase() throws Exception {
         response = connect(DBUnitServlet.class);
         assertResponseStatus(200, response);
     }
@@ -72,7 +72,7 @@ public class BasicFeaturesIT {
     @Test
     @RunAsClient
     @InSequence(100)
-    public void connectToWelcomeServlet() throws Exception {
+    public void t0100_connectToWelcomeServlet() throws Exception {
         response = connect(WelcomeServlet.class);
         assertResponseStatus(200, response);
 
@@ -92,21 +92,15 @@ public class BasicFeaturesIT {
     @Test
     @RunAsClient
     @InSequence(200)
-    public void connectToUsersServlet() throws Exception {
+    public void t0200_connectToUsersServlet() throws Exception {
         response = connect(UsersServlet.class);
         assertResponseStatus(200, response);
-
-        Document doc = Jsoup.parse(response.getBody());
-        Elements links = doc.getElementsByClass("userLink");
-
-        // DBUnit seed data contains 1 user.
-        assertThat(links.size(), is(equalTo(1)));
     }
 
     @Test
     @RunAsClient
     @InSequence(300)
-    public void connectToUserManagerServlet() throws Exception {
+    public void t0300_connectToUserManagerServlet() throws Exception {
         response = connect(UserManagerServlet.class);
         assertResponseStatus(200, response);
     }
@@ -114,8 +108,16 @@ public class BasicFeaturesIT {
     @Test
     @RunAsClient
     @InSequence(400)
-    public void createUser() throws Exception {
-        HttpResponse<String> response = Unirest.post(url(UserManagerServlet.class))
+    public void t0400_createUser() throws Exception {
+        // record how many users are in the system before we create another
+        final String viewUsersUrl = url(UsersServlet.class);
+        response = Unirest.get(viewUsersUrl).asString();
+        Document docBefore = Jsoup.parse(response.getBody());
+        Elements linksBefore = docBefore.getElementsByClass("userLink");
+
+        final int numUsersBeforeTest = linksBefore.size();
+
+        response = Unirest.post(url(UserManagerServlet.class))
             .field("user.name", "testuser")
             .field("action", "Add User")
             .asString();
@@ -127,13 +129,12 @@ public class BasicFeaturesIT {
                 url.getPath().startsWith(fullServletPath(UserSummaryServlet.class)) &&
                 url.getQuery().contains("user.id="));
 
-        String viewUsersUrl = url(UsersServlet.class);
         response = Unirest.get(viewUsersUrl).asString();
 
         Document doc = Jsoup.parse(response.getBody());
         Elements links = doc.getElementsByClass("userLink");
 
-        assertThat(links.size(), is(equalTo(2)));
+        assertThat(links.size(), is(equalTo(numUsersBeforeTest + 1)));
 
         userDetailPath = findLinkByText(links, "testuser");
 
@@ -152,7 +153,7 @@ public class BasicFeaturesIT {
     @Test
     @RunAsClient
     @InSequence(500)
-    public void viewAccounts() throws Exception {
+    public void t0500_viewAccounts() throws Exception {
         response = connect(userDetailPath);
         assertResponseStatus(200, response);
 
@@ -164,7 +165,7 @@ public class BasicFeaturesIT {
     @Test
     @RunAsClient
     @InSequence(600)
-    public void addAccount() throws Exception {
+    public void t0600_addAccount() throws Exception {
         String accountName = "Account 1";
         response = Unirest.post(url(AccountManagerServlet.class))
             .field("action", "store")
@@ -189,7 +190,7 @@ public class BasicFeaturesIT {
     @Test
     @RunAsClient
     @InSequence(700)
-    public void shouldBeAbleToAddCategory() throws Exception {
+    public void t0700_shouldBeAbleToAddCategory() throws Exception {
         response = connect(CategoryManagerServlet.class,
                 "user.id", Long.toString(userId));
         assertResponseStatus(200, response);
@@ -214,7 +215,7 @@ public class BasicFeaturesIT {
     @Test
     @RunAsClient
     @InSequence(800)
-    public void shouldNotAddBlankCategory() throws Exception {
+    public void t0800_shouldNotAddBlankCategory() throws Exception {
         response = Unirest.post(url(CategoryManagerServlet.class))
                 .field("user.id", userId)
                 .field("action", "store")

@@ -86,9 +86,10 @@ public class Account implements Comparable<Account> {
     }
 
     @SuppressWarnings("unchecked")
-    public static List<Account> findAll() {
+    public static List<Account> findAll(User currentUser) {
         return (List<Account>) HibernateUtil.getSessionFactory().getCurrentSession()
             .createCriteria(Account.class)
+                .add(Restrictions.eq("user", currentUser))
             .list();
     }
 

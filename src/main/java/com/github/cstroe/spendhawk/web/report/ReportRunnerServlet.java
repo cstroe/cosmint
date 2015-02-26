@@ -18,8 +18,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @WebServlet("/report")
@@ -39,7 +42,7 @@ public class ReportRunnerServlet extends HttpServlet {
             User currentUser = User.findById(Long.parseLong(userId))
                 .orElseThrow(Exceptions::userNotFound);
             req.setAttribute("user", currentUser);
-            req.setAttribute("reports", getReports());
+            req.setAttribute("reports", getReports(currentUser));
             req.getRequestDispatcher(TEMPLATE_SELECT_REPORT).forward(req, resp);
             HibernateUtil.getSessionFactory().getCurrentSession().getTransaction().commit();
         } catch (Exception ex) {
@@ -55,28 +58,22 @@ public class ReportRunnerServlet extends HttpServlet {
         String userId = StringEscapeUtils.escapeHtml4(req.getParameter("user.id"));
         try {
             HibernateUtil.getSessionFactory().getCurrentSession().beginTransaction();
+            User currentUser = User.findById(Long.parseLong(userId))
+                .orElseThrow(Exceptions::userNotFound);
+            ReportRunner report = getReportByName(currentUser, reportName)
+                .orElseThrow(Exceptions::reportNotFound);
+            ReportFormGenerator rfg =
+                new ReportFormGenerator(currentUser, report.getParameters());
+
             if ("Enter Parameters".equals(action)) {
-                ReportRunner report = getReportByName(reportName);
-                User currentUser = User.findById(Long.parseLong(userId))
-                    .orElseThrow(Exceptions::userNotFound);
-                ReportFormGenerator rfg =
-                        new ReportFormGenerator(currentUser, report.getParameters());
                 req.setAttribute("report", report);
                 req.setAttribute("generate", rfg);
                 req.setAttribute("user", currentUser);
                 req.getRequestDispatcher(TEMPLATE_ENTER_PARAMETERS).forward(req, resp);
             } else if("Run Report".equals(action)) {
-                ReportRunner report = getReportByName(reportName);
-                User currentUser = User.findById(Long.parseLong(userId))
-                    .orElseThrow(Exceptions::userNotFound);
-                ReportFormGenerator rfg =
-                        new ReportFormGenerator(currentUser, report.getParameters());
                 rfg.parseParameters(req, report.getParameters());
-
                 report.runReport();
-
                 ReportResultRenderer renderer = new TableRenderer(report.getResult());
-
                 req.setAttribute("user", currentUser);
                 req.setAttribute("renderer", renderer);
                 req.getRequestDispatcher(TEMPLATE_RESULT).forward(req, resp);
@@ -88,25 +85,32 @@ public class ReportRunnerServlet extends HttpServlet {
         }
     }
 
-    private List<ReportRunner> getReports() throws InstantiationException, IllegalAccessException {
+    private List<ReportRunner> getReports(User currentUser) {
         Reflections reflections = new Reflections(ClasspathHelper.forPackage("com.github.cstroe.spendhawk"), new SubTypesScanner());
         Set<Class<? extends ReportRunner>> reportClasses = reflections.getSubTypesOf(ReportRunner.class);
 
         List<ReportRunner> reportRunners = new LinkedList<>();
         for (Class<? extends ReportRunner> reportClass : reportClasses) {
-            ReportRunner report = reportClass.newInstance();
-            reportRunners.add(report);
+            try {
+                Constructor<? extends ReportRunner> reportRunnerConstructor =
+                    reportClass.getConstructor(User.class);
+                ReportRunner report = reportRunnerConstructor.newInstance(currentUser);
+                reportRunners.add(report);
+            } catch( InvocationTargetException | NoSuchMethodException |
+                     InstantiationException | IllegalAccessException ex) {
+                ex.printStackTrace();
+            }
         }
         return reportRunners;
     }
 
-    private ReportRunner getReportByName(String name) throws InstantiationException, IllegalAccessException {
-        List<ReportRunner> reports = getReports();
+    private Optional<ReportRunner> getReportByName(User currentUser, String name) {
+        List<ReportRunner> reports = getReports(currentUser);
         for(ReportRunner report : reports) {
             if(report.getName().equals(name)) {
-                return report;
+                return Optional.of(report);
             }
         }
-        return null;
+        return Optional.empty();
     }
 }

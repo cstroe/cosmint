@@ -3,6 +3,7 @@ package com.github.cstroe.spendhawk.report.impl;
 import com.github.cstroe.spendhawk.bean.DateBean;
 import com.github.cstroe.spendhawk.entity.Category;
 import com.github.cstroe.spendhawk.entity.Expense;
+import com.github.cstroe.spendhawk.entity.User;
 import com.github.cstroe.spendhawk.report.ReportParameter;
 import com.github.cstroe.spendhawk.report.ReportResult;
 import com.github.cstroe.spendhawk.report.ReportRunner;
@@ -19,10 +20,12 @@ public class AllExpensesReport implements ReportRunner {
     // because this class is not container managed, we can't use CDI annotations
     DateBean dateBean = new DateBean();
 
+    private final User currentUser;
     private final List<ReportParameter> reportParameters;
     private SimpleReportResult result;
 
-    public AllExpensesReport() {
+    public AllExpensesReport(User currentUser) {
+        this.currentUser = currentUser;
         List<ReportParameter> parameters = new LinkedList<>();
         parameters.add(rp("startDate", "Start Date", ReportParameter.ReportParameterType.DATE));
         parameters.add(rp("endDate", "End Date", ReportParameter.ReportParameterType.DATE));
@@ -65,6 +68,8 @@ public class AllExpensesReport implements ReportRunner {
                 .createCriteria("transaction")
                     .add(Restrictions.ge("effectiveDate", startDate))
                     .add(Restrictions.lt("effectiveDate", endDate))
+                .createCriteria("account")
+                    .add(Restrictions.eq("user", currentUser))
                 .list();
 
         HashMap<Category, Double> expenseTotalsByCategory = new HashMap<>();

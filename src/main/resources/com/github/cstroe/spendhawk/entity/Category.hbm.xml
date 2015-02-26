@@ -12,5 +12,10 @@
         <!-- properties declared using Hibernate mapping types -->
         <property name="name"     type="string"    column="NAME"      not-null="true"/>
         <many-to-one name="user" column="USER_ID" not-null="true"/>
+        <many-to-one name="parent" column="PARENT_ID" class="Category" not-null="false"/>
+        <set name="children" table="CATEGORIES" lazy="false" inverse="false">
+            <key column="PARENT_ID"/>
+            <one-to-many class="Category"/>
+        </set>
     </class>
 </hibernate-mapping>

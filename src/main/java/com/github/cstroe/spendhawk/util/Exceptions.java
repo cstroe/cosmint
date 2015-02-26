@@ -52,4 +52,8 @@ public class Exceptions {
     public static RuntimeException cannotCreateCategory() {
         return new RuntimeException("Cannot create category.");
     }
+
+    public static RuntimeException reportNotFound() {
+        return new RuntimeException("Report not found.");
+    }
 }

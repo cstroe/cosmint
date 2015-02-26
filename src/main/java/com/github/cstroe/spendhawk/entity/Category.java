@@ -4,8 +4,10 @@ import com.github.cstroe.spendhawk.util.HibernateUtil;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * The category for an expense.  Categories are at the user level, so that
@@ -15,6 +17,8 @@ public class Category {
     private Long id;
     private User user;
     private String name;
+    private Category parent;
+    private Set<Category> children;
 
     public Long getId() {
         return id;
@@ -38,6 +42,22 @@ public class Category {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Category getParent() {
+        return parent;
+    }
+
+    public void setParent(@Nullable Category parent) {
+        this.parent = parent;
+    }
+
+    public Set<Category> getChildren() {
+        return children;
+    }
+
+    private void setChildren(Set<Category> children) {
+        this.children = children;
     }
 
     public boolean save() {

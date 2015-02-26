@@ -6,6 +6,9 @@ import com.github.cstroe.spendhawk.entity.User;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
+/**
+ * Generate the HTML form for inputting report parameters.
+ */
 public class ReportFormGenerator {
 
     private final User currentUser;
