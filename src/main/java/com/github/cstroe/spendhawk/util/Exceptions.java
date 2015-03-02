@@ -49,11 +49,27 @@ public class Exceptions {
         return new RuntimeException("Category not found.");
     }
 
+    public static RuntimeException categoryIdNotSpecified() {
+        return new RuntimeException("Category id not specified.");
+    }
+
+    public static RuntimeException parentCategoryNotFound() {
+        return new RuntimeException("Parent category not found.");
+    }
+
     public static RuntimeException cannotCreateCategory() {
         return new RuntimeException("Cannot create category.");
     }
 
     public static RuntimeException reportNotFound() {
         return new RuntimeException("Report not found.");
+    }
+
+    public static RuntimeException categoryParentNotSpecified() {
+        return new RuntimeException("Parent category ID is not specified.");
+    }
+
+    public static RuntimeException actionNotSpecified() {
+        return new RuntimeException("Action not specified.");
     }
 }

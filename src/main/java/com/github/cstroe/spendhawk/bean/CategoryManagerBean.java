@@ -69,4 +69,23 @@ public class CategoryManagerBean extends DatabaseBean {
             return false;
         }
     }
+
+    public boolean setParent(Long userId, Long categoryId, Long parentCategoryId) {
+        try {
+            startTransaction();
+            User user = User.findById(userId).orElseThrow(Exceptions::userNotFound);
+            Category category = Category.findById(user, categoryId)
+                .orElseThrow(Exceptions::categoryNotFound);
+            Category parentCategory = Category.findById(user, parentCategoryId)
+                .orElseThrow(Exceptions::parentCategoryNotFound);
+            category.setParent(parentCategory);
+            category.save();
+            commitTransaction();
+            return true;
+        } catch(Exception ex) {
+            rollbackTransaction();
+            message = ex.getMessage();
+            return false;
+        }
+    }
 }

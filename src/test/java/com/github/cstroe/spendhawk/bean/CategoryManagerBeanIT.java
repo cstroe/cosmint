@@ -12,6 +12,8 @@ import org.junit.runner.RunWith;
 import javax.inject.Inject;
 import java.util.Optional;
 
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.*;
 
 @RunWith(Arquillian.class)
@@ -148,5 +150,17 @@ public class CategoryManagerBeanIT extends BaseIT {
         assertFalse("Should not have expenses for categories that have been deleted.",
             t10.getExpenses().stream().anyMatch(e -> e.getCategory().getId().equals(1l)));
         commitTransaction();
+    }
+
+    @Test
+    public void testSetParent() {
+        boolean parentSet = categoryManager.setParent(1l, 1l, 2l);
+        assertTrue("Category parent should be set.", parentSet);
+
+        startTransaction();
+        User currentUser = User.findById(1l).get();
+        Category cat1 = Category.findById(currentUser, 1l).get();
+        Category cat2 = Category.findById(currentUser, 2l).get();
+        assertThat("Category parent should be persisted", cat1.getParent(), is(equalTo(cat2)));
     }
 }
