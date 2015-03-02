@@ -44,7 +44,7 @@ public class CategoryManagerServlet extends HttpServlet {
             HibernateUtil.getSessionFactory().getCurrentSession().getTransaction().commit();
         } catch (Exception ex) {
             HibernateUtil.getSessionFactory().getCurrentSession().getTransaction().rollback();
-            throw ex;
+            throw new ServletException(ex);
         }
     }
 
@@ -67,11 +67,9 @@ public class CategoryManagerServlet extends HttpServlet {
                 Optional<Category> categoryOptional = categoryManager.createCategory(userId, categoryName);
 
                 if(categoryOptional.isPresent()) {
-                    resp.sendRedirect(req.getContextPath() + servletPath(UserSummaryServlet.class) + "?user.id=" + userId.toString());
+                    redirectToUserSummaryServlet(req, resp, userId);
                 } else {
-                    req.setAttribute("message", categoryManager.getMessage());
-                    req.setAttribute("user", currentUser);
-                    req.getRequestDispatcher(TEMPLATE).forward(req, resp);
+                    showError(req, resp, currentUser);
                 }
             }
 
@@ -81,5 +79,15 @@ public class CategoryManagerServlet extends HttpServlet {
             HibernateUtil.getSessionFactory().getCurrentSession().getTransaction().rollback();
             throw new ServletException(ex);
         }
+    }
+
+    private static void redirectToUserSummaryServlet(HttpServletRequest req, HttpServletResponse resp, Long userId) throws IOException {
+        resp.sendRedirect(req.getContextPath() + servletPath(UserSummaryServlet.class, "user.id", userId));
+    }
+
+    private void showError(HttpServletRequest req, HttpServletResponse resp, User currentUser) throws IOException, ServletException {
+        req.setAttribute("message", categoryManager.getMessage());
+        req.setAttribute("user", currentUser);
+        req.getRequestDispatcher(TEMPLATE).forward(req, resp);
     }
 }
