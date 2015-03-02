@@ -6,10 +6,12 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.Map;
 
-import static com.github.cstroe.spendhawk.util.TestUtil.getLink;
+import static com.github.cstroe.spendhawk.util.TestUtil.*;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 
@@ -89,5 +91,55 @@ public class TestUtilTest {
                 "argumentA", "valB",
                 "argumentC", "valD",
                 "argumentF", ""));
+    }
+
+    @Test
+    public void testCreateArgumentMap() {
+        Map<String, String> argumentMap;
+
+        argumentMap = createArgumentMap("");
+        assertThat(argumentMap.size(), is(0));
+
+        argumentMap = createArgumentMap("a=3");
+        assertThat(argumentMap.size(), is(1));
+        assertThat(argumentMap.get("a"), is(equalTo("3")));
+
+        argumentMap = createArgumentMap("b=4&c=five");
+        assertThat(argumentMap.size(), is(2));
+        assertThat(argumentMap.get("b"), is(equalTo("4")));
+        assertThat(argumentMap.get("c"), is(equalTo("five")));
+
+        argumentMap = createArgumentMap("a&b=something");
+        assertThat(argumentMap.size(), is(2));
+        assertThat(argumentMap.get("a"), is(equalTo("")));
+        assertThat(argumentMap.get("b"), is(equalTo("something")));
+
+        argumentMap = createArgumentMap("a&b&c");
+        assertThat(argumentMap.size(), is(3));
+        assertThat(argumentMap.get("a"), is(equalTo("")));
+        assertThat(argumentMap.get("b"), is(equalTo("")));
+        assertThat(argumentMap.get("c"), is(equalTo("")));
+
+        argumentMap = createArgumentMap("a&b=778&c=hjhjhjhj");
+        assertThat(argumentMap.size(), is(3));
+        assertThat(argumentMap.get("a"), is(equalTo("")));
+        assertThat(argumentMap.get("b"), is(equalTo("778")));
+        assertThat(argumentMap.get("c"), is(equalTo("hjhjhjhj")));
+    }
+
+    @Test
+    public void testGetArguments() {
+        assertFalse(getArguments("/someContext/url1").isPresent());
+        assertFalse(getArguments("/someContext/url1?").isPresent());
+        assertThat(getArguments("/someContext/url1?a").get(), is(equalTo("a")));
+        assertThat(getArguments("/someContext/url1?a=1&b=2").get(), is(equalTo("a=1&b=2")));
+    }
+
+    @Test
+    public void testGetPath() {
+        assertThat(getPath("/someContext/url1"), is(equalTo("/someContext/url1")));
+        assertThat(getPath("/someContext/url1?"), is(equalTo("/someContext/url1")));
+        assertThat(getPath("/someContext/url1?a"), is(equalTo("/someContext/url1")));
+        assertThat(getPath("/someContext/url1?a=1&b=2"), is(equalTo("/someContext/url1")));
     }
 }

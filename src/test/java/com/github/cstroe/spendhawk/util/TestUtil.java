@@ -1,5 +1,6 @@
 package com.github.cstroe.spendhawk.util;
 
+import org.apache.commons.lang3.StringUtils;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -10,6 +11,7 @@ import java.io.FileWriter;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public final class TestUtil {
@@ -37,20 +39,39 @@ public final class TestUtil {
     }
 
     private static boolean matches(String linkHref, String path, String[] checkArguments) {
-        final int questionMarkIndex = linkHref.indexOf("?");
+        String linkPath = getPath(linkHref);
 
-        if(questionMarkIndex == -1) {
-            return checkArguments.length == 0 && linkHref.equals(path);
-        }
-
-        String linkPath = linkHref.substring(0, questionMarkIndex);
         if(!linkPath.equals(path)) {
             return false;
         }
 
-        String linkArguments = linkHref.substring(questionMarkIndex + 1);
+        Optional<String> linkArguments = getArguments(linkHref);
 
-        return matchArguments(createArgumentMap(linkArguments), createArgumentMap(checkArguments));
+        if(!linkArguments.isPresent()) {
+            return checkArguments.length == 0;
+        } else if(checkArguments.length == 0) {
+            return false;
+        }
+
+        return matchArguments(createArgumentMap(linkArguments.get()), createArgumentMap(checkArguments));
+    }
+
+    public static String getPath(String linkHref) {
+        final int questionMarkIndex = linkHref.indexOf("?");
+        if(questionMarkIndex == -1) {
+            return linkHref;
+        } else {
+            return linkHref.substring(0, questionMarkIndex);
+        }
+    }
+
+    public static Optional<String> getArguments(String linkHref) {
+        final int questionMarkIndex = linkHref.indexOf("?");
+        if(questionMarkIndex == -1 || questionMarkIndex == linkHref.length() - 1) {
+            return Optional.empty();
+        }
+
+        return Optional.of(linkHref.substring(questionMarkIndex + 1));
     }
 
     private static boolean matchArguments(
@@ -73,8 +94,13 @@ public final class TestUtil {
         return true;
     }
 
-    private static Map<String, String> createArgumentMap(String linkArguments) {
+    public static Map<String, String> createArgumentMap(String linkArguments) {
         Map<String, String> argumentMap = new HashMap<>();
+
+        if(StringUtils.isBlank(linkArguments)) {
+            return argumentMap;
+        }
+
         String[] keyValuePairs = linkArguments.split("&");
 
         Arrays.asList(keyValuePairs).stream().forEach(kvp -> {
