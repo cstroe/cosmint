@@ -4,6 +4,7 @@ import com.github.cstroe.spendhawk.util.HibernateUtil;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Optional;
@@ -13,7 +14,7 @@ import java.util.Set;
  * The category for an expense.  Categories are at the user level, so that
  * many accounts can use the same categories to categorize their expenditures.
  */
-public class Category {
+public class Category implements Comparable<Category> {
     private Long id;
     private User user;
     private String name;
@@ -58,6 +59,23 @@ public class Category {
 
     private void setChildren(Set<Category> children) {
         this.children = children;
+    }
+
+    @Override
+    public int compareTo(@Nonnull Category o) {
+        if(name == null) { return -1; }
+        if(o.name == null) { return 1; }
+        return name.compareTo(name);
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if(other instanceof Category) {
+            Category otherCategory = (Category) other;
+            return getId().equals(otherCategory.getId());
+        } else {
+            return false;
+        }
     }
 
     public boolean save() {
