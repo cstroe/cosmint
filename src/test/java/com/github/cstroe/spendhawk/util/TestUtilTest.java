@@ -12,7 +12,6 @@ import static com.github.cstroe.spendhawk.util.TestUtil.*;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 
 public class TestUtilTest {
@@ -29,12 +28,12 @@ public class TestUtilTest {
 
     @Test
     public void getLinkNoArgs() throws IOException {
-        assertThat(getLink(doc, "/myContext/simplePath"), is(equalTo("/myContext/simplePath")));
+        assertThat(getLink(doc, "/myContext/simplePath").get(), is(equalTo("/myContext/simplePath")));
     }
 
     @Test
     public void getLinkWithOneArg() {
-        assertThat(getLink(doc, "/myContext/funstuff/action1", "argument1", "val1"),
+        assertThat(getLink(doc, "/myContext/funstuff/action1", "argument1", "val1").get(),
             is(equalTo("/myContext/funstuff/action1?argument1=val1")));
     }
 
@@ -45,52 +44,52 @@ public class TestUtilTest {
                 "argumentE", "",
                 "argumentA", "valB",
                 "argumentC", "valD",
-                "argumentF", ""),
+                "argumentF", "").get(),
             is("/myContext/funstuff/action2?argumentA=valB&argumentC=valD&argumentE&argumentF"));
 
         TestUtil.saveFileOnError = false;
 
-        assertNull("Should not match a link that is similar, but missing one empty value argument.",
+        assertFalse("Should not match a link that is similar, but missing one empty value argument.",
             getLink(doc, "/myContext/funstuff/action2",
                 "argumentE", "",
                 "argumentA", "valB",
-                "argumentC", "valD"));
+                "argumentC", "valD").isPresent());
 
-        assertNull("Should not match a link that is similar, but missing one non-empty value argument.",
+        assertFalse("Should not match a link that is similar, but missing one non-empty value argument.",
             getLink(doc, "/myContext/funstuff/action2",
                 "argumentE", "",
                 "argumentA", "valB",
-                "argumentF", ""));
+                "argumentF", "").isPresent());
 
-        assertNull("Should not match a link that is similar, but contains an extra empty value argument.",
-            getLink(doc, "/myContext/funstuff/action2",
-                "argumentE", "",
-                "argumentA", "valB",
-                "argumentC", "valD",
-                "argumentF", "",
-                "argumentG", ""));
-
-        assertNull("Should not match a link that is similar, but contains an extra non-empty value argument.",
+        assertFalse("Should not match a link that is similar, but contains an extra empty value argument.",
             getLink(doc, "/myContext/funstuff/action2",
                 "argumentE", "",
                 "argumentA", "valB",
                 "argumentC", "valD",
                 "argumentF", "",
-                "argumentG", "foobar"));
+                "argumentG", "").isPresent());
 
-        assertNull("Should not match a link that just contains the argument names.",
+        assertFalse("Should not match a link that is similar, but contains an extra non-empty value argument.",
+            getLink(doc, "/myContext/funstuff/action2",
+                "argumentE", "",
+                "argumentA", "valB",
+                "argumentC", "valD",
+                "argumentF", "",
+                "argumentG", "foobar").isPresent());
+
+        assertFalse("Should not match a link that just contains the argument names.",
             getLink(doc, "/myContext/funstuff/action2",
                 "argumentE", "",
                 "argumentA", "",
                 "argumentC", "",
-                "argumentF", ""));
+                "argumentF", "").isPresent());
 
-        assertNull("Should not match a link with correct arguments but incorrect path.",
+        assertFalse("Should not match a link with correct arguments but incorrect path.",
             getLink(doc, "/myContext/funstuff/wrongpath",
                 "argumentE", "",
                 "argumentA", "valB",
                 "argumentC", "valD",
-                "argumentF", ""));
+                "argumentF", "").isPresent());
     }
 
     @Test
