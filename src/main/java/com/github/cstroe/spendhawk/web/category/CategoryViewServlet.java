@@ -5,6 +5,7 @@ import com.github.cstroe.spendhawk.entity.Category;
 import com.github.cstroe.spendhawk.entity.User;
 import com.github.cstroe.spendhawk.util.Exceptions;
 import com.github.cstroe.spendhawk.util.HibernateUtil;
+import com.github.cstroe.spendhawk.util.TemplateForwarder;
 import com.github.cstroe.spendhawk.web.user.UserSummaryServlet;
 
 import javax.ejb.EJB;
@@ -43,6 +44,8 @@ public class CategoryViewServlet extends HttpServlet {
             List<Category> userCategories = Category.findAll(currentUser).stream()
                 .filter(c -> !c.equals(currentCategory)).sorted().collect(Collectors.toList());
 
+            req.setAttribute("fw", new TemplateForwarder(req));
+            req.setAttribute("user", currentUser);
             req.setAttribute("userCategories", userCategories);
             req.setAttribute("category", currentCategory);
             req.getRequestDispatcher(TEMPLATE).forward(req, resp);
@@ -104,7 +107,7 @@ public class CategoryViewServlet extends HttpServlet {
     }
 
     private void showError(HttpServletRequest req, HttpServletResponse resp, User currentUser) throws IOException, ServletException {
-
+        req.setAttribute("fw", new TemplateForwarder(req));
         req.setAttribute("message", categoryManager.getMessage());
         req.setAttribute("user", currentUser);
         req.getRequestDispatcher(TEMPLATE).forward(req, resp);

@@ -1,3 +1,5 @@
+<#-- @ftlvariable name="user" type="com.github.cstroe.spendhawk.entity.User" -->
+<#-- @ftlvariable name="fw" type="com.github.cstroe.spendhawk.util.TemplateForwarder" -->
 <#-- @ftlvariable name="message" type="java.lang.String" -->
 <#-- @ftlvariable name="category" type="com.github.cstroe.spendhawk.entity.Category" -->
 <#-- @ftlvariable name="userCategories" type="java.util.List" -->
@@ -6,6 +8,10 @@
 <#assign page_title="Category ${category.name}">
 
 <#include "/template/layouts/global_header.ftl"/>
+<p>
+    <#--noinspection FtlReferencesInspection-->
+    <a href="${fw.url('/accounts', 'user.id', user.id)}">Back to Summary page</a>
+</p>
 
 <p>
     ${message!""}

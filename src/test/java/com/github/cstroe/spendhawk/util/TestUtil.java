@@ -18,16 +18,25 @@ public final class TestUtil {
 
     public static Boolean saveFileOnError = true;
 
-    public static String getLink(@Nonnull Document doc, @Nonnull String path, String... arguments) {
+    /**
+     * Find a link to the given path.
+     * @return true if the path was found as one of the links' href, false if none was found
+     */
+    public static boolean hasLink(Document doc, String path, Object... arguments) {
+        return getLink(doc, path, arguments).isPresent();
+    }
+
+
+    public static Optional<String> getLink(@Nonnull Document doc, @Nonnull String path, Object... arguments) {
         Elements links = doc.getElementsByTag("a");
         if(links == null) {
             // no links found
-            return null;
+            return Optional.empty();
         }
 
         for(Element link : links) {
             if(matches(link.attr("href"), path, arguments)) {
-                return link.attr("href");
+                return Optional.of(link.attr("href"));
             }
         }
 
@@ -35,10 +44,10 @@ public final class TestUtil {
         if(saveFileOnError) {
             saveFile("response page", doc.toString());
         }
-        return null;
+        return Optional.empty();
     }
 
-    private static boolean matches(String linkHref, String path, String[] checkArguments) {
+    private static boolean matches(String linkHref, String path, Object[] checkArguments) {
         String linkPath = getPath(linkHref);
 
         if(!linkPath.equals(path)) {
@@ -117,10 +126,10 @@ public final class TestUtil {
         return argumentMap;
     }
 
-    private static Map<String, String> createArgumentMap(String[] arguments) {
+    private static Map<String, String> createArgumentMap(Object[] arguments) {
         Map<String, String> argumentMap = new HashMap<>();
         for(int i = 0; i < arguments.length; i += 2) {
-            argumentMap.put(arguments[i], arguments[i+1]);
+            argumentMap.put(arguments[i].toString(), arguments[i+1].toString());
         }
         return argumentMap;
     }

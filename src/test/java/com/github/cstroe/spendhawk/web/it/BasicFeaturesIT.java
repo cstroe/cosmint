@@ -23,6 +23,7 @@ import java.net.URL;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.github.cstroe.spendhawk.util.TestUtil.hasLink;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.*;
@@ -64,7 +65,7 @@ public class BasicFeaturesIT extends BaseClientIT {
 
         Document doc = Jsoup.parse(response.getBody());
         assertTrue("A link from the welcome page to the users page must exist.",
-            hasLink(doc, fullServletPath(UsersServlet.class)));
+            hasLink(doc, servletPath(UsersServlet.class)));
 
         String welcomePage = response.getBody();
 
@@ -96,14 +97,14 @@ public class BasicFeaturesIT extends BaseClientIT {
     @InSequence(400)
     public void t0400_createUser() throws Exception {
         // record how many users are in the system before we create another
-        final String viewUsersUrl = url(UsersServlet.class);
+        final String viewUsersUrl = fullURL(UsersServlet.class);
         response = Unirest.get(viewUsersUrl).asString();
         Document docBefore = Jsoup.parse(response.getBody());
         Elements linksBefore = docBefore.getElementsByClass("userLink");
 
         final int numUsersBeforeTest = linksBefore.size();
 
-        response = Unirest.post(url(UserManagerServlet.class))
+        response = Unirest.post(fullURL(UserManagerServlet.class))
             .field("user.name", "testuser")
             .field("action", "Add User")
             .asString();
@@ -112,7 +113,7 @@ public class BasicFeaturesIT extends BaseClientIT {
         String redirectUrl = response.getHeaders().getFirst("location");
         URL url = new URL(redirectUrl);
         assertTrue("Creating a user should take you to the summary page for that user.",
-                url.getPath().startsWith(fullServletPath(UserSummaryServlet.class)) &&
+                url.getPath().startsWith(servletPath(UserSummaryServlet.class)) &&
                 url.getQuery().contains("user.id="));
 
         response = Unirest.get(viewUsersUrl).asString();
@@ -125,7 +126,7 @@ public class BasicFeaturesIT extends BaseClientIT {
         userDetailPath = findLinkByText(links, "testuser");
 
         assertTrue("The user detail link points to the AccountsServlet and takes params",
-                userDetailPath.startsWith(fullServletPath(UserSummaryServlet.class) + "?"));
+                userDetailPath.startsWith(servletPath(UserSummaryServlet.class) + "?"));
 
         Matcher m = Pattern.compile("user\\.id=(.*)").matcher(userDetailPath);
         if(m.find()) {
@@ -145,7 +146,7 @@ public class BasicFeaturesIT extends BaseClientIT {
 
         Document doc = Jsoup.parse(response.getBody());
         assertTrue("A link from the accounts page to the account manager page must exist.",
-            hasLink(doc, fullServletPath(AccountManagerServlet.class), "user.id", userId.toString()));
+            hasLink(doc, servletPath(AccountManagerServlet.class), "user.id", userId.toString()));
     }
 
     @Test
@@ -153,7 +154,7 @@ public class BasicFeaturesIT extends BaseClientIT {
     @InSequence(600)
     public void t0600_addAccount() throws Exception {
         String accountName = "Account 1";
-        response = Unirest.post(url(AccountManagerServlet.class))
+        response = Unirest.post(fullURL(AccountManagerServlet.class))
             .field("action", "store")
             .field("account.name", accountName)
             .field("user.id", userId.toString())
@@ -190,14 +191,14 @@ public class BasicFeaturesIT extends BaseClientIT {
         String redirectUrl = response.getHeaders().getFirst("location");
         String urlPath = new URL(redirectUrl).getPath();
         assertTrue("Creating a category should take you to the summary page for that user.",
-                urlPath.startsWith(fullServletPath(UserSummaryServlet.class)));
+                urlPath.startsWith(servletPath(UserSummaryServlet.class)));
     }
 
     @Test
     @RunAsClient
     @InSequence(800)
     public void t0800_shouldNotAddBlankCategory() throws Exception {
-        response = Unirest.post(url(CategoryManagerServlet.class))
+        response = Unirest.post(fullURL(CategoryManagerServlet.class))
                 .field("user.id", userId)
                 .field("action", "store")
                 .asString();

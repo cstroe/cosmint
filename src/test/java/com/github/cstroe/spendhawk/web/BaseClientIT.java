@@ -1,12 +1,12 @@
 package com.github.cstroe.spendhawk.web;
 
+import com.github.cstroe.spendhawk.util.ServletUtil;
 import com.github.cstroe.spendhawk.web.category.CategoryManagerServlet;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.test.api.ArquillianResource;
-import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.junit.runner.RunWith;
@@ -18,8 +18,6 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import static com.github.cstroe.spendhawk.util.ServletUtil.servletPath;
-import static com.github.cstroe.spendhawk.util.TestUtil.getLink;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -42,11 +40,11 @@ public class BaseClientIT {
      *
      * Return: "/a1dgfdw/accounts/manage"
      */
-    protected String fullServletPath(Class<? extends HttpServlet> servlet) {
+    protected String servletPath(Class<? extends HttpServlet> servlet) {
         StringBuilder servletUrl = new StringBuilder();
         final String deploymentPath = deploymentUrl.getPath();
         servletUrl.append(deploymentPath.substring(0, deploymentPath.length()-1));
-        servletUrl.append(servletPath(servlet));
+        servletUrl.append(ServletUtil.servletPath(servlet));
         return servletUrl.toString();
     }
 
@@ -55,7 +53,7 @@ public class BaseClientIT {
      */
     protected HttpResponse<String> connect(Class<? extends HttpServlet> servlet) {
         try {
-            return Unirest.get(url(servlet)).asString();
+            return Unirest.get(fullURL(servlet)).asString();
         } catch (UnirestException e) {
             e.printStackTrace();
             return null;
@@ -116,12 +114,12 @@ public class BaseClientIT {
     /**
      * Create the url for a servlet on the test deployment.
      */
-    protected String url(Class<? extends HttpServlet> servlet) {
+    protected String fullURL(Class<? extends HttpServlet> servlet) {
         return "http://" +
                 deploymentUrl.getHost() +
                 ":" +
                 deploymentUrl.getPort() +
-                fullServletPath(servlet);
+                servletPath(servlet);
     }
 
     protected String url(Class<? extends HttpServlet> servlet, Object... params) {
@@ -130,7 +128,7 @@ public class BaseClientIT {
                 .append(deploymentUrl.getHost())
                 .append(":")
                 .append(deploymentUrl.getPort())
-                .append(fullServletPath(servlet));
+                .append(servletPath(servlet));
 
         for(int i = 0; i < params.length; i=i+2) {
             if(i == 0) {
@@ -144,14 +142,6 @@ public class BaseClientIT {
         }
 
         return url.toString();
-    }
-
-    /**
-     * Find a link to the given path.
-     * @return true if the path was found as one of the links' href, false if none was found
-     */
-    protected boolean hasLink(Document doc, String path, String... arguments) {
-        return getLink(doc, path, arguments) != null;
     }
 
     /**
@@ -190,7 +180,7 @@ public class BaseClientIT {
      * Create a category via the CategoryManagerServlet.
      */
     protected HttpResponse<String> createCategory(Long userId, String categoryName) throws Exception {
-        HttpResponse<String> response = Unirest.post(url(CategoryManagerServlet.class))
+        HttpResponse<String> response = Unirest.post(fullURL(CategoryManagerServlet.class))
                 .field("user.id", userId)
                 .field("category.name", categoryName)
                 .field("action", "store")

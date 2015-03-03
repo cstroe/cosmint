@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
 
 import static com.github.cstroe.spendhawk.util.TestUtil.createArgumentMap;
 import static com.github.cstroe.spendhawk.util.TestUtil.getArguments;
+import static com.github.cstroe.spendhawk.util.TestUtil.hasLink;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.*;
@@ -91,7 +92,7 @@ public class CategoryViewServletIT extends BaseClientIT {
 
         response = connect(CategoryViewServlet.class, "id", catCId);
 
-        response = Unirest.post(url(CategoryViewServlet.class))
+        response = Unirest.post(fullURL(CategoryViewServlet.class))
             .field("action", "Set Parent Category")
             .field("category.id", catCId)
             .field("parentCategory.id", catBId)
@@ -102,7 +103,7 @@ public class CategoryViewServletIT extends BaseClientIT {
         String redirectUrl = response.getHeaders().getFirst("location");
         URL url = new URL(redirectUrl);
         assertTrue("Setting a parent category should take you to the view page for that category.",
-            url.getPath().startsWith(fullServletPath(CategoryViewServlet.class)) &&
+            url.getPath().startsWith(servletPath(CategoryViewServlet.class)) &&
                 url.getQuery().contains("id=" + catCId));
 
         response = connect200(CategoryViewServlet.class, "id", catCId);
@@ -123,5 +124,16 @@ public class CategoryViewServletIT extends BaseClientIT {
             .orElseThrow(() -> new RuntimeException("Link for '" + categoryName + "' should the href argument."));
 
         return Long.parseLong(createArgumentMap(queryArguments).get("id"));
+    }
+
+    @Test
+    @RunAsClient
+    @InSequence(300)
+    public void t0300_categoryViewShouldDisplayLinkToUserSummaryPage() {
+        response = connect(CategoryViewServlet.class, "id", 1l);
+        Document doc = Jsoup.parse(response.getBody());
+
+        assertTrue("Category view page should contain a link back to the user summary page.",
+            hasLink(doc, servletPath(UserSummaryServlet.class), "user.id", 1l));
     }
 }
