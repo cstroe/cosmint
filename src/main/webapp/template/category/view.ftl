@@ -12,6 +12,11 @@
 </p>
 
 Category: ${category.name}<br/>
+<#if category.parent??>
+    Category Parent: <span id="categoryParent">${category.parent.name}</span>
+<#else>
+    Category Parent: None.
+</#if>
 
 <form method="post">
     <input type="hidden" name="category.id" value="${category.id}"/>

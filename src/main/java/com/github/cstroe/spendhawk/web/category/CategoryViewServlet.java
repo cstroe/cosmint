@@ -89,7 +89,7 @@ public class CategoryViewServlet extends HttpServlet {
                 }
 
                 if(categoryManager.setParent(currentUser.getId(), currentCategory.getId(), parentCategoryId)) {
-                    resp.sendRedirect(req.getContextPath() + servletPath(CategoryViewServlet.class, "id", currentUser.getId()));
+                    resp.sendRedirect(req.getContextPath() + servletPath(CategoryViewServlet.class, "id", currentCategory.getId()));
                 } else {
                     showError(req, resp, currentUser);
                 }

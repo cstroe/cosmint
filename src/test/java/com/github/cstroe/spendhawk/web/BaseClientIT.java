@@ -62,10 +62,16 @@ public class BaseClientIT {
         }
     }
 
+    protected HttpResponse<String> connect200(Class<? extends HttpServlet> servlet, Object... params) {
+        HttpResponse<String> resp = connect(servlet, params);
+        assertResponseStatus(200, resp);
+        return resp;
+    }
+
     /**
      * A helper method to connect to a specific servlet on the test deployment.
      */
-    protected HttpResponse<String> connect(Class<? extends HttpServlet> servlet, String... params) {
+    protected HttpResponse<String> connect(Class<? extends HttpServlet> servlet, Object... params) {
         try {
             return Unirest.get(url(servlet, params)).asString();
         } catch (UnirestException e) {
@@ -118,7 +124,7 @@ public class BaseClientIT {
                 fullServletPath(servlet);
     }
 
-    protected String url(Class<? extends HttpServlet> servlet, String... params) {
+    protected String url(Class<? extends HttpServlet> servlet, Object... params) {
         StringBuilder url = new StringBuilder();
         url.append("http://")
                 .append(deploymentUrl.getHost())
@@ -132,7 +138,7 @@ public class BaseClientIT {
             } else {
                 url.append("&");
             }
-            url.append(params[i])
+            url.append(params[i].toString())
                     .append("=")
                     .append(params[i+1]);
         }
@@ -164,13 +170,17 @@ public class BaseClientIT {
     /**
      * Save response output to a file if the response status assertion fails.
      */
-    protected static void assertResponseStatus(int expected, HttpResponse<String> response) throws IOException {
-        if(response.getStatus() != expected) {
-            File tempFile = File.createTempFile("integrationTest", ".html");
-            FileWriter writer = new FileWriter(tempFile);
-            writer.write(response.getBody());
-            writer.close();
-            System.out.println("Saved response page to: file://" + tempFile.getAbsolutePath());
+    protected static void assertResponseStatus(int expected, HttpResponse<String> response) {
+        try {
+            if (response.getStatus() != expected) {
+                File tempFile = File.createTempFile("integrationTest", ".html");
+                FileWriter writer = new FileWriter(tempFile);
+                writer.write(response.getBody());
+                writer.close();
+                System.out.println("Saved response page to: file://" + tempFile.getAbsolutePath());
+            }
+        } catch(IOException ex) {
+            throw new RuntimeException(ex);
         }
 
         assertEquals(expected, response.getStatus());
