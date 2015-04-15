@@ -18,7 +18,7 @@ import static org.junit.Assert.assertTrue;
 public class CategoryTestIT extends BaseIT {
 
     @Test
-    public void testParentIsPersisted() {
+    public void testParentIsPersistedByDBUnit() {
         startTransaction();
         User currentUser = User.findById(3l).orElseThrow(Exceptions::userNotFound);
 
@@ -31,7 +31,7 @@ public class CategoryTestIT extends BaseIT {
     }
 
     @Test
-    public void testChildrenArePersisted() {
+    public void testChildrenArePersistedByDBUnit() {
         startTransaction();
         User currentUser = User.findById(3l).orElseThrow(Exceptions::userNotFound);
 
