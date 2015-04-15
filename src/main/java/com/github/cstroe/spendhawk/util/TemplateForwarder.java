@@ -1,5 +1,6 @@
 package com.github.cstroe.spendhawk.util;
 
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 
 /**
@@ -44,5 +45,16 @@ public class TemplateForwarder {
         }
 
         return url.toString();
+    }
+
+    public String servlet(String className, Object... param) throws ClassNotFoundException {
+        Class<?> classObject = Class.forName(className);
+        if(HttpServlet.class.isAssignableFrom(classObject)) {
+            @SuppressWarnings("unchecked")
+            Class<? extends HttpServlet> servletClass = (Class<? extends HttpServlet>) classObject;
+            return url(ServletUtil.servletPath(servletClass), param);
+        } else {
+            throw new IllegalArgumentException(className + " does not extend HttpServlet.");
+        }
     }
 }

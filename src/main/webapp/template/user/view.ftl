@@ -1,3 +1,6 @@
+<#-- @ftlvariable name="users" type="com.github.cstroe.spendhawk.entity.User[]" -->
+<#-- @ftlvariable name="fw" type="com.github.cstroe.spendhawk.util.TemplateForwarder" -->
+
 <#assign page_title="Users">
 
 <#include "/template/layouts/global_header.ftl">
@@ -14,7 +17,8 @@
     <tr>
         <td>
             <a class="userLink"
-               href="${fw.url('/accounts', 'user.id', user.id)}">
+               <#--noinspection FtlReferencesInspection-->
+               href="${fw.servlet('com.github.cstroe.spendhawk.web.user.UserSummaryServlet', 'user.id', user.id)}">
             ${user.name}
             </a>
         </td>

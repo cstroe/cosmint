@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet("/accounts")
+@WebServlet("/summary")
 public class UserSummaryServlet extends HttpServlet {
 
     private static final String TEMPLATE = "/template/user/summary.ftl";

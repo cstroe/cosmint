@@ -2,15 +2,14 @@
 <#-- @ftlvariable name="fw" type="com.github.cstroe.spendhawk.util.TemplateForwarder" -->
 <#-- @ftlvariable name="message" type="java.lang.String" -->
 <#-- @ftlvariable name="category" type="com.github.cstroe.spendhawk.entity.Category" -->
-<#-- @ftlvariable name="userCategories" type="java.util.List" -->
-<#-- @ftlvariable name="currentCategory" type="com.github.cstroe.spendhawk.entity.Category" -->
+<#-- @ftlvariable name="userCategories" type="com.github.cstroe.spendhawk.entity.Category[]" -->
 
 <#assign page_title="Category ${category.name}">
 
 <#include "/template/layouts/global_header.ftl"/>
 <p>
     <#--noinspection FtlReferencesInspection-->
-    <a href="${fw.url('/accounts', 'user.id', user.id)}">Back to Summary page</a>
+    <a href="${fw.servlet('com.github.cstroe.spendhawk.web.user.UserSummaryServlet', 'user.id', user.id)}">Back to Summary page</a>
 </p>
 
 <p>
