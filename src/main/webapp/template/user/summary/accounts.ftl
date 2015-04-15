@@ -1,3 +1,7 @@
+<#-- @ftlvariable name="accounts" type="com.github.cstroe.spendhawk.entity.Account[]" -->
+<#-- @ftlvariable name="fw" type="com.github.cstroe.spendhawk.util.TemplateForwarder" -->
+
+<#--noinspection FtlReferencesInspection-->
 <a href="${fw.url('/accounts/manage', "user.id", user.id)}">Manage Accounts</a>
 
 <h2>Accounts:</h2>
@@ -10,6 +14,7 @@
 <#list accounts as account>
     <tr>
         <td>
+            <#--noinspection FtlReferencesInspection-->
             <a href="${fw.url('/account', 'id', account.id, 'relDate', 'currentMonth')}">
             ${account.name}
             </a>

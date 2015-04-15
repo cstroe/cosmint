@@ -1,3 +1,4 @@
+<#-- @ftlvariable name="page_title" type="java.lang.String" -->
 <html>
 
 <head>
