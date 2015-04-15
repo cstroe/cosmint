@@ -47,6 +47,12 @@ public class TemplateForwarder {
         return url.toString();
     }
 
+    /**
+     * @param className A class that extends HttpServlet.
+     * @param param Parameters to the servlet.
+     * @return The url for the given servlet, using the parameters.
+     * @throws ClassNotFoundException
+     */
     public String servlet(String className, Object... param) throws ClassNotFoundException {
         Class<?> classObject = Class.forName(className);
         if(HttpServlet.class.isAssignableFrom(classObject)) {
