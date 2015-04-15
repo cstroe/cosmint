@@ -37,7 +37,7 @@ public class CategoryHierachyReportIT extends BaseIT {
         ReportResultRenderer renderer = new PreformattedTextRenderer(result);
         String renderOutput = renderer.render();
 
-        assertThat(renderOutput, is("<pre>\nFood -114.0 \n> Groceries -80.0 \n> Eating Out -34.0 \n\n</pre>"));
+        assertThat(renderOutput, is("<pre>\nFood -114.0 \n> Eating Out -34.0 \n> Groceries -80.0 \n\n</pre>"));
 
         commitTransaction();
     }

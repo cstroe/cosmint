@@ -41,7 +41,7 @@ public class CategoryHierarchyReport implements ReportRunner {
     public void runReport() throws Exception {
         List<Category> categories = Category.findAll(currentUser);
 
-        List<Category> rootNodes = categories.stream()
+        List<Category> rootNodes = categories.stream().sorted()
             .filter(c -> c.getParent() == null).collect(Collectors.toList());
 
         SimpleReportResult res = new SimpleReportResult(categories.size(), 2);
@@ -64,7 +64,9 @@ public class CategoryHierarchyReport implements ReportRunner {
         res.setCell(currentRow, 0, strRepeat("> ", categoryDepth) + currentRoot.getName());
         res.setCell(currentRow, 1, Double.toString(categoryTotal));
         int delta = 1;
-        for(Category currentRootChild : currentRoot.getChildren()) {
+        final List<Category> sortedChildren = currentRoot.getChildren().stream()
+            .sorted().collect(Collectors.toList());
+        for(Category currentRootChild : sortedChildren) {
             delta += fillIn(res, currentRow + delta, currentRootChild);
         }
         return delta;
