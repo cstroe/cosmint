@@ -40,7 +40,7 @@ public class BaseIT {
 
                 // http://stackoverflow.com/questions/2653322/getresourceasstream-not-loading-resource-in-webapp
                 InputStream seed = Thread.currentThread().getContextClassLoader().getResourceAsStream("db/seed.xml");
-                IDataSet seedDataset = new FlatXmlDataSetBuilder().build(seed);
+                IDataSet seedDataset = new FlatXmlDataSetBuilder().setColumnSensing(true).build(seed);
 
                 dbTester.setDataSet(seedDataset);
                 // don't close the connection after we setup
