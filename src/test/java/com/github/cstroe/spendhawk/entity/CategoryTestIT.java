@@ -36,7 +36,7 @@ public class CategoryTestIT extends BaseIT {
         User currentUser = User.findById(3l).orElseThrow(Exceptions::userNotFound);
 
         Category p1 = Category.findById(currentUser, 10l)
-                .orElseThrow(Exceptions::categoryNotFound);
+            .orElseThrow(Exceptions::categoryNotFound);
 
         assertThat(p1.getChildren(), is(not(nullValue())));
 
@@ -44,10 +44,10 @@ public class CategoryTestIT extends BaseIT {
         assertThat(children.size(), is(2));
 
         Category c1 = Category.findById(currentUser, 11l)
-                .orElseThrow(Exceptions::categoryNotFound);
+            .orElseThrow(Exceptions::categoryNotFound);
 
         Category c2 = Category.findById(currentUser, 12l)
-                .orElseThrow(Exceptions::categoryNotFound);
+            .orElseThrow(Exceptions::categoryNotFound);
 
         assertTrue(children.contains(c1));
         assertTrue(children.contains(c2));
