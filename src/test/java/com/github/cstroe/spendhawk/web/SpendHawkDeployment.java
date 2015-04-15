@@ -56,7 +56,10 @@ public class SpendHawkDeployment {
                         "org.hibernate:hibernate-core",
                         "org.apache.commons:commons-lang3",
                         "org.apache.commons:commons-csv",
-                        "org.dbunit:dbunit"
+                        "org.dbunit:dbunit",
+                        "org.jmock:jmock-junit4",
+                        "org.jsoup:jsoup",
+                        "com.mashape.unirest:unirest-java"
                 ).withTransitivity().asFile();
 
         war.addAsLibraries(files);
