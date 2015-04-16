@@ -7,6 +7,7 @@ import com.github.cstroe.spendhawk.report.ReportRunner;
 import com.github.cstroe.spendhawk.report.impl.TableRenderer;
 import com.github.cstroe.spendhawk.util.Exceptions;
 import com.github.cstroe.spendhawk.util.HibernateUtil;
+import com.github.cstroe.spendhawk.util.TemplateForwarder;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.reflections.Reflections;
 import org.reflections.scanners.SubTypesScanner;
@@ -74,6 +75,7 @@ public class ReportRunnerServlet extends HttpServlet {
                 rfg.parseParameters(req, report.getParameters());
                 report.runReport();
                 ReportResultRenderer renderer = new TableRenderer(report.getResult());
+                req.setAttribute("fw", new TemplateForwarder(req));
                 req.setAttribute("user", currentUser);
                 req.setAttribute("renderer", renderer);
                 req.getRequestDispatcher(TEMPLATE_RESULT).forward(req, resp);

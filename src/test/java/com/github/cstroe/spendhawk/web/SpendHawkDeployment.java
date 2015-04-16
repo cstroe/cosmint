@@ -59,7 +59,8 @@ public class SpendHawkDeployment {
                         "org.dbunit:dbunit",
                         "org.jmock:jmock-junit4",
                         "org.jsoup:jsoup",
-                        "com.mashape.unirest:unirest-java"
+                        "com.mashape.unirest:unirest-java",
+                        "org.reflections:reflections"
                 ).withTransitivity().asFile();
 
         war.addAsLibraries(files);

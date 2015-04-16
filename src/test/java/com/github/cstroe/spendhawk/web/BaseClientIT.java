@@ -17,6 +17,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
 
@@ -41,10 +42,26 @@ public class BaseClientIT {
      * Return: "/a1dgfdw/accounts/manage"
      */
     protected String servletPath(Class<? extends HttpServlet> servlet) {
+        return servletPath(servlet, new Object[0]);
+    }
+
+    protected String servletPath(Class<? extends HttpServlet> servlet, Object... params) {
         StringBuilder servletUrl = new StringBuilder();
         final String deploymentPath = deploymentUrl.getPath();
         servletUrl.append(deploymentPath.substring(0, deploymentPath.length()-1));
         servletUrl.append(ServletUtil.servletPath(servlet));
+
+        for(int i = 0; i < params.length; i=i+2) {
+            if(i == 0) {
+                servletUrl.append("?");
+            } else {
+                servletUrl.append("&");
+            }
+            servletUrl.append(params[i].toString())
+                    .append("=")
+                    .append(params[i+1]);
+        }
+
         return servletUrl.toString();
     }
 
@@ -123,57 +140,45 @@ public class BaseClientIT {
     }
 
     protected String url(Class<? extends HttpServlet> servlet, Object... params) {
-        StringBuilder url = new StringBuilder();
-        url.append("http://")
-                .append(deploymentUrl.getHost())
-                .append(":")
-                .append(deploymentUrl.getPort())
-                .append(servletPath(servlet));
-
-        for(int i = 0; i < params.length; i=i+2) {
-            if(i == 0) {
-                url.append("?");
-            } else {
-                url.append("&");
-            }
-            url.append(params[i].toString())
-                    .append("=")
-                    .append(params[i+1]);
-        }
-
-        return url.toString();
+        return "http://" +
+               deploymentUrl.getHost() +
+               ":" +
+               deploymentUrl.getPort() +
+               servletPath(servlet, params);
     }
 
     /**
      * @return the link url that has the given text, null if a link with that
      *         text is not found
      */
-    protected static String findLinkByText(Elements links, String text) {
+    protected static Optional<String> findLinkByText(Elements links, String text) {
         for(Element e : links) {
             if(e.ownText().equals(text)) {
-                return e.attr("href");
+                return Optional.of(e.attr("href"));
             }
         }
-        return null;
+        return Optional.empty();
     }
 
     /**
      * Save response output to a file if the response status assertion fails.
      */
     protected static void assertResponseStatus(int expected, HttpResponse<String> response) {
-        try {
-            if (response.getStatus() != expected) {
-                File tempFile = File.createTempFile("integrationTest", ".html");
-                FileWriter writer = new FileWriter(tempFile);
-                writer.write(response.getBody());
-                writer.close();
-                System.out.println("Saved response page to: file://" + tempFile.getAbsolutePath());
-            }
-        } catch(IOException ex) {
-            throw new RuntimeException(ex);
+        if (response.getStatus() != expected) {
+            saveResponseToFile(response);
         }
 
         assertEquals(expected, response.getStatus());
+    }
+
+    protected static void saveResponseToFile(HttpResponse<String> response) {
+        File tempFile;
+        try (FileWriter writer = new FileWriter(tempFile = File.createTempFile("integrationTest", ".html"))) {
+            writer.write(response.getBody());
+            System.out.println("Saved response page to: file://" + tempFile.getAbsolutePath());
+        } catch(IOException ex) {
+            throw new RuntimeException(ex);
+        }
     }
 
     /**
@@ -188,5 +193,10 @@ public class BaseClientIT {
 
         assertResponseStatus(302, response);
         return response;
+    }
+
+    protected AssertionError saveAndFail(String message, HttpResponse<String> response) {
+        saveResponseToFile(response);
+        return new AssertionError(message);
     }
 }

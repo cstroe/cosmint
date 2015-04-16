@@ -123,7 +123,9 @@ public class BasicFeaturesIT extends BaseClientIT {
 
         assertThat(links.size(), is(equalTo(numUsersBeforeTest + 1)));
 
-        userDetailPath = findLinkByText(links, "testuser");
+        //noinspection ThrowableResultOfMethodCallIgnored
+        userDetailPath = findLinkByText(links, "testuser")
+            .orElseThrow(() -> saveAndFail("Could not find link for 'testuser'.", response));
 
         assertTrue("The user detail link points to the AccountsServlet and takes params",
                 userDetailPath.startsWith(servletPath(UserSummaryServlet.class) + "?"));
