@@ -65,7 +65,7 @@ public class Category implements Comparable<Category> {
     public int compareTo(@Nonnull Category o) {
         if(name == null) { return -1; }
         if(o.name == null) { return 1; }
-        return name.compareTo(name);
+        return name.compareTo(o.name);
     }
 
     @Override
