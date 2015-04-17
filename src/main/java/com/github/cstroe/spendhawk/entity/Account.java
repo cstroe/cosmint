@@ -9,6 +9,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * <p>
@@ -21,9 +22,19 @@ import java.util.Optional;
  *     <li>a name</li>
  *     <li>a list of transactions recorded against the account</li>
  *     <li>a balance, which represents the value of the money in the account as
- *     of some date.  The balance is the sum of the amounts of the transactions
- *     recorded against the account up and including the given date.  If the
- *     account has no transactions, the balance will be $0.</li>
+ *     of some date.
+ *     <ul>
+ *         <li>The balance is the sum of the amounts of the transactions
+ *         recorded against the account up and including the given date plus
+ *         the balance of its sub-accounts.  If the
+ *         account has no transactions or sub-accounts, the balance will be $0.
+ *         </li>
+ *         <li>The balance of the sub-accounts are added to the account's
+ *         balance.</li>
+ *     </ul>
+ *     </li>
+ *     <li>a parent account</li>
+ *     <li>a list of sub accounts (accounts whose parent is this account)</li>
  * </ul>
  */
 public class Account implements Comparable<Account> {
@@ -33,12 +44,14 @@ public class Account implements Comparable<Account> {
     private User user;
     private String name;
     private Collection<Transaction> transactions;
+    private Account parent;
+    private Set<Account> subAccounts;
 
     public Long getId() {
         return id;
     }
 
-    private void setId(Long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -64,6 +77,22 @@ public class Account implements Comparable<Account> {
 
     public void setTransactions(Collection<Transaction> transactions) {
         this.transactions = transactions;
+    }
+
+    public Account getParent() {
+        return parent;
+    }
+
+    public void setParent(Account parent) {
+        this.parent = parent;
+    }
+
+    public Set<Account> getSubAccounts() {
+        return subAccounts;
+    }
+
+    public void setSubAccounts(Set<Account> subAccounts) {
+        this.subAccounts = subAccounts;
     }
 
     @Override

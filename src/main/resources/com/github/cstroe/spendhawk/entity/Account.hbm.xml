@@ -16,5 +16,10 @@
             <key column="ACCOUNT_ID"/>
             <one-to-many class="Transaction"/>
         </set>
+        <many-to-one name="parent" column="PARENT_ID" class="Account" not-null="false"/>
+        <set name="subAccounts" table="ACCOUNTS" lazy="false" inverse="false">
+            <key column="PARENT_ID"/>
+            <one-to-many class="Account"/>
+        </set>
     </class>
 </hibernate-mapping>

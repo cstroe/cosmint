@@ -10,7 +10,10 @@ import org.junit.runner.RunWith;
 
 import javax.inject.Inject;
 import java.util.Optional;
+import java.util.Set;
 
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.*;
 
 @RunWith(Arquillian.class)
@@ -36,6 +39,72 @@ public class AccountManagerBeanIT extends BaseIT {
         assertEquals("Account user should be correctly persisted.", 1l, (long)retrieved.getUser().getId());
         assertEquals("Empty account should have 0 transactions.", 0, retrieved.getTransactions().size());
         assertEquals("Empty account should have a 0 balance.", 0d, retrieved.getBalance(), 0.0001);
+        commitTransaction();
+    }
+
+    @Test
+    public void testCreateAccountWithParent() {
+        startTransaction();
+        Account parent = Account.findById(1l)
+            .orElseThrow(() -> new AssertionError("Account 1 should exist in the seed data."));
+
+        Optional<Account> newAccountOptional =
+            accountManager.createAccount(1l, "New Account", Optional.of(parent.getId()));
+
+        assertTrue("Account should be created.", newAccountOptional.isPresent());
+
+        Account newAccount = newAccountOptional.get();
+
+        assertThat(newAccount.getParent(), is(equalTo(parent)));
+        commitTransaction();
+    }
+
+    @Test
+    public void testSeedSubAccount() {
+        startTransaction();
+        Account parent = Account.findById(2l)
+            .orElseThrow(() -> new AssertionError("Account 2 should exist in the seed data."));
+
+        assertThat(parent.getSubAccounts().size(), is(1));
+        assertThat(parent.getSubAccounts().iterator().next().getName(),
+            is(equalTo("General Spending Account")));
+    }
+
+    @Test
+    public void testSubAccounts() {
+        final String account1name = "Sub Account 1";
+        final String account2name = "Sub Account 2";
+
+        startTransaction();
+        Account parent = Account.findById(1l)
+            .orElseThrow(() -> new AssertionError("Account 1 should exist in the seed data."));
+
+        Optional<Account> newAccountOptional1 =
+            accountManager.createAccount(1l, account1name, Optional.of(parent.getId()));
+
+        assertTrue("Account should be created.", newAccountOptional1.isPresent());
+
+        Optional<Account> newAccountOptional2 =
+                accountManager.createAccount(1l, account2name, Optional.of(parent.getId()));
+
+        assertTrue("Account should be created.", newAccountOptional2.isPresent());
+
+        commitTransaction();
+        startTransaction();
+
+        parent = Account.findById(1l)
+            .orElseThrow(() -> new AssertionError("Account 1 should exist in the seed data."));
+
+        assertThat(parent.getSubAccounts().size(), is(2));
+
+        Set<Account> children = parent.getSubAccounts();
+
+        assertTrue(account1name + " should be presisted.",
+            children.stream().filter(a -> a.getName().equals(account1name)).findFirst().isPresent());
+
+        assertTrue(account2name + " should be persisted.",
+            children.stream().filter(a -> a.getName().equals(account2name)).findFirst().isPresent());
+
         commitTransaction();
     }
 

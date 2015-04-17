@@ -26,6 +26,10 @@ public class AccountManagerBean extends DatabaseBean {
     }
 
     public Optional<Account> createAccount(Long userId, String accountName) {
+        return createAccount(userId, accountName, Optional.<Long>empty());
+    }
+
+    public Optional<Account> createAccount(Long userId, String accountName, Optional<Long> parentId) {
         if(janitor.isBlank(accountName)) {
             message = "Account name cannot be blank.";
             return Optional.empty();
@@ -39,9 +43,15 @@ public class AccountManagerBean extends DatabaseBean {
             User currentUser = User.findById(userId)
                 .orElseThrow(Exceptions::userNotFound);
 
-            Account theAccount = new Account();
+            final Account theAccount = new Account();
             theAccount.setName(accountName);
             theAccount.setUser(currentUser);
+
+            parentId.ifPresent((pId) -> {
+                Account parentAccount = Account.findById(pId)
+                    .orElseThrow(() -> new IllegalArgumentException("Parent account id is not valid."));
+                theAccount.setParent(parentAccount);
+            });
 
             HibernateUtil.getSessionFactory().getCurrentSession().save(theAccount);
             commitTransaction();
