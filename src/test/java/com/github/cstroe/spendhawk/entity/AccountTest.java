@@ -3,6 +3,12 @@ package com.github.cstroe.spendhawk.entity;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
 
 public class AccountTest {
@@ -35,5 +41,30 @@ public class AccountTest {
         Account a1 = new Account();
         a1.setName("Test Account");
         assertEquals(new Double(0d), a1.getBalance());
+    }
+
+    @Test
+    public void compare() {
+        char c = 'z';
+
+        List<Account> accountList = new ArrayList<>();
+        for (long i = 0; i <= 'z' - 'a'; i++) {
+            Account currentAccount = new Account();
+            currentAccount.setId(i);
+            currentAccount.setName("Account " + Character.toString((char) (c - i)));
+            accountList.add(currentAccount);
+        }
+
+        Collections.shuffle(accountList);
+        Collections.sort(accountList);
+
+        for (int i = 0; i < accountList.size() - 1; i++) {
+            Account currentAccount = accountList.get(i);
+            Account nextAccount = accountList.get(i + 1);
+            assertThat("A current account should be before the next account",
+                    currentAccount.compareTo(nextAccount), is(-1));
+            assertThat("A next account should be after the current account",
+                    nextAccount.compareTo(currentAccount), is(1));
+        }
     }
 }
