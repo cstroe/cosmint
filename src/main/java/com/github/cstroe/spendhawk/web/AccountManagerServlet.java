@@ -5,6 +5,7 @@ import com.github.cstroe.spendhawk.entity.Account;
 import com.github.cstroe.spendhawk.entity.User;
 import com.github.cstroe.spendhawk.util.Exceptions;
 import com.github.cstroe.spendhawk.util.HibernateUtil;
+import com.github.cstroe.spendhawk.util.TemplateForwarder;
 import org.apache.commons.lang3.StringEscapeUtils;
 
 import javax.ejb.EJB;
@@ -34,6 +35,7 @@ public class AccountManagerServlet extends HttpServlet {
             User currentUser = User.findById(Long.parseLong(userId))
                 .orElseThrow(Exceptions::userNotFound);
 
+            request.setAttribute("fw", new TemplateForwarder(request));
             request.setAttribute("user", currentUser);
             request.getRequestDispatcher(TEMPLATE).forward(request, response);
             HibernateUtil.getSessionFactory().getCurrentSession().getTransaction().commit();
@@ -90,6 +92,7 @@ public class AccountManagerServlet extends HttpServlet {
             }
         }
 
+        request.setAttribute("fw", new TemplateForwarder(request));
         request.getRequestDispatcher(TEMPLATE).forward(request,response);
         HibernateUtil.getSessionFactory().getCurrentSession().getTransaction().commit();
     }

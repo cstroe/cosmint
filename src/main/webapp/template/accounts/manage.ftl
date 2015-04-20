@@ -1,9 +1,13 @@
+<#-- @ftlvariable name="user" type="com.github.cstroe.spendhawk.entity.User" -->
+<#-- @ftlvariable name="message" type="java.lang.String" -->
+<#-- @ftlvariable name="fw" type="com.github.cstroe.spendhawk.util.TemplateForwarder" -->
+
 <#assign page_title="Account Manager">
 <#include "/template/layouts/global_header.ftl">
 
-<a href="/spendhawk/accounts?user.id=${user.id}"
-   xmlns="http://www.w3.org/1999/html">Back to Accounts</a>
-
+<#--noinspection FtlReferencesInspection-->
+<a href="${fw.servlet("com.github.cstroe.spendhawk.web.user.UserSummaryServlet","user.id", user.id)}">Back to User Summary</a>
+b
 <p>
 ${message!""}
 </p>
