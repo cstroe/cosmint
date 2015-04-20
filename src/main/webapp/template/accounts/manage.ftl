@@ -7,7 +7,7 @@
 
 <#--noinspection FtlReferencesInspection-->
 <a href="${fw.servlet("com.github.cstroe.spendhawk.web.user.UserSummaryServlet","user.id", user.id)}">Back to User Summary</a>
-b
+
 <p>
 ${message!""}
 </p>
