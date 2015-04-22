@@ -40,7 +40,7 @@ public class AccountManagerBean extends DatabaseBean {
         try {
             startTransaction();
 
-            User currentUser = User.findById(userId)
+            final User currentUser = User.findById(userId)
                 .orElseThrow(Exceptions::userNotFound);
 
             final Account theAccount = new Account();
@@ -48,7 +48,7 @@ public class AccountManagerBean extends DatabaseBean {
             theAccount.setUser(currentUser);
 
             parentId.ifPresent((pId) -> {
-                Account parentAccount = Account.findById(pId)
+                Account parentAccount = Account.findById(currentUser, pId)
                     .orElseThrow(() -> new IllegalArgumentException("Parent account id is not valid."));
                 theAccount.setParent(parentAccount);
             });
@@ -57,6 +57,32 @@ public class AccountManagerBean extends DatabaseBean {
             commitTransaction();
 
             return Optional.of(theAccount);
+        } catch(Exception ex) {
+            rollbackTransaction();
+            message = ex.getMessage();
+            return Optional.empty();
+        }
+    }
+
+    public Optional<Account> nestAccount(Long userId, Long parentAccountId, Long subAccountId) {
+        try {
+            startTransaction();
+
+            User currentUser = User.findById(userId)
+                .orElseThrow(Exceptions::userNotFound);
+
+            final Account parentAccount = Account.findById(currentUser, parentAccountId)
+                .orElseThrow(() -> new IllegalArgumentException("Parent account id is not valid."));
+
+            final Account subAccount = Account.findById(currentUser, subAccountId)
+                .orElseThrow(() -> new IllegalArgumentException("Sub account id is not valid."));
+
+            subAccount.setParent(parentAccount);
+
+            HibernateUtil.getSessionFactory().getCurrentSession().save(subAccount);
+            commitTransaction();
+
+            return Optional.of(subAccount);
         } catch(Exception ex) {
             rollbackTransaction();
             message = ex.getMessage();

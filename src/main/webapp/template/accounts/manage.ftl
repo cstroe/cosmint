@@ -20,6 +20,29 @@ ${message!""}
     <input type="submit" name="action" value="store"/>
 </form>
 
+<h2>Nest Account:</h2>
+<form method="POST">
+    Account (the parent):
+    <select name="parentAccount.id">
+        <#list user.accounts as currentAccount>
+            <option class="accountOption" value="${currentAccount.id}" selected>${currentAccount.name}</option>
+        </#list>
+    </select>
+    <br/>
+
+    Sub-Account (the child):
+    <select name="subAccount.id">
+        <option value="null"></option>
+        <#list user.accounts as currentAccount>
+            <option class="subAccountOption" value="${currentAccount.id}" selected>${currentAccount.name}</option>
+        </#list>
+    </select>
+
+    <br/>
+    <input type="hidden" name="user.id" value="${user.id}"/>
+    <input type="submit" name="action" value="Nest Account"/>
+</form>
+
 <h2>Delete account:</h2>
 <p>
     DANGER: This will delete all transactions and expenses added to the account,

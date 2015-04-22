@@ -63,6 +63,8 @@ public class AccountManagerServlet extends HttpServlet {
 
         HibernateUtil.getSessionFactory().getCurrentSession().beginTransaction();
 
+        User currentUser = User.findById(userId).orElseThrow(Exceptions::userNotFound);
+
         if("store".equals(actionRaw)) {
             String accountName = Optional.ofNullable(request.getParameter("account.name"))
                     .map(StringEscapeUtils::escapeHtml4)
@@ -70,7 +72,6 @@ public class AccountManagerServlet extends HttpServlet {
 
             Optional<Account> newAccount = accountManager.createAccount(userId, accountName);
 
-            request.setAttribute("user", User.findById(userId).orElseThrow(Exceptions::userNotFound));
             if(newAccount.isPresent()) {
                 request.setAttribute("message", "Added account <b>" + newAccount.get().getName() + "</b>.");
             } else {
@@ -84,14 +85,26 @@ public class AccountManagerServlet extends HttpServlet {
             accountId = Long.parseLong(accountIdRaw);
             boolean deleteSuccessful = accountManager.deleteAccount(userId, accountId);
 
-            request.setAttribute("user", User.findById(userId).orElseThrow(Exceptions::userNotFound));
             if(deleteSuccessful) {
                 request.setAttribute("message", "Account deleted.");
             } else {
                 request.setAttribute("message", accountManager.getMessage());
             }
+        } else if("Nest Account".equals(actionRaw)) {
+            Long parentAccountId = Optional.ofNullable(request.getParameter("parentAccount.id"))
+                    .map(StringEscapeUtils::escapeHtml4)
+                    .map(Long::parseLong)
+                    .orElseThrow(() -> new RuntimeException("Parent account id is not valid."));
+
+            Long subAccountId = Optional.ofNullable(request.getParameter("subAccount.id"))
+                    .map(StringEscapeUtils::escapeHtml4)
+                    .map(Long::parseLong)
+                    .orElseThrow(() -> new RuntimeException("Sub account id is not valid."));
+
+            accountManager.nestAccount(userId, parentAccountId, subAccountId);
         }
 
+        request.setAttribute("user", currentUser);
         request.setAttribute("fw", new TemplateForwarder(request));
         request.getRequestDispatcher(TEMPLATE).forward(request,response);
         HibernateUtil.getSessionFactory().getCurrentSession().getTransaction().commit();

@@ -21,6 +21,7 @@
     <USERS USER_ID="3" NAME="User Three"/>
     <ACCOUNTS ACCOUNT_ID="2" NAME="John Pierpont Morgan Chase Checking Account" USER_ID="3"/>
     <ACCOUNTS ACCOUNT_ID="3" NAME="General Spending Account" USER_ID="3" PARENT_ID="2"/>
+    <ACCOUNTS ACCOUNT_ID="4" NAME="Assets" USER_ID="3"/>
     <CATEGORIES CATEGORY_ID="10" NAME="Food" USER_ID="3"/>
     <CATEGORIES CATEGORY_ID="11" NAME="Groceries" USER_ID="3" PARENT_ID="10"/>
     <CATEGORIES CATEGORY_ID="12" NAME="Eating Out" USER_ID="3" PARENT_ID="10"/>
