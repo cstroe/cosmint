@@ -67,4 +67,20 @@ public class AccountTest {
                     nextAccount.compareTo(currentAccount), is(1));
         }
     }
+
+    @Test
+    public void getDepth() {
+        Account p = new Account();
+        assertThat(p.getDepth(), is(0));
+
+        Account c1 = new Account();
+        c1.setParent(p);
+
+        assertThat(c1.getDepth(), is(1));
+
+        Account c2 = new Account();
+        c2.setParent(c1);
+
+        assertThat(c2.getDepth(), is(2));
+    }
 }

@@ -160,4 +160,11 @@ public class Account implements Comparable<Account> {
     public void delete() {
         HibernateUtil.getSessionFactory().getCurrentSession().delete(this);
     }
+
+    public int getDepth() {
+        if(getParent() == null) {
+            return 0;
+        }
+        return 1 + getParent().getDepth();
+    }
 }
