@@ -129,6 +129,14 @@ public class Account implements Comparable<Account> {
             .uniqueResult());
     }
 
+    public static Optional<Account> findById(User currentUser, Long id) {
+        return Optional.ofNullable((Account) HibernateUtil.getSessionFactory().getCurrentSession()
+            .createCriteria(Account.class)
+            .add(Restrictions.eq("id", id))
+            .add(Restrictions.eq("user", currentUser))
+            .uniqueResult());
+    }
+
     @Override
     public int compareTo(@Nonnull Account o) {
         return this.getName().compareTo(o.getName());
