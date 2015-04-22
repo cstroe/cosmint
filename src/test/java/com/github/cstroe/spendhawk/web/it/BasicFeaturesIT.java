@@ -16,6 +16,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -47,6 +48,11 @@ public class BasicFeaturesIT extends BaseClientIT {
 
     private static String userDetailPath;
     private static Long userId;
+
+    @Before
+    public void setUp() {
+        Unirest.setTimeouts(2000, 2000);
+    }
 
     @Test
     @RunAsClient
