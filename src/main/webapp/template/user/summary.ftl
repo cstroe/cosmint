@@ -1,3 +1,5 @@
+<#-- @ftlvariable name="user" type="com.github.cstroe.spendhawk.entity.User" -->
+
 <#assign page_title="User Summary">
 
 <#include "/template/layouts/global_header.ftl">
