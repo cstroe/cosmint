@@ -65,6 +65,7 @@ public class AccountManagerServlet extends HttpServlet {
 
         User currentUser = User.findById(userId).orElseThrow(Exceptions::userNotFound);
 
+        //noinspection IfCanBeSwitch
         if("store".equals(actionRaw)) {
             String accountName = Optional.ofNullable(request.getParameter("account.name"))
                     .map(StringEscapeUtils::escapeHtml4)
