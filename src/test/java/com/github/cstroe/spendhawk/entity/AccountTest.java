@@ -71,16 +71,16 @@ public class AccountTest {
     @Test
     public void getDepth() {
         Account p = new Account();
-        assertThat(p.getDepth(), is(0));
+        assertThat("Top level depth should be 0.", p.getDepth(), is(0));
 
         Account c1 = new Account();
         c1.setParent(p);
 
-        assertThat(c1.getDepth(), is(1));
+        assertThat("Depth should be incremented by 1.", c1.getDepth(), is(1));
 
         Account c2 = new Account();
         c2.setParent(c1);
 
-        assertThat(c2.getDepth(), is(2));
+        assertThat("Depth should work for deeper sub-accounts.", c2.getDepth(), is(2));
     }
 }
