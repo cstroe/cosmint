@@ -1,5 +1,7 @@
 package com.github.cstroe.spendhawk.entity;
 
+import com.github.cstroe.spendhawk.util.Exceptions;
+
 import java.lang.reflect.Field;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -24,9 +26,10 @@ public class EntityTestScenario {
 
     private void createAccounts() {
         try {
-            for (int i = 0; i < accountsTemplate.length; i += 2) {
+            for (int i = 0; i < accountsTemplate.length; i += 3) {
                 Long accountId = Long.parseLong(accountsTemplate[i]);
                 String accountName = accountsTemplate[i+1];
+                String parentAccountIdRaw = accountsTemplate[i+2];
 
                 // create account
                 Account account = new Account();
@@ -38,6 +41,13 @@ public class EntityTestScenario {
                 idField.setAccessible(false);
                 account.setName(accountName);
                 account.setTransactions(new ArrayList<>());
+                if(parentAccountIdRaw != null) {
+                    final Long parentAccountId = Long.parseLong(parentAccountIdRaw);
+                    Account parentAccount = accountsList.stream()
+                        .filter(a -> a.getId().equals(parentAccountId))
+                        .findFirst().orElseThrow(Exceptions::accountNotFound);
+                    account.setParent(parentAccount);
+                }
                 accountsList.add(account);
             }
         } catch(Exception e) {
