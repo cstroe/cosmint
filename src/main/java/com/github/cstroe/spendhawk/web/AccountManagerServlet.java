@@ -102,7 +102,19 @@ public class AccountManagerServlet extends HttpServlet {
                     .map(Long::parseLong)
                     .orElseThrow(() -> new RuntimeException("Sub account id is not valid."));
 
-            accountManager.nestAccount(userId, parentAccountId, subAccountId);
+            Optional<Account> subAccount = accountManager.nestAccount(userId, parentAccountId, subAccountId);
+            if(subAccount.isPresent()) {
+                request.setAttribute("message", "Account nested.");
+            } else {
+                request.setAttribute("message", accountManager.getMessage());
+            }
+        } else if("Convert Categories to Accounts".equals(actionRaw)) {
+            boolean convertSuccessful = accountManager.convertCategoriesToAccounts(currentUser.getId());
+            if(convertSuccessful) {
+                request.setAttribute("message", "Converted categories.");
+            } else {
+                request.setAttribute("message", accountManager.getMessage());
+            }
         }
 
         request.setAttribute("user", currentUser);

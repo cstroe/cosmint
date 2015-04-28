@@ -1,5 +1,6 @@
 package com.github.cstroe.spendhawk.entity;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -7,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
@@ -73,8 +75,7 @@ public class AccountTest {
         Account p = new Account();
         assertThat("Top level depth should be 0.", p.getDepth(), is(0));
 
-        Account c1 = new Account();
-        c1.setParent(p);
+        Account c1 = new Account().withParent(p);
 
         assertThat("Depth should be incremented by 1.", c1.getDepth(), is(1));
 
@@ -82,5 +83,147 @@ public class AccountTest {
         c2.setParent(c1);
 
         assertThat("Depth should work for deeper sub-accounts.", c2.getDepth(), is(2));
+    }
+
+    @Test
+    public void getPath() {
+        Account p = new Account().withName("Account 1");
+        Account c1 = new Account().withName("Child 1").andParent(p);
+        Account c2 = new Account().withName("Child 2").andParent(c1);
+
+        assertThat(c2.getPath(), is(equalTo("Account 1Child 1Child 2")));
+    }
+
+    @Test
+    public void sort_top_level_accounts() {
+        List<Account> accounts = new ArrayList<>();
+        accounts.add(new Account().withName("Account A")); // 0
+        accounts.add(new Account().withName("Account B"));
+        accounts.add(new Account().withName("Account C"));
+        accounts.add(new Account().withName("Account D"));
+        accounts.add(new Account().withName("Account E")); //4
+        accounts.add(new Account().withName("Account F"));
+        accounts.add(new Account().withName("Account F"));
+        accounts.add(new Account().withName("Account G"));
+        accounts.add(new Account().withName("Account H"));
+        accounts.add(new Account().withName("Account H")); // 9
+
+        Collections.shuffle(accounts);
+
+        Collections.sort(accounts, Account.HIERARCHICAL_COMPARATOR);
+
+        Assert.assertThat(accounts.get(0).getName(), is(equalTo("Account A")));
+        Assert.assertThat(accounts.get(1).getName(), is(equalTo("Account B")));
+        Assert.assertThat(accounts.get(2).getName(), is(equalTo("Account C")));
+        Assert.assertThat(accounts.get(3).getName(), is(equalTo("Account D")));
+        Assert.assertThat(accounts.get(4).getName(), is(equalTo("Account E")));
+        Assert.assertThat(accounts.get(5).getName(), is(equalTo("Account F")));
+        Assert.assertThat(accounts.get(6).getName(), is(equalTo("Account F")));
+        Assert.assertThat(accounts.get(7).getName(), is(equalTo("Account G")));
+        Assert.assertThat(accounts.get(8).getName(), is(equalTo("Account H")));
+        Assert.assertThat(accounts.get(9).getName(), is(equalTo("Account H")));
+    }
+
+    @Test
+    public void sort_one_top_level_account_and_children() {
+        Account p = new Account().withName("Parent Account");
+        List<Account> accounts = new ArrayList<>();
+        accounts.add(p);
+        accounts.add(new Account().withName("Child A").andParent(p));
+        accounts.add(new Account().withName("Child B").andParent(p));
+        accounts.add(new Account().withName("Child C").andParent(p));
+        accounts.add(new Account().withName("Child D").andParent(p));
+        accounts.add(new Account().withName("Child E").andParent(p));
+        accounts.add(new Account().withName("Child E").andParent(p));
+        accounts.add(new Account().withName("Child F").andParent(p));
+        accounts.add(new Account().withName("Child G").andParent(p));
+
+        Collections.shuffle(accounts);
+
+        Collections.sort(accounts, (Account a, Account b) -> a.getPath().compareTo(b.getPath()));
+
+        Assert.assertThat(accounts.get(0).getName(), is(equalTo("Parent Account")));
+        Assert.assertThat(accounts.get(1).getName(), is(equalTo("Child A")));
+        Assert.assertThat(accounts.get(2).getName(), is(equalTo("Child B")));
+        Assert.assertThat(accounts.get(3).getName(), is(equalTo("Child C")));
+        Assert.assertThat(accounts.get(4).getName(), is(equalTo("Child D")));
+        Assert.assertThat(accounts.get(5).getName(), is(equalTo("Child E")));
+        Assert.assertThat(accounts.get(6).getName(), is(equalTo("Child E")));
+        Assert.assertThat(accounts.get(7).getName(), is(equalTo("Child F")));
+        Assert.assertThat(accounts.get(8).getName(), is(equalTo("Child G")));
+    }
+
+    @Test
+    public void sort_two_top_level_accounts_and_children() {
+        Account p1 = new Account().withName("Parent Account 1");
+        Account p2 = new Account().withName("Parent Account 2");
+        List<Account> accounts = new ArrayList<>();
+        accounts.add(p1);
+        accounts.add(p2);
+        accounts.add(new Account().withName("Child A").andParent(p1));
+        accounts.add(new Account().withName("Child B").andParent(p2));
+        accounts.add(new Account().withName("Child C").andParent(p1));
+        accounts.add(new Account().withName("Child D").andParent(p2));
+        accounts.add(new Account().withName("Child E").andParent(p1));
+        accounts.add(new Account().withName("Child E").andParent(p2));
+        accounts.add(new Account().withName("Child F").andParent(p1));
+        accounts.add(new Account().withName("Child G").andParent(p2));
+
+        Collections.shuffle(accounts);
+
+        Collections.sort(accounts, Account.HIERARCHICAL_COMPARATOR);
+
+        Assert.assertThat(accounts.get(0).getName(), is(equalTo("Parent Account 1")));
+        Assert.assertThat(accounts.get(1).getName(), is(equalTo("Child A")));
+        Assert.assertThat(accounts.get(2).getName(), is(equalTo("Child C")));
+        Assert.assertThat(accounts.get(3).getName(), is(equalTo("Child E")));
+        Assert.assertThat(accounts.get(4).getName(), is(equalTo("Child F")));
+        Assert.assertThat(accounts.get(5).getName(), is(equalTo("Parent Account 2")));
+        Assert.assertThat(accounts.get(6).getName(), is(equalTo("Child B")));
+        Assert.assertThat(accounts.get(7).getName(), is(equalTo("Child D")));
+        Assert.assertThat(accounts.get(8).getName(), is(equalTo("Child E")));
+        Assert.assertThat(accounts.get(9).getName(), is(equalTo("Child G")));
+    }
+
+    @Test
+    public void sort_two_deep_accounts() {
+        Account a = new Account().withName("a");
+        Account b = new Account().withName("b").andParent(a);
+        Account c = new Account().withName("c").andParent(b);
+        Account d = new Account().withName("d").andParent(c);
+        Account e = new Account().withName("e").andParent(d);
+
+        Account v = new Account().withName("v");
+        Account w = new Account().withName("w").andParent(v);
+        Account x = new Account().withName("x").andParent(w);
+        Account y = new Account().withName("y").andParent(x);
+        Account z = new Account().withName("z").andParent(y);
+
+        List<Account> accounts = new ArrayList<>();
+        accounts.add(a);
+        accounts.add(b);
+        accounts.add(c);
+        accounts.add(d);
+        accounts.add(e);
+        accounts.add(v);
+        accounts.add(w);
+        accounts.add(x);
+        accounts.add(z);
+        accounts.add(y);
+
+        Collections.shuffle(accounts);
+
+        Collections.sort(accounts, Account.HIERARCHICAL_COMPARATOR);
+
+        Assert.assertThat(accounts.get(0).getName(), is(equalTo(a.getName())));
+        Assert.assertThat(accounts.get(1).getName(), is(equalTo(b.getName())));
+        Assert.assertThat(accounts.get(2).getName(), is(equalTo(c.getName())));
+        Assert.assertThat(accounts.get(3).getName(), is(equalTo(d.getName())));
+        Assert.assertThat(accounts.get(4).getName(), is(equalTo(e.getName())));
+        Assert.assertThat(accounts.get(5).getName(), is(equalTo(v.getName())));
+        Assert.assertThat(accounts.get(6).getName(), is(equalTo(w.getName())));
+        Assert.assertThat(accounts.get(7).getName(), is(equalTo(x.getName())));
+        Assert.assertThat(accounts.get(8).getName(), is(equalTo(y.getName())));
+        Assert.assertThat(accounts.get(9).getName(), is(equalTo(z.getName())));
     }
 }

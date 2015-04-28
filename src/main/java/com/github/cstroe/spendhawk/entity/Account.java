@@ -6,6 +6,7 @@ import org.hibernate.criterion.Restrictions;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -46,6 +47,9 @@ public class Account implements Comparable<Account> {
     private Collection<Transaction> transactions;
     private Account parent;
     private Set<Account> subAccounts;
+
+    public static Comparator<Account> HIERARCHICAL_COMPARATOR =
+            (Account a, Account b) -> a.getPath().compareTo(b.getPath());
 
     public Long getId() {
         return id;
@@ -157,6 +161,11 @@ public class Account implements Comparable<Account> {
                 .list();
     }
 
+    public boolean save() {
+        Long id = (Long) HibernateUtil.getSessionFactory().getCurrentSession().save(this);
+        return id != null;
+    }
+
     public void delete() {
         HibernateUtil.getSessionFactory().getCurrentSession().delete(this);
     }
@@ -166,5 +175,28 @@ public class Account implements Comparable<Account> {
             return 0;
         }
         return 1 + getParent().getDepth();
+    }
+
+    public String getPath() {
+        if(parent != null) {
+            return parent.getPath() + getName();
+        }
+        return getName();
+    }
+
+
+    public Account withName(String name) {
+        this.setName(name);
+        return this;
+    }
+
+    public Account andParent(Account parent) {
+        this.setParent(parent);
+        return this;
+    }
+
+    public Account withParent(Account parent) {
+        this.setParent(parent);
+        return this;
     }
 }

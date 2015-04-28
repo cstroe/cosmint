@@ -4,7 +4,7 @@
 <#--noinspection FtlReferencesInspection-->
 <a href="${fw.url('/accounts/manage', "user.id", user.id)}">Manage Accounts</a>
 
-<h2>Accounts:</h2>
+<h2>Chart of Accounts:</h2>
 <table border='1'>
     <tr>
         <th>Name</th>
@@ -16,7 +16,7 @@
         <td>
             <#--noinspection FtlReferencesInspection-->
             <a href="${fw.url('/account', 'id', account.id, 'relDate', 'currentMonth')}">
-            ${account.name}
+            <span style="margin-left: ${account.depth * 20}px">${account.name}</span>
             </a>
         </td>
         <td>${account.balance}</td>

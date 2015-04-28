@@ -59,6 +59,11 @@ ${message!""}
     <input type="submit" name="action" value="delete" onclick="confirm(getConfirmMessage())"/>
 </form>
 
+<form method="POST">
+    <input type="hidden" name="user.id" value="${user.id}"/>
+    <input type="submit" name="action" value="Convert Categories to Accounts"/>
+</form>
+
 <script>
     function getConfirmMessage() {
         var e = document.getElementById('acctSelect');

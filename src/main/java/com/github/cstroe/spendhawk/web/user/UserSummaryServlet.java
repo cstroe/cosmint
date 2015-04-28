@@ -1,5 +1,6 @@
 package com.github.cstroe.spendhawk.web.user;
 
+import com.github.cstroe.spendhawk.entity.Account;
 import com.github.cstroe.spendhawk.entity.User;
 import com.github.cstroe.spendhawk.util.HibernateUtil;
 import com.github.cstroe.spendhawk.util.TemplateForwarder;
@@ -11,6 +12,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.stream.Collectors;
 
 @WebServlet("/summary")
 public class UserSummaryServlet extends HttpServlet {
@@ -30,9 +32,12 @@ public class UserSummaryServlet extends HttpServlet {
                     .add(Restrictions.eq("id", userId))
                     .uniqueResult();
 
+
+
             request.setAttribute("fw", new TemplateForwarder(request));
             request.setAttribute("user", user);
-            request.setAttribute("accounts", user.getAccounts());
+            request.setAttribute("accounts", user.getAccounts().stream()
+                .sorted(Account.HIERARCHICAL_COMPARATOR).collect(Collectors.toList()));
             request.setAttribute("categories", user.getCategories());
             request.getRequestDispatcher(TEMPLATE).forward(request,response);
             HibernateUtil.getSessionFactory().getCurrentSession().getTransaction().commit();
