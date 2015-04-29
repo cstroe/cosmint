@@ -7,9 +7,9 @@
         <configuration>
             <!-- These settings are specific to my computer -->
             <property name="managementAddress">localhost</property>
-            <property name="managementPort">9995</property>
-            <property name="username">testuser</property>
-            <property name="password">test12345user!@#$%</property>
+            <property name="managementPort">9990</property>
+            <property name="username">admin</property>
+            <property name="password">password</property>
         </configuration>
     </container>
 
