@@ -44,7 +44,7 @@ public class Account implements Comparable<Account> {
     private Long id;
     private User user;
     private String name;
-    private Collection<Transaction> transactions;
+    private Collection<CashFlow> cashFlows;
     private Account parent;
     private Set<Account> subAccounts;
 
@@ -75,12 +75,12 @@ public class Account implements Comparable<Account> {
         this.name = name;
     }
 
-    public Collection<Transaction> getTransactions() {
-        return transactions;
+    public Collection<CashFlow> getCashFlows() {
+        return cashFlows;
     }
 
-    public void setTransactions(Collection<Transaction> transactions) {
-        this.transactions = transactions;
+    public void setCashFlows(Collection<CashFlow> cashFlows) {
+        this.cashFlows = cashFlows;
     }
 
     public Account getParent() {
@@ -109,12 +109,12 @@ public class Account implements Comparable<Account> {
      */
     public Double getBalance() {
         final Date now = new Date();
-        if(transactions == null || transactions.isEmpty()) {
+        if(cashFlows == null || cashFlows.isEmpty()) {
             return ZERO;
         }
-        return transactions.stream()
-                .filter(t -> !t.getEffectiveDate().after(now))
-                .mapToDouble(Transaction::getAmount)
+        return cashFlows.stream()
+                .filter(c -> !c.getTransaction().getEffectiveDate().after(now))
+                .mapToDouble(CashFlow::getAmount)
                 .sum();
     }
 
