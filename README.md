@@ -85,3 +85,16 @@ session.  Use the following command instead of the normal one from step 3 above:
   
   WildFly will open a debugging port at 8787 to which you can connect from your
   IDE.
+
+## Running Integration Tests
+
+```
+cd spendhawk
+cd wildfly/wildfly-run/wildfly-8.2.0.Final
+bash ./bin/add-user.sh
+```
+
+Add user with username that matches `src/test/resources/arquillian.xml`.
+
+Then you can run any of the integration tests (classes that end in `IT`) from 
+any JUnit compatible IDE.
