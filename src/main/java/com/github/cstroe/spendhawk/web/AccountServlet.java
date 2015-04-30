@@ -29,10 +29,10 @@ public class AccountServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
-            LocalDate startDate = null;
-            LocalDate endDate = null;
+            LocalDate startDate;
+            LocalDate endDate;
 
-            String accountIdRaw = request.getParameter("id");
+            Long accountId = Long.parseLong(request.getParameter("id"));
             String startDateRaw = request.getParameter("start");
             String endDateRaw = request.getParameter("end");
             String relDateRaw = request.getParameter("relDate");
@@ -40,10 +40,7 @@ public class AccountServlet extends HttpServlet {
             if(startDateRaw != null && endDateRaw != null) {
                 startDate = formatter.parse(startDateRaw, LocalDate::from);
                 endDate = formatter.parse(endDateRaw, LocalDate::from);
-            }
-
-
-            if(relDateRaw != null) {
+            } else if(relDateRaw != null) {
                 if("currentMonth".equals(relDateRaw)) {
                     startDate = LocalDate.now().withDayOfMonth(1);
                     endDate = null;
@@ -52,43 +49,44 @@ public class AccountServlet extends HttpServlet {
                     startDate = date.withDayOfMonth(1);
                     endDate = date.with(TemporalAdjusters.lastDayOfMonth());
                 }
+            } else {
+                throw new IllegalAccessException("Dates could not be parsed.");
             }
 
-            if(accountIdRaw != null) {
-                Long accountId = Long.parseLong(accountIdRaw);
-                // Begin unit of work
-                HibernateUtil.getSessionFactory().getCurrentSession().beginTransaction();
-                Account account = Account.findById(accountId).orElseThrow(() -> new RuntimeException("Account not found."));
-                if(account == null) {
-                    throw new IllegalArgumentException("Account not found.");
-                }
-
-                Criteria query = HibernateUtil.getSessionFactory()
-                    .getCurrentSession()
-                    .createCriteria(Transaction.class)
-                    .add(Restrictions.eq("account", account));
-
-                if(startDate != null) {
-                    query.add(Restrictions.ge("effectiveDate", DateUtil.asDate(startDate)));
-                }
-
-                if(endDate != null) {
-                    query.add(Restrictions.le("effectiveDate", DateUtil.asDate(endDate)));
-                }
-
-                @SuppressWarnings("unchecked")
-                List<Transaction> result = (List<Transaction>) query.addOrder(Order.desc("effectiveDate")).list();
-
-                request.setAttribute("account", account);
-                request.setAttribute("transactions", result);
-                setNavigationDates(request, startDate);
-                request.getRequestDispatcher(TEMPLATE).forward(request,response);
-                // End unit of work
-                HibernateUtil.getSessionFactory().getCurrentSession().getTransaction().commit();
+            // Begin unit of work
+            HibernateUtil.getSessionFactory().getCurrentSession().beginTransaction();
+            Account account = Account.findById(accountId).orElseThrow(() -> new RuntimeException("Account not found."));
+            if(account == null) {
+                throw new IllegalArgumentException("Account not found.");
             }
+
+            Criteria query = HibernateUtil.getSessionFactory()
+                .getCurrentSession()
+                .createCriteria(Transaction.class);
+
+            if(startDate != null) {
+                query.add(Restrictions.ge("effectiveDate", DateUtil.asDate(startDate)));
+            }
+
+            if(endDate != null) {
+                query.add(Restrictions.le("effectiveDate", DateUtil.asDate(endDate)));
+            }
+
+            @SuppressWarnings("unchecked")
+            List<Transaction> result = (List<Transaction>) query.addOrder(Order.desc("effectiveDate")).list();
+
+            request.setAttribute("account", account);
+            request.setAttribute("transactions", result);
+            setNavigationDates(request, startDate);
+            request.getRequestDispatcher(TEMPLATE).forward(request,response);
+            // End unit of work
+            HibernateUtil.getSessionFactory().getCurrentSession().getTransaction().commit();
         } catch (Exception ex) {
-            HibernateUtil.getSessionFactory().getCurrentSession().getTransaction().rollback();
-            throw ex;
+            org.hibernate.Transaction t = HibernateUtil.getSessionFactory().getCurrentSession().getTransaction();
+            if(t.isActive()) {
+                HibernateUtil.getSessionFactory().getCurrentSession().getTransaction().rollback();
+            }
+            throw new ServletException(ex);
         }
     }
 
