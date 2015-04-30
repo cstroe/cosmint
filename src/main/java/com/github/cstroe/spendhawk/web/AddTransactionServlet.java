@@ -75,10 +75,10 @@ public class AddTransactionServlet extends HttpServlet {
 
             t = new Transaction();
             t.setEffectiveDate(date);
-            t.setAmount(amount);
+            //t.setAmount(amount);
             t.setDescription(description);
             t.setNotes(notes);
-            t.setAccount(account);
+            //t.setAccount(account);
 
             HibernateUtil.getSessionFactory().getCurrentSession().save(t);
             HibernateUtil.getSessionFactory().getCurrentSession().getTransaction().commit();

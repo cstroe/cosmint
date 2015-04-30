@@ -38,7 +38,6 @@ public class UserSummaryServlet extends HttpServlet {
             request.setAttribute("user", user);
             request.setAttribute("accounts", user.getAccounts().stream()
                 .sorted(Account.HIERARCHICAL_COMPARATOR).collect(Collectors.toList()));
-            request.setAttribute("categories", user.getCategories());
             request.getRequestDispatcher(TEMPLATE).forward(request,response);
             HibernateUtil.getSessionFactory().getCurrentSession().getTransaction().commit();
         } catch(Exception ex) {

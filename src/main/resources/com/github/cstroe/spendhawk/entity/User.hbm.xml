@@ -15,9 +15,5 @@
             <key column="USER_ID"/>
             <one-to-many class="Account"/>
         </set>
-        <set name="categories" inverse="true" order-by="name">
-            <key column="USER_ID"/>
-            <one-to-many class="Category"/>
-        </set>
     </class>
 </hibernate-mapping>

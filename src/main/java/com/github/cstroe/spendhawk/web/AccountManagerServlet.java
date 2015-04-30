@@ -108,13 +108,6 @@ public class AccountManagerServlet extends HttpServlet {
             } else {
                 request.setAttribute("message", accountManager.getMessage());
             }
-        } else if("Convert Categories to Accounts".equals(actionRaw)) {
-            boolean convertSuccessful = accountManager.convertCategoriesToAccounts(currentUser.getId());
-            if(convertSuccessful) {
-                request.setAttribute("message", "Converted categories.");
-            } else {
-                request.setAttribute("message", accountManager.getMessage());
-            }
         }
 
         request.setAttribute("user", currentUser);

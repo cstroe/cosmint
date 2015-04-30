@@ -1,7 +1,6 @@
 package com.github.cstroe.spendhawk.web;
 
 import com.github.cstroe.spendhawk.util.ServletUtil;
-import com.github.cstroe.spendhawk.web.category.CategoryManagerServlet;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
@@ -179,20 +178,6 @@ public class BaseClientIT {
         } catch(IOException ex) {
             throw new RuntimeException(ex);
         }
-    }
-
-    /**
-     * Create a category via the CategoryManagerServlet.
-     */
-    protected HttpResponse<String> createCategory(Long userId, String categoryName) throws Exception {
-        HttpResponse<String> response = Unirest.post(fullURL(CategoryManagerServlet.class))
-                .field("user.id", userId)
-                .field("category.name", categoryName)
-                .field("action", "store")
-                .asString();
-
-        assertResponseStatus(302, response);
-        return response;
     }
 
     protected AssertionError saveAndFail(String message, HttpResponse<String> response) {

@@ -2,7 +2,6 @@ package com.github.cstroe.spendhawk.web.transaction;
 
 import com.github.cstroe.spendhawk.entity.Account;
 import com.github.cstroe.spendhawk.entity.Transaction;
-import com.github.cstroe.spendhawk.helper.TListTotaler;
 import com.github.cstroe.spendhawk.util.Exceptions;
 import com.github.cstroe.spendhawk.util.HibernateUtil;
 import org.hibernate.Session;
@@ -36,7 +35,6 @@ public class TransactionSearchServlet extends HttpServlet {
             req.setAttribute("query", searchString);
             Collection<Transaction> tList = account.findTransactions(searchString);
             req.setAttribute("transactions", tList);
-            req.setAttribute("totaler", new TListTotaler(tList));
             req.getRequestDispatcher(TEMPLATE).forward(req,resp);
             currentSession.getTransaction().commit();
         } catch(Exception ex) {

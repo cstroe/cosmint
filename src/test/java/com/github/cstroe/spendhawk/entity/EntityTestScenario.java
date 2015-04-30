@@ -40,7 +40,7 @@ public class EntityTestScenario {
                 idField.set(account, accountId);
                 idField.setAccessible(false);
                 account.setName(accountName);
-                account.setTransactions(new ArrayList<>());
+//                account.setTransactions(new ArrayList<>());
                 if(parentAccountIdRaw != null) {
                     final Long parentAccountId = Long.parseLong(parentAccountIdRaw);
                     Account parentAccount = accountsList.stream()
@@ -74,11 +74,11 @@ public class EntityTestScenario {
                 idField.setAccessible(true);
                 idField.set(transaction, transactionId);
                 idField.setAccessible(false);
-                transaction.setAccount(account);
-                transaction.setAmount(amount);
+//                transaction.setAccount(account);
+//                transaction.setAmount(amount);
                 transaction.setEffectiveDate(effectiveDate);
                 transaction.setDescription(transactionName);
-                transaction.getAccount().getTransactions().add(transaction); // add the Transaction to the Account.
+//                transaction.getAccount().getTransactions().add(transaction); // add the Transaction to the Account.
 
                 transactionList.add(transaction);
             }

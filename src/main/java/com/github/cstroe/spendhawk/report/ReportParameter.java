@@ -6,7 +6,7 @@ package com.github.cstroe.spendhawk.report;
 public class ReportParameter {
 
     public enum ReportParameterType {
-        DATE, CATEGORY
+        DATE
     }
 
     private final String id;

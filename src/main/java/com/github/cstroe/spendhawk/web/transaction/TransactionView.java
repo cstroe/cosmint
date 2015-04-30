@@ -1,9 +1,8 @@
 package com.github.cstroe.spendhawk.web.transaction;
 
 import com.github.cstroe.spendhawk.entity.Account;
-import com.github.cstroe.spendhawk.entity.Expense;
+import com.github.cstroe.spendhawk.entity.CashFlow;
 import com.github.cstroe.spendhawk.entity.Transaction;
-import com.github.cstroe.spendhawk.util.DateUtil;
 import com.github.cstroe.spendhawk.util.Exceptions;
 import com.github.cstroe.spendhawk.util.HibernateUtil;
 import com.github.cstroe.spendhawk.web.AccountServlet;
@@ -37,7 +36,7 @@ public class TransactionView extends HttpServlet {
                     .orElseThrow(Exceptions::transactionNotFound);
 
                 request.setAttribute("transaction", transaction);
-                request.setAttribute("expenses", transaction.getExpenses());
+                request.setAttribute("cashflows", transaction.getCashFlows());
                 request.getRequestDispatcher(TEMPLATE).forward(request,response);
             }
             // End unit of work
@@ -62,11 +61,8 @@ public class TransactionView extends HttpServlet {
             Transaction transaction = Transaction.findById(transactionId)
                 .orElseThrow(Exceptions::transactionNotFound);
 
-            effectiveDate = transaction.getEffectiveDate();
-            account = transaction.getAccount();
-
-            for(Expense expense : transaction.getExpenses()) {
-                expense.delete();
+            for(CashFlow cashFlow : transaction.getCashFlows()) {
+                cashFlow.delete();
             }
             transaction.delete();
 
@@ -77,7 +73,8 @@ public class TransactionView extends HttpServlet {
             throw new ServletException(ex);
         }
 
-        response.sendRedirect(request.getContextPath() + servletPath(AccountServlet.class) +
-                "?id=" + account.getId() + "&relDate=" + AccountServlet.formatter.format(DateUtil.asLocalDate(effectiveDate)));
+        response.sendRedirect(request.getContextPath() + servletPath(AccountServlet.class));
+        //+
+        //        "?id=" + account.getId() + "&relDate=" + AccountServlet.formatter.format(DateUtil.asLocalDate(effectiveDate)));
     }
 }

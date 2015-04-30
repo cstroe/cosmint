@@ -2,7 +2,6 @@ package com.github.cstroe.spendhawk.web;
 
 import com.github.cstroe.spendhawk.entity.Account;
 import com.github.cstroe.spendhawk.entity.Transaction;
-import com.github.cstroe.spendhawk.helper.TListTotaler;
 import com.github.cstroe.spendhawk.util.DateUtil;
 import com.github.cstroe.spendhawk.util.HibernateUtil;
 import org.hibernate.Criteria;
@@ -82,7 +81,6 @@ public class AccountServlet extends HttpServlet {
 
                 request.setAttribute("account", account);
                 request.setAttribute("transactions", result);
-                request.setAttribute("totaler", new TListTotaler(result));
                 setNavigationDates(request, startDate);
                 request.getRequestDispatcher(TEMPLATE).forward(request,response);
                 // End unit of work

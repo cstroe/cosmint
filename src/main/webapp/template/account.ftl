@@ -1,3 +1,7 @@
+<#-- @ftlvariable name="nextMonth" type="java.lang.String" -->
+<#-- @ftlvariable name="previousMonth" type="java.lang.String" -->
+<#-- @ftlvariable name="account" type="com.github.cstroe.spendhawk.entity.Account" -->
+
 <#assign page_title="${account.name}">
 
 <#include "/template/layouts/global_header.ftl"/>

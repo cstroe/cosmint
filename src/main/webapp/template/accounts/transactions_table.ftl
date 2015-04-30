@@ -27,7 +27,7 @@
     <tr>
         <td>&nbsp;</td>
         <td>&nbsp;</td>
-        <td style="text-align: right;">${totaler.total}</td>
+        <td style="text-align: right;">-</td>
         <td>&nbsp;</td>
         <td>&nbsp;</td>
     </tr>

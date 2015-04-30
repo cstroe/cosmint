@@ -1,3 +1,5 @@
+<#-- @ftlvariable name="query" type="java.lang.String" -->
+<#-- @ftlvariable name="account" type="com.github.cstroe.spendhawk.entity.Account" -->
 <#assign page_title="Search Transactions">
 
 <#include "/template/layouts/global_header.ftl"/>

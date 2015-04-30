@@ -19,7 +19,6 @@ public class User {
     private Long id;
     private String name;
     private Collection<Account> accounts;
-    private Collection<Category> categories;
 
     public Long getId() {
         return id;
@@ -43,14 +42,6 @@ public class User {
 
     public void setAccounts(Collection<Account> accounts) {
         this.accounts = accounts;
-    }
-
-    public Collection<Category> getCategories() {
-        return categories;
-    }
-
-    public void setCategories(Collection<Category> categories) {
-        this.categories = categories;
     }
 
     public static Optional<User> findById(Long id) {
