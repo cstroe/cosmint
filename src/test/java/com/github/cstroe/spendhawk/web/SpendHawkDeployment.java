@@ -7,6 +7,7 @@ import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.OverProtocol;
 import org.jboss.shrinkwrap.api.Filters;
 import org.jboss.shrinkwrap.api.GenericArchive;
+import org.jboss.shrinkwrap.api.Node;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.importer.ExplodedImporter;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
@@ -15,6 +16,9 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 
 @ArquillianSuiteDeployment
 public class SpendHawkDeployment {
@@ -73,5 +77,16 @@ public class SpendHawkDeployment {
     public void showDeploymentContents() {
         WebArchive archive = deploy();
         System.out.println(archive.toString(true));
+
+        Node hcfg = archive.get("/WEB-INF/classes/hibernate.cfg.xml");
+
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(hcfg.getAsset().openStream()))){
+            String currentLine;
+            while ((currentLine = reader.readLine()) != null) {
+                System.out.println(currentLine);
+            }
+        } catch(IOException ex) {
+            ex.printStackTrace();
+        }
     }
 }
