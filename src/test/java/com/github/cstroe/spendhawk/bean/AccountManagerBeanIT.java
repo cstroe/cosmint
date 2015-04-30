@@ -66,12 +66,12 @@ public class AccountManagerBeanIT extends BaseIT {
     public void testSeedSubAccount() {
         startTransaction();
         User currentUser = User.findById(3l).orElseThrow(Exceptions::userNotFound);
-        Account parent = Account.findById(currentUser, 2l)
-            .orElseThrow(() -> new AssertionError("Account 2 should exist in the seed data."));
+        Account parent = Account.findById(currentUser, 10l)
+            .orElseThrow(() -> new AssertionError("Account 10 should exist in the seed data."));
 
         assertThat(parent.getSubAccounts().size(), is(1));
         assertThat(parent.getSubAccounts().iterator().next().getName(),
-            is(equalTo("General Spending Account")));
+            is(equalTo("MegaCorp Inc.")));
     }
 
     @Test
@@ -118,18 +118,18 @@ public class AccountManagerBeanIT extends BaseIT {
         startTransaction();
         User currentUser = User.findById(3l).orElseThrow(Exceptions::userNotFound);
 
-        Account subAccount = Account.findById(currentUser, 2l)
+        Account subAccount = Account.findById(currentUser, 18l)
             .orElseThrow(Exceptions::accountNotFound);
 
         assertNull("The sub account should not have a parent.", subAccount.getParent());
 
-        accountManager.nestAccount(currentUser.getId(), 4l, 2l);
+        accountManager.nestAccount(currentUser.getId(), 11l, 18l);
         commitTransaction();
 
         startTransaction();
 
-        Account parentAccount = Account.findById(currentUser, 4l).get();
-        subAccount = Account.findById(currentUser, 2l).get();
+        Account parentAccount = Account.findById(currentUser, 11l).get();
+        subAccount = Account.findById(currentUser, 18l).get();
 
         assertThat(subAccount.getParent(), is(equalTo(parentAccount)));
         commitTransaction();

@@ -106,7 +106,10 @@ public class AccountManagerBean extends DatabaseBean {
             // I have a feeling that this can be handled by hibernate.
             account.getCashFlows().stream()
                 .map(CashFlow::getTransaction).collect(Collectors.toSet())
-                .stream().forEach(Transaction::delete);
+                .stream().forEach(t -> {
+                    t.getCashFlows().forEach(CashFlow::delete);
+                    t.delete();
+                });
 
             currentUser.getAccounts().remove(account);
             account.delete();
