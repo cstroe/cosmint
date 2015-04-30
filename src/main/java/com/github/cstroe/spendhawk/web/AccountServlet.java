@@ -1,9 +1,11 @@
 package com.github.cstroe.spendhawk.web;
 
 import com.github.cstroe.spendhawk.entity.Account;
+import com.github.cstroe.spendhawk.entity.CashFlow;
 import com.github.cstroe.spendhawk.entity.Transaction;
 import com.github.cstroe.spendhawk.util.DateUtil;
 import com.github.cstroe.spendhawk.util.HibernateUtil;
+import com.github.cstroe.spendhawk.util.TemplateForwarder;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
@@ -62,7 +64,9 @@ public class AccountServlet extends HttpServlet {
 
             Criteria query = HibernateUtil.getSessionFactory()
                 .getCurrentSession()
-                .createCriteria(Transaction.class);
+                .createCriteria(CashFlow.class)
+                    .add(Restrictions.eq("account", account))
+                    .createCriteria("transaction");
 
             if(startDate != null) {
                 query.add(Restrictions.ge("effectiveDate", DateUtil.asDate(startDate)));
@@ -76,7 +80,8 @@ public class AccountServlet extends HttpServlet {
             List<Transaction> result = (List<Transaction>) query.addOrder(Order.desc("effectiveDate")).list();
 
             request.setAttribute("account", account);
-            request.setAttribute("transactions", result);
+            request.setAttribute("cashflows", result);
+            request.setAttribute("fw", new TemplateForwarder(request));
             setNavigationDates(request, startDate);
             request.getRequestDispatcher(TEMPLATE).forward(request,response);
             // End unit of work

@@ -5,25 +5,34 @@
 
 <#include "/template/layouts/global_header.ftl">
 
-<a href="${fw.url('/users/manage')}">Manage Users</a>
+<div class="container_12">
+    <div class="grid_12 clearfix">
+        <a href="${fw.url('/users/manage')}">Manage Users</a>
+    </div>
 
-<h2>Users in database:</h2>
-<table border='1'>
-    <tr>
-        <th>User Name</th>
-    </tr>
+    <div class="grid_12 clearfix">
+        <h2>Users in database:</h2>
+        <table border='1'>
+            <tr>
+                <th>User Name</th>
+            </tr>
 
-<#list users as user>
-    <tr>
-        <td>
-            <a class="userLink"
-               <#--noinspection FtlReferencesInspection-->
-               href="${fw.servlet('com.github.cstroe.spendhawk.web.user.UserSummaryServlet', 'user.id', user.id)}">
-            ${user.name}
-            </a>
-        </td>
-    </tr>
-</#list>
+        <#list users as user>
+            <tr>
+                <td>
+                    <a class="userLink"
+                    <#--noinspection FtlReferencesInspection-->
+                       href="${fw.servlet('com.github.cstroe.spendhawk.web.user.UserSummaryServlet', 'user.id', user.id)}">
+                    ${user.name}
+                    </a>
+                </td>
+            </tr>
+        </#list>
+    </div>
+</div>
+
+
+
 
 </table>
 
