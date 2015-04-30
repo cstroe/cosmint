@@ -72,4 +72,8 @@ public class Exceptions {
     public static RuntimeException actionNotSpecified() {
         return new RuntimeException("Action not specified.");
     }
+
+    public static RuntimeException cashFlowNotFound() {
+        return new RuntimeException("CashFlow not found.");
+    }
 }
