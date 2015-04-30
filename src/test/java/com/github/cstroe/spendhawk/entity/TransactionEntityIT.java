@@ -12,8 +12,9 @@ public class TransactionEntityIT extends BaseIT {
     public void testFindById() {
         startTransaction();
         Transaction.findById(1l).orElseThrow(RuntimeException::new);
-        Transaction.findById(5l).orElseThrow(RuntimeException::new);
+        Transaction.findById(2l).orElseThrow(RuntimeException::new);
         Transaction.findById(10l).orElseThrow(RuntimeException::new);
+        Transaction.findById(12l).orElseThrow(RuntimeException::new);
         commitTransaction();
     }
 }
