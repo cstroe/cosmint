@@ -10,8 +10,6 @@
 
 <#include "/template/user/summary/accounts.ftl">
 
-<#include "/template/user/summary/categories.ftl">
-
 <#include "/template/user/summary/reports.ftl">
 
 <#include "/template/layouts/global_footer.ftl">
