@@ -9,6 +9,7 @@ import org.jboss.arquillian.junit.InSequence;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -25,9 +26,13 @@ public class TransactionsIT extends BaseIT {
         startTransaction();
         User currentUser = User.findById(1l).orElseThrow(Exceptions::userNotFound);
         List<Account> accounts = Account.findAll(currentUser);
-        assertEquals(1, accounts.size());
-        Account firstAccount = accounts.get(0);
-        assertEquals("Main Checking", firstAccount.getName());
+        assertEquals(3, accounts.size());
+
+        Collections.sort(accounts);
+
+        assertEquals("Asset", accounts.get(0).getName());
+        assertEquals("Expense", accounts.get(1).getName());
+        assertEquals("Income", accounts.get(2).getName());
         commitTransaction();
     }
 
@@ -37,9 +42,13 @@ public class TransactionsIT extends BaseIT {
         startTransaction();
         User currentUser = User.findById(1l).orElseThrow(Exceptions::userNotFound);
         List<Account> accounts = Account.findAll(currentUser);
-        assertEquals(1, accounts.size());
-        Account firstAccount = accounts.get(0);
-        assertEquals("Main Checking", firstAccount.getName());
+        assertEquals(3, accounts.size());
+
+        Collections.sort(accounts);
+
+        assertEquals("Asset", accounts.get(0).getName());
+        assertEquals("Expense", accounts.get(1).getName());
+        assertEquals("Income", accounts.get(2).getName());
         commitTransaction();
     }
 }
