@@ -36,6 +36,7 @@
         <mapping resource="com/github/cstroe/spendhawk/entity/Transaction.hbm.xml"/>
         <mapping resource="com/github/cstroe/spendhawk/entity/Expense.hbm.xml"/>
         <mapping resource="com/github/cstroe/spendhawk/entity/Category.hbm.xml"/>
+        <mapping resource="com/github/cstroe/spendhawk/entity/CashFlow.hbm.xml"/>
 
     </session-factory>
 
