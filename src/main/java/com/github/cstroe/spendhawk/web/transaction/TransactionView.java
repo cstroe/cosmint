@@ -3,7 +3,7 @@ package com.github.cstroe.spendhawk.web.transaction;
 import com.github.cstroe.spendhawk.entity.Account;
 import com.github.cstroe.spendhawk.entity.CashFlow;
 import com.github.cstroe.spendhawk.entity.Transaction;
-import com.github.cstroe.spendhawk.util.Exceptions;
+import com.github.cstroe.spendhawk.util.Ex;
 import com.github.cstroe.spendhawk.util.HibernateUtil;
 import com.github.cstroe.spendhawk.web.AccountServlet;
 
@@ -33,7 +33,7 @@ public class TransactionView extends HttpServlet {
                 HibernateUtil.getSessionFactory().getCurrentSession().beginTransaction();
 
                 Transaction transaction = Transaction.findById(transactionId)
-                    .orElseThrow(Exceptions::transactionNotFound);
+                    .orElseThrow(Ex::transactionNotFound);
 
                 request.setAttribute("transaction", transaction);
                 request.setAttribute("cashflows", transaction.getCashFlows());
@@ -53,13 +53,13 @@ public class TransactionView extends HttpServlet {
         Date effectiveDate;
         try {
             String transactionIdRaw = Optional.ofNullable(request.getParameter("id"))
-                .orElseThrow(Exceptions::transactionIdRequired);
+                .orElseThrow(Ex::transactionIdRequired);
             Long transactionId = Long.parseLong(transactionIdRaw);
 
             // Begin unit of work
             HibernateUtil.getSessionFactory().getCurrentSession().beginTransaction();
             Transaction transaction = Transaction.findById(transactionId)
-                .orElseThrow(Exceptions::transactionNotFound);
+                .orElseThrow(Ex::transactionNotFound);
 
             for(CashFlow cashFlow : transaction.getCashFlows()) {
                 cashFlow.delete();

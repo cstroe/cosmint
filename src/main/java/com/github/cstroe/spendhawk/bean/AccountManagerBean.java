@@ -2,9 +2,8 @@ package com.github.cstroe.spendhawk.bean;
 
 import com.github.cstroe.spendhawk.entity.Account;
 import com.github.cstroe.spendhawk.entity.CashFlow;
-import com.github.cstroe.spendhawk.entity.Transaction;
 import com.github.cstroe.spendhawk.entity.User;
-import com.github.cstroe.spendhawk.util.Exceptions;
+import com.github.cstroe.spendhawk.util.Ex;
 import com.github.cstroe.spendhawk.util.HibernateUtil;
 
 import javax.ejb.Stateful;
@@ -43,7 +42,7 @@ public class AccountManagerBean extends DatabaseBean {
             startTransaction();
 
             final User currentUser = User.findById(userId)
-                .orElseThrow(Exceptions::userNotFound);
+                .orElseThrow(Ex::userNotFound);
 
             final Account theAccount = new Account();
             theAccount.setName(accountName);
@@ -71,7 +70,7 @@ public class AccountManagerBean extends DatabaseBean {
             startTransaction();
 
             User currentUser = User.findById(userId)
-                .orElseThrow(Exceptions::userNotFound);
+                .orElseThrow(Ex::userNotFound);
 
             final Account parentAccount = Account.findById(currentUser, parentAccountId)
                 .orElseThrow(() -> new IllegalArgumentException("Parent account id is not valid."));
@@ -97,11 +96,11 @@ public class AccountManagerBean extends DatabaseBean {
             startTransaction();
 
             User currentUser = User.findById(userId)
-                .orElseThrow(Exceptions::userNotFound);
+                .orElseThrow(Ex::userNotFound);
 
             Account account = currentUser.getAccounts().stream()
                 .filter(a->a.getId().equals(accountId)).findFirst()
-                .orElseThrow(Exceptions::accountNotFound);
+                .orElseThrow(Ex::accountNotFound);
 
             // I have a feeling that this can be handled by hibernate.
             account.getCashFlows().stream()
@@ -117,7 +116,7 @@ public class AccountManagerBean extends DatabaseBean {
             return true;
         } catch(Exception ex) {
             rollbackTransaction();
-            message = Exceptions.getDescriptiveMessage(ex);
+            message = Ex.getDescriptiveMessage(ex);
             return false;
         }
     }

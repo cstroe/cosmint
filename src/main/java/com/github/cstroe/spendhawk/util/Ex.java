@@ -3,7 +3,10 @@ package com.github.cstroe.spendhawk.util;
 import java.util.HashSet;
 import java.util.Set;
 
-public class Exceptions {
+/**
+ * Keep track of our exceptions.
+ */
+public final class Ex {
     public static RuntimeException transactionIdRequired() {
         return new RuntimeException("Transaction id is required.");
     }

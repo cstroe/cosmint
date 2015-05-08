@@ -1,6 +1,6 @@
 package com.github.cstroe.spendhawk.entity;
 
-import com.github.cstroe.spendhawk.util.Exceptions;
+import com.github.cstroe.spendhawk.util.Ex;
 
 import java.lang.reflect.Field;
 import java.text.DateFormat;
@@ -45,7 +45,7 @@ public class EntityTestScenario {
                     final Long parentAccountId = Long.parseLong(parentAccountIdRaw);
                     Account parentAccount = accountsList.stream()
                         .filter(a -> a.getId().equals(parentAccountId))
-                        .findFirst().orElseThrow(Exceptions::accountNotFound);
+                        .findFirst().orElseThrow(Ex::accountNotFound);
                     account.setParent(parentAccount);
                 }
                 accountsList.add(account);

@@ -3,7 +3,7 @@ package com.github.cstroe.spendhawk.web;
 import com.github.cstroe.spendhawk.bean.AccountManagerBean;
 import com.github.cstroe.spendhawk.entity.Account;
 import com.github.cstroe.spendhawk.entity.User;
-import com.github.cstroe.spendhawk.util.Exceptions;
+import com.github.cstroe.spendhawk.util.Ex;
 import com.github.cstroe.spendhawk.util.HibernateUtil;
 import com.github.cstroe.spendhawk.util.TemplateForwarder;
 import org.apache.commons.lang3.StringEscapeUtils;
@@ -33,7 +33,7 @@ public class AccountManagerServlet extends HttpServlet {
         try {
             HibernateUtil.getSessionFactory().getCurrentSession().beginTransaction();
             User currentUser = User.findById(Long.parseLong(userId))
-                .orElseThrow(Exceptions::userNotFound);
+                .orElseThrow(Ex::userNotFound);
 
             request.setAttribute("fw", new TemplateForwarder(request));
             request.setAttribute("user", currentUser);
@@ -50,9 +50,9 @@ public class AccountManagerServlet extends HttpServlet {
             throws ServletException, IOException {
         String userIdRaw = Optional.ofNullable(request.getParameter("user.id"))
                 .map(StringEscapeUtils::escapeHtml4)
-                .orElseThrow(Exceptions::userIdRequired);
+                .orElseThrow(Ex::userIdRequired);
         String actionRaw = Optional.ofNullable(request.getParameter("action"))
-                .orElseThrow(Exceptions::userIdRequired);
+                .orElseThrow(Ex::userIdRequired);
 
         Long userId, accountId;
         try {
@@ -63,13 +63,13 @@ public class AccountManagerServlet extends HttpServlet {
 
         HibernateUtil.getSessionFactory().getCurrentSession().beginTransaction();
 
-        User currentUser = User.findById(userId).orElseThrow(Exceptions::userNotFound);
+        User currentUser = User.findById(userId).orElseThrow(Ex::userNotFound);
 
         //noinspection IfCanBeSwitch
         if("store".equals(actionRaw)) {
             String accountName = Optional.ofNullable(request.getParameter("account.name"))
                     .map(StringEscapeUtils::escapeHtml4)
-                    .orElseThrow(Exceptions::accountNameRequired);
+                    .orElseThrow(Ex::accountNameRequired);
 
             Optional<Account> newAccount = accountManager.createAccount(userId, accountName);
 
@@ -81,7 +81,7 @@ public class AccountManagerServlet extends HttpServlet {
         } else if("delete".equals(actionRaw)) {
             String accountIdRaw = Optional.ofNullable(request.getParameter("account.id"))
                     .map(StringEscapeUtils::escapeHtml4)
-                    .orElseThrow(Exceptions::accountIdRequired);
+                    .orElseThrow(Ex::accountIdRequired);
 
             accountId = Long.parseLong(accountIdRaw);
             boolean deleteSuccessful = accountManager.deleteAccount(userId, accountId);

@@ -2,7 +2,7 @@ package com.github.cstroe.spendhawk.web.transaction;
 
 import com.github.cstroe.spendhawk.entity.Account;
 import com.github.cstroe.spendhawk.entity.Transaction;
-import com.github.cstroe.spendhawk.util.Exceptions;
+import com.github.cstroe.spendhawk.util.Ex;
 import com.github.cstroe.spendhawk.util.HibernateUtil;
 import org.hibernate.Session;
 
@@ -30,7 +30,7 @@ public class TransactionSearchServlet extends HttpServlet {
         try {
             currentSession.beginTransaction();
             Account account = Account.findById(Long.parseLong(accountId))
-                .orElseThrow(Exceptions::accountNotFound);
+                .orElseThrow(Ex::accountNotFound);
             req.setAttribute("account", account);
             req.setAttribute("query", searchString);
             Collection<Transaction> tList = account.findTransactions(searchString);

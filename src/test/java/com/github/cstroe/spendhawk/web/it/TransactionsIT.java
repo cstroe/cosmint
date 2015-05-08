@@ -3,7 +3,7 @@ package com.github.cstroe.spendhawk.web.it;
 import com.github.cstroe.spendhawk.entity.Account;
 import com.github.cstroe.spendhawk.entity.User;
 import com.github.cstroe.spendhawk.util.BaseIT;
-import com.github.cstroe.spendhawk.util.Exceptions;
+import com.github.cstroe.spendhawk.util.Ex;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.junit.InSequence;
 import org.junit.Test;
@@ -24,7 +24,7 @@ public class TransactionsIT extends BaseIT {
     @InSequence(100)
     public void seedDatabaseWorks() {
         startTransaction();
-        User currentUser = User.findById(1l).orElseThrow(Exceptions::userNotFound);
+        User currentUser = User.findById(1l).orElseThrow(Ex::userNotFound);
         List<Account> accounts = Account.findAll(currentUser);
         assertEquals(3, accounts.size());
 
@@ -40,7 +40,7 @@ public class TransactionsIT extends BaseIT {
     @InSequence(200)
     public void seedDatabaseWorks2() {
         startTransaction();
-        User currentUser = User.findById(1l).orElseThrow(Exceptions::userNotFound);
+        User currentUser = User.findById(1l).orElseThrow(Ex::userNotFound);
         List<Account> accounts = Account.findAll(currentUser);
         assertEquals(3, accounts.size());
 
