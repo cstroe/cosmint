@@ -2,6 +2,7 @@ package com.github.cstroe.spendhawk.web.it;
 
 import com.github.cstroe.spendhawk.testutil.web.DBUnitServlet;
 import com.github.cstroe.spendhawk.web.AccountServlet;
+import com.github.cstroe.spendhawk.web.AddTransactionServlet;
 import com.github.cstroe.spendhawk.web.BaseClientIT;
 import com.github.cstroe.spendhawk.web.transaction.TransactionView;
 import org.jboss.arquillian.container.test.api.RunAsClient;
@@ -19,6 +20,7 @@ import org.junit.runner.RunWith;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -60,9 +62,33 @@ public class AccountServletIT extends BaseClientIT {
 
         Document doc = Jsoup.parse(response.getBody());
         List<Element> transactionLinks = doc.getElementsByTag("a").stream()
-            .filter(e -> e.attr("href").contains(servletPath(TransactionView.class)))
+            .filter(e -> e.attr("href").startsWith(servletPath(TransactionView.class) + "?"))
             .collect(Collectors.toList());
 
-        assertThat(transactionLinks.size(), is(3));
+        assertThat("Seed database contains 3 transactions for account 17.",
+            transactionLinks.size(), is(3));
+    }
+
+    @Test
+    @RunAsClient
+    @InSequence(200)
+    public void t0200_display_correct_add_transaction_link() {
+        response = connect(AccountServlet.class,
+            "id", 17l, "start", "01-01-2015", "end", "01-01-2015");
+
+        assertResponseStatus(200, response);
+
+        Document doc = Jsoup.parse(response.getBody());
+        List<Element> links = doc.getElementsByTag("a").stream()
+            .filter(e -> e.attr("href").startsWith(servletPath(AddTransactionServlet.class)))
+            .collect(Collectors.toList());
+
+        assertThat("There should only be one link to add transactions", links.size(), is(1));
+
+        Element addTransactionLink = links.get(0);
+
+        String correctLink = servletPath(AddTransactionServlet.class, "user.id", 3l, "account.id", 17l);
+
+        assertThat(addTransactionLink.attr("href"), is(equalTo(correctLink)));
     }
 }

@@ -1,3 +1,4 @@
+<#-- @ftlvariable name="fw" type="com.github.cstroe.spendhawk.util.TemplateForwarder" -->
 <#-- @ftlvariable name="nextMonth" type="java.lang.String" -->
 <#-- @ftlvariable name="previousMonth" type="java.lang.String" -->
 <#-- @ftlvariable name="account" type="com.github.cstroe.spendhawk.entity.Account" -->
@@ -10,7 +11,7 @@
     <a class="navlink" href="/spendhawk/accounts?user.id=${account.user.id}">
         <img class="navbutton" src="/spendhawk/images/previous.svg"/>Accounts
     </a>
-    <a class="navlink" href="/spendhawk/transactions/add?id=${account.id}">
+    <a class="navlink" href="${fw.servlet("com.github.cstroe.spendhawk.web.AddTransactionServlet", "user.id", account.user.id, "account.id", account.id)}">
         <img class="navbutton" src="/spendhawk/images/add.svg"/>Add Transaction
     </a>
     <a class="navlink" href="/spendhawk/transactions/upload?id=${account.id}">
