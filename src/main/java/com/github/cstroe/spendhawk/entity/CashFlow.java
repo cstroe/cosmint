@@ -62,4 +62,21 @@ public class CashFlow {
             .add(Restrictions.eq("id", id))
             .uniqueResult());
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj instanceof CashFlow) {
+            if (this.getId() == null) {
+                return false;
+            }
+            return this.getId().equals(((CashFlow) obj).getId());
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
+    }
 }

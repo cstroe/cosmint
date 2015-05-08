@@ -1,7 +1,7 @@
 package com.github.cstroe.spendhawk.entity;
 
 import com.github.cstroe.spendhawk.util.BaseIT;
-import com.github.cstroe.spendhawk.util.Exceptions;
+import com.github.cstroe.spendhawk.util.Ex;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,9 +20,9 @@ public class CashFlowIT extends BaseIT {
     @Test
     public void save() {
         startTransaction();
-        User user = User.findById(USER_ID).orElseThrow(Exceptions::userNotFound);
-        Account account = Account.findById(user, 1l).orElseThrow(Exceptions::accountNotFound);
-        Transaction transaction = Transaction.findById(1l).orElseThrow(Exceptions::transactionNotFound);
+        User user = User.findById(USER_ID).orElseThrow(Ex::userNotFound);
+        Account account = Account.findById(user, 1l).orElseThrow(Ex::accountNotFound);
+        Transaction transaction = Transaction.findById(1l).orElseThrow(Ex::transactionNotFound);
         CashFlow cashFlow = new CashFlow();
         cashFlow.setAccount(account);
         cashFlow.setTransaction(transaction);
@@ -34,14 +34,14 @@ public class CashFlowIT extends BaseIT {
         assertNotNull("CashFlow should have an ID after being persisted.", cashFlow.getId());
 
         startTransaction();
-        CashFlow.findById(cashFlow.getId()).orElseThrow(Exceptions::cashFlowNotFound);
+        CashFlow.findById(cashFlow.getId()).orElseThrow(Ex::cashFlowNotFound);
         commitTransaction();
     }
 
     @Test
     public void delete() {
         startTransaction();
-        CashFlow cashFlow = CashFlow.findById(USER_ID).orElseThrow(Exceptions::cashFlowNotFound);
+        CashFlow cashFlow = CashFlow.findById(USER_ID).orElseThrow(Ex::cashFlowNotFound);
         cashFlow.delete();
         commitTransaction();
 
