@@ -1,0 +1,33 @@
+
+table, td, th {
+    border: 1px solid black;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+td.date_cell, th.date_cell {
+    text-align: center;
+    width: 100px;
+}
+
+td.desc_cell, th.desc_cell {
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    width: 300px;
+}
+
+td.amnt_cell, th.amnt_cell {
+    text-align: right;
+    padding-left: 5px;
+    padding-right: 5px;
+    font-family: courier, 'Lucida Sans Typewriter', monospace;
+}
+
+td.note_cell, th.note_cell {
+    padding-left: 5px;
+    padding-right: 5px;
+    width: 200px;
+    display: none;
+}

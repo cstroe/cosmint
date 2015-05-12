@@ -1,31 +1,31 @@
 <#-- @ftlvariable name="cashflows" type="com.github.cstroe.spendhawk.entity.CashFlow[]" -->
 <#-- @ftlvariable name="fw" type="com.github.cstroe.spendhawk.util.TemplateForwarder" -->
 
-<table border='1' style="margin-left: auto; margin-right: auto;">
+<table>
     <tr>
-        <th>Date</th>
-        <th>Description</th>
-        <th>Amount</th>
-        <th>Notes</th>
+        <th class="date_cell">Date</th>
+        <th class="desc_cell">Description</th>
+        <th class="amnt_cell">Amount</th>
+        <th class="note_cell">Notes</th>
     </tr>
 
 <#list cashflows as cashflow>
     <tr>
-        <td>${cashflow.transaction.effectiveDate?date?iso("CST")}</td>
-        <td>
+        <td class="date_cell">${cashflow.transaction.effectiveDate?date?iso("CST")}</td>
+        <td class="desc_cell">
             <a href="${fw.servlet("com.github.cstroe.spendhawk.web.transaction.TransactionView", "id", cashflow.transaction.id)}">
             ${cashflow.transaction.description}
             </a>
         </td>
-        <td>${cashflow.amount}</td>
-        <td>${cashflow.transaction.notes!""}</td>
+        <td class="amnt_cell">${cashflow.amount}</td>
+        <td class="note_cell">${cashflow.transaction.notes!""}</td>
     </tr>
 </#list>
     <tr>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td style="text-align: right;">-</td>
-        <td>&nbsp;</td>
+        <td class="date_cell">&nbsp;</td>
+        <td class="desc_cell">&nbsp;</td>
+        <td class="amnt_cell">-</td>
+        <td class="note_cell">&nbsp;</td>
     </tr>
 
 </table>
