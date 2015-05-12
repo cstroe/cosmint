@@ -33,6 +33,10 @@ public class TransactionManagerBean extends DatabaseBean {
 
         Set<CashFlow> cashFlows = new HashSet<>();
         for(int i = 0; i < cashflowAccounts.length; i++) {
+            if(cashflowAmounts[i] == null || cashflowAccounts[i] == null ||
+                cashflowAmounts[i].isEmpty() || cashflowAccounts[i].isEmpty()) {
+                continue;
+            }
             CashFlow newCashFlow = new CashFlow();
             Account account = Account.findById(currentUser, Long.parseLong(cashflowAccounts[i]))
                 .orElseThrow(Ex::accountNotFound);

@@ -49,8 +49,8 @@ public class TransactionManagerIT extends BaseIT {
         startTransaction();
         Optional<Transaction> tOpt = tMan.createTransaction(3l, new Date(),
             "New Transaction", "This is a note.",
-            new String[] {"10", "17"},
-            new String[] {"-1000.00", "1000.00"});
+            new String[] {"10", "17", "", "", ""},
+            new String[] {"-1000.00", "1000.00", "", "", ""});
 
         assertTrue(tOpt.isPresent());
 
