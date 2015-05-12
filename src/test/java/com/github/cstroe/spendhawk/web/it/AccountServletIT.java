@@ -5,6 +5,7 @@ import com.github.cstroe.spendhawk.web.AccountServlet;
 import com.github.cstroe.spendhawk.web.AddTransactionServlet;
 import com.github.cstroe.spendhawk.web.BaseClientIT;
 import com.github.cstroe.spendhawk.web.transaction.TransactionView;
+import com.github.cstroe.spendhawk.web.user.UserSummaryServlet;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.junit.InSequence;
@@ -80,7 +81,7 @@ public class AccountServletIT extends BaseClientIT {
 
         Document doc = Jsoup.parse(response.getBody());
         List<Element> links = doc.getElementsByTag("a").stream()
-            .filter(e -> e.attr("href").startsWith(servletPath(AddTransactionServlet.class)))
+            .filter(e -> e.attr("href").startsWith(servletPath(AddTransactionServlet.class) + "?"))
             .collect(Collectors.toList());
 
         assertThat("There should only be one link to add transactions", links.size(), is(1));
@@ -88,6 +89,29 @@ public class AccountServletIT extends BaseClientIT {
         Element addTransactionLink = links.get(0);
 
         String correctLink = servletPath(AddTransactionServlet.class, "user.id", 3l, "account.id", 17l);
+
+        assertThat(addTransactionLink.attr("href"), is(equalTo(correctLink)));
+    }
+
+    @Test
+    @RunAsClient
+    @InSequence(300)
+    public void t0300_display_correct_accounts_link() {
+        response = connect(AccountServlet.class,
+                "id", 17l, "start", "01-01-2015", "end", "01-01-2015");
+
+        assertResponseStatus(200, response);
+
+        Document doc = Jsoup.parse(response.getBody());
+        List<Element> links = doc.getElementsByTag("a").stream()
+                .filter(e -> e.attr("href").startsWith(servletPath(UserSummaryServlet.class) + "?"))
+                .collect(Collectors.toList());
+
+        assertThat("There should be one link to the user summary page.", links.size(), is(1));
+
+        Element addTransactionLink = links.get(0);
+
+        String correctLink = servletPath(UserSummaryServlet.class, "user.id", 3l);
 
         assertThat(addTransactionLink.attr("href"), is(equalTo(correctLink)));
     }

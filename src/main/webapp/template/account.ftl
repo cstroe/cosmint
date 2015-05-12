@@ -8,7 +8,7 @@
 <#include "/template/layouts/global_header.ftl"/>
 
 <div class="accountnav">
-    <a class="navlink" href="/spendhawk/accounts?user.id=${account.user.id}">
+    <a class="navlink" href="${fw.servlet("com.github.cstroe.spendhawk.web.user.UserSummaryServlet", "user.id", account.user.id)}">
         <img class="navbutton" src="/spendhawk/images/previous.svg"/>Accounts
     </a>
     <a class="navlink" href="${fw.servlet("com.github.cstroe.spendhawk.web.AddTransactionServlet", "user.id", account.user.id, "account.id", account.id)}">
