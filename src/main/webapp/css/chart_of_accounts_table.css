@@ -1,0 +1,19 @@
+table#chart_of_accounts {
+    border: 1px solid black;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+td.account_cell {
+    padding-top: 2px;
+    padding-bottom: 2px;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+td.coa_balance {
+    text-align: right;
+    padding-left: 5px;
+    padding-right: 5px;
+    font-family: "Courier New", Courier, monospace;
+}
