@@ -46,6 +46,9 @@ public class AccountServlet extends HttpServlet {
                 if("currentMonth".equals(relDateRaw)) {
                     startDate = LocalDate.now().withDayOfMonth(1);
                     endDate = null;
+                } else if("allTime".equals(relDateRaw)) {
+                    startDate = LocalDate.of(1900,1,1);
+                    endDate = null;
                 } else {
                     LocalDate date = formatter.parse(relDateRaw, LocalDate::from);
                     startDate = date.withDayOfMonth(1);

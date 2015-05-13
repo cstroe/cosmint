@@ -29,6 +29,9 @@ Balance: ${account.balance}<br/>
 
 <div class="accountnav">
     <form style="margin: 0px;" method="get" action="/spendhawk/transaction/search">
+    <a class="navlink" href="/spendhawk/account?id=${account.id}&relDate=allTime">
+        All Time
+    </a>
     <a class="navlink" href="/spendhawk/account?id=${account.id}&relDate=${previousMonth}">
         <img class="navbutton" src="/spendhawk/images/back.svg"/>Previous Month
     </a>
