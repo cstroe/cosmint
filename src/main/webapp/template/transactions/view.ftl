@@ -19,10 +19,15 @@
 </p>
 
 <p>
+    Description: ${transaction.description}
+</p>
+
+<p>
     Note: ${transaction.notes}
 </p>
 
 <h2>CashFlows:</h2>
+<form method="post">
 <table border='1'>
     <tr>
         <th>Account</th>
@@ -31,11 +36,19 @@
 
 <#list transaction.cashFlows as cashFlow>
     <tr>
-        <td>${cashFlow.amount}</td>
-        <td>${cashFlow.account.name}</td>
+        <td>
+            <input type="text" name="cfamount[]" value="${cashFlow.amount}"/>
+        </td>
+        <td>
+            ${cashFlow.account.name}
+            <input type="hidden" name="cfid[]" value="${cashFlow.id}"/>
+        </td>
     </tr>
 </#list>
-
 </table>
 
+    <input type="submit" name="update.cashflows" value="Update CashFlows"/>
+    <input type="hidden" name="fromAccountId" value="${fromAccountId}"/>
+    <input type="hidden" name="transactionId" value="${transaction.id}"/>
+</form>
 <#include "/template/layouts/global_footer.ftl">

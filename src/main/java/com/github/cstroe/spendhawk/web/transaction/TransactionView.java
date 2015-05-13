@@ -56,11 +56,53 @@ public class TransactionView extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        Long accountId;
-        Date effectiveDate;
+        Optional<String> updateCashflows = Optional.ofNullable(request.getParameter("update.cashflows"));
+        if(updateCashflows.isPresent()) {
+            doUpdateCashflowAmounts(request, response);
+        } else {
+            doView(request, response);
+        }
+    }
+
+    private void doUpdateCashflowAmounts(HttpServletRequest request, HttpServletResponse response) throws ServletException{
         try {
+            HibernateUtil.getSessionFactory().getCurrentSession().beginTransaction();
+
+            String[] cfId = request.getParameterValues("cfid[]");
+            String[] cfAmount = request.getParameterValues("cfamount[]");
+            Long fromAccountId = Long.parseLong(request.getParameter("fromAccountId"));
+            Long transactionId = Long.parseLong(request.getParameter("transactionId"));
+
+            for (int i = 0; i < cfId.length; i++) {
+                if (cfId[i] == null || cfAmount == null ||
+                        cfId[i].isEmpty() || cfAmount[i].isEmpty()) {
+                    continue;
+                }
+
+                CashFlow c = CashFlow.findById(Long.parseLong(cfId[i]))
+                        .orElseThrow(Ex::cashFlowNotFound);
+                c.setAmount(Double.parseDouble(cfAmount[i]));
+                c.save();
+            }
+
+            // End unit of work
+            HibernateUtil.getSessionFactory().getCurrentSession().getTransaction().commit();
+
+            response.sendRedirect(request.getContextPath() + servletPath(TransactionView.class,
+                    "id", transactionId, "from", fromAccountId));
+        } catch(Exception ex) {
+            HibernateUtil.getSessionFactory().getCurrentSession().getTransaction().rollback();
+            throw new ServletException(ex);
+        }
+    }
+
+    private void doView(HttpServletRequest request, HttpServletResponse response) throws ServletException {
+        try {
+            Long accountId;
+            Date effectiveDate;
+
             String transactionIdRaw = Optional.ofNullable(request.getParameter("id"))
-                .orElseThrow(Ex::transactionIdRequired);
+                    .orElseThrow(Ex::transactionIdRequired);
             String fromAccountIdRaw = Optional.ofNullable(request.getParameter("fromAccountId"))
                     .orElseThrow(Ex::accountIdRequired);
             accountId = Long.parseLong(fromAccountIdRaw);
@@ -69,23 +111,23 @@ public class TransactionView extends HttpServlet {
             // Begin unit of work
             HibernateUtil.getSessionFactory().getCurrentSession().beginTransaction();
             Transaction transaction = Transaction.findById(transactionId)
-                .orElseThrow(Ex::transactionNotFound);
+                    .orElseThrow(Ex::transactionNotFound);
 
             effectiveDate = transaction.getEffectiveDate();
 
-            for(CashFlow cashFlow : transaction.getCashFlows()) {
+            for (CashFlow cashFlow : transaction.getCashFlows()) {
                 cashFlow.delete();
             }
             transaction.delete();
 
             // End unit of work
             HibernateUtil.getSessionFactory().getCurrentSession().getTransaction().commit();
+
+            response.sendRedirect(request.getContextPath() + servletPath(AccountServlet.class,
+                    "id", accountId, "relDate", AccountServlet.formatter.format(DateUtil.asLocalDate(effectiveDate))));
         } catch (Exception ex) {
             HibernateUtil.getSessionFactory().getCurrentSession().getTransaction().rollback();
             throw new ServletException(ex);
         }
-
-        response.sendRedirect(request.getContextPath() + servletPath(AccountServlet.class,
-                "id", accountId, "relDate", AccountServlet.formatter.format(DateUtil.asLocalDate(effectiveDate))));
     }
 }
