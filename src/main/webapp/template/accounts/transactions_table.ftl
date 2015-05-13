@@ -17,7 +17,7 @@
             ${cashflow.transaction.description}
             </a>
         </td>
-        <td class="amnt_cell">${cashflow.amount}</td>
+        <td class="amnt_cell">${cashflow.amount?string["0.00"]}</td>
         <td class="note_cell">${cashflow.transaction.notes!""}</td>
     </tr>
 </#list>
