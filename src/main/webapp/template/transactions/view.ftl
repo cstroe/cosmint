@@ -1,13 +1,16 @@
+<#-- @ftlvariable name="fromAccountId" type="java.lang.Long" -->
+<#-- @ftlvariable name="transaction" type="com.github.cstroe.spendhawk.entity.Transaction" -->
 <#assign page_title="View Transaction">
 <#include "/template/layouts/global_header.ftl">
 
 <p>
     <#assign transactionDate = transaction.effectiveDate?date?string("MM-dd-yyyy")>
-    <a href="/spendhawk/account?id=${transaction.account.id}&relDate=${transactionDate}">Back to Account</a>
+    <a href="/spendhawk/account?id=${fromAccountId}&relDate=${transactionDate}">Back to Account</a>
 </p>
 
 <form method="post">
     <input type="hidden" name="id" value="${transaction.id}"/>
+    <input type="hidden" name="fromAccountId" value="${fromAccountId}"/>
     Delete this transaction: <input type="submit" value="Delete" name="delete"/>
 </form>
 
@@ -15,20 +18,21 @@
     <a href="/spendhawk/expense/manage?transaction.id=${transaction.id}">Add Expense</a>
 </p>
 
+<p>
+    Note: ${transaction.notes}
+</p>
 
-<h2>Expenses:</h2>
+<h2>CashFlows:</h2>
 <table border='1'>
     <tr>
+        <th>Account</th>
         <th>Amount</th>
-        <th>Category</th>
-        <th>Merchant</th>
     </tr>
 
-<#list expenses as expense>
+<#list transaction.cashFlows as cashFlow>
     <tr>
-        <td>${expense.amount}</td>
-        <td>${expense.category.name}</td>
-        <td>${expense.merchant!""}</td>
+        <td>${cashFlow.amount}</td>
+        <td>${cashFlow.account.name}</td>
     </tr>
 </#list>
 

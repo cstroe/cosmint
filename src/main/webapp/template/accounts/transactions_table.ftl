@@ -13,7 +13,8 @@
     <tr>
         <td class="date_cell">${cashflow.transaction.effectiveDate?date?iso("CST")}</td>
         <td class="desc_cell">
-            <a href="${fw.servlet("com.github.cstroe.spendhawk.web.transaction.TransactionView", "id", cashflow.transaction.id)}">
+            <a href="${fw.servlet("com.github.cstroe.spendhawk.web.transaction.TransactionView",
+                        "id", cashflow.transaction.id, "fromAccountId", cashflow.account.id)}">
             ${cashflow.transaction.description}
             </a>
         </td>

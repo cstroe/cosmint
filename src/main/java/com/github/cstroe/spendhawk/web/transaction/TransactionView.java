@@ -1,8 +1,8 @@
 package com.github.cstroe.spendhawk.web.transaction;
 
-import com.github.cstroe.spendhawk.entity.Account;
 import com.github.cstroe.spendhawk.entity.CashFlow;
 import com.github.cstroe.spendhawk.entity.Transaction;
+import com.github.cstroe.spendhawk.util.DateUtil;
 import com.github.cstroe.spendhawk.util.Ex;
 import com.github.cstroe.spendhawk.util.HibernateUtil;
 import com.github.cstroe.spendhawk.web.AccountServlet;
@@ -27,6 +27,7 @@ public class TransactionView extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
             String transactionIdRaw = request.getParameter("id");
+            String fromAccountId = request.getParameter("from");
             if(transactionIdRaw != null) {
                 Long transactionId = Long.parseLong(transactionIdRaw);
                 // Begin unit of work
@@ -35,9 +36,15 @@ public class TransactionView extends HttpServlet {
                 Transaction transaction = Transaction.findById(transactionId)
                     .orElseThrow(Ex::transactionNotFound);
 
+                if(fromAccountId != null) {
+                    request.setAttribute("fromAccountId", Long.parseLong(fromAccountId));
+                } else {
+                    CashFlow cf =transaction.getCashFlows().iterator().next();
+                    request.setAttribute("fromAccountId", cf.getAccount().getId());
+                }
+
                 request.setAttribute("transaction", transaction);
-                request.setAttribute("cashflows", transaction.getCashFlows());
-                request.getRequestDispatcher(TEMPLATE).forward(request,response);
+                request.getRequestDispatcher(TEMPLATE).forward(request, response);
             }
             // End unit of work
             HibernateUtil.getSessionFactory().getCurrentSession().getTransaction().commit();
@@ -49,17 +56,22 @@ public class TransactionView extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        Account account;
+        Long accountId;
         Date effectiveDate;
         try {
             String transactionIdRaw = Optional.ofNullable(request.getParameter("id"))
                 .orElseThrow(Ex::transactionIdRequired);
+            String fromAccountIdRaw = Optional.ofNullable(request.getParameter("fromAccountId"))
+                    .orElseThrow(Ex::accountIdRequired);
+            accountId = Long.parseLong(fromAccountIdRaw);
             Long transactionId = Long.parseLong(transactionIdRaw);
 
             // Begin unit of work
             HibernateUtil.getSessionFactory().getCurrentSession().beginTransaction();
             Transaction transaction = Transaction.findById(transactionId)
                 .orElseThrow(Ex::transactionNotFound);
+
+            effectiveDate = transaction.getEffectiveDate();
 
             for(CashFlow cashFlow : transaction.getCashFlows()) {
                 cashFlow.delete();
@@ -73,8 +85,7 @@ public class TransactionView extends HttpServlet {
             throw new ServletException(ex);
         }
 
-        response.sendRedirect(request.getContextPath() + servletPath(AccountServlet.class));
-        //+
-        //        "?id=" + account.getId() + "&relDate=" + AccountServlet.formatter.format(DateUtil.asLocalDate(effectiveDate)));
+        response.sendRedirect(request.getContextPath() + servletPath(AccountServlet.class,
+                "id", accountId, "relDate", AccountServlet.formatter.format(DateUtil.asLocalDate(effectiveDate))));
     }
 }
