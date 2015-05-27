@@ -17,7 +17,7 @@
     <tr>
         <td class="account_cell">
         <#--noinspection FtlReferencesInspection-->
-            <a href="${fw.url('/account', 'id', account.id, 'relDate', 'currentMonth')}">
+            <a href="${fw.servlet('com.github.cstroe.spendhawk.web.AccountServlet', 'id', account.id, 'relDate', 'currentMonth')}">
                 <span style="margin-left: ${account.depth * 20}px">${account.name}</span>
             </a>
         </td>
