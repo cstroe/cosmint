@@ -18,9 +18,15 @@
     <a href="/spendhawk/expense/manage?transaction.id=${transaction.id}">Add Expense</a>
 </p>
 
+<form method="post">
 <p>
-    Description: ${transaction.description}
+    Description: <input type="text" name="description" value="${transaction.description}"/>
+    <input type="submit" name="update.description" value="Update"/>
 </p>
+
+<input type="hidden" name="transactionId" value="${transaction.id}"/>
+<input type="hidden" name="fromAccountId" value="${fromAccountId}"/>
+</form>
 
 <p>
     Note: ${transaction.notes}

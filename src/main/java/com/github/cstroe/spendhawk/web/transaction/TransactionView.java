@@ -57,14 +57,42 @@ public class TransactionView extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Optional<String> updateCashflows = Optional.ofNullable(request.getParameter("update.cashflows"));
-        if(updateCashflows.isPresent()) {
+        Optional<String> updateDescription = Optional.ofNullable(request.getParameter("update.description"));
+        if (updateCashflows.isPresent()) {
             doUpdateCashflowAmounts(request, response);
+        } else if(updateDescription.isPresent()) {
+            doUpdateDescription(request, response);
         } else {
             doView(request, response);
         }
     }
 
-    private void doUpdateCashflowAmounts(HttpServletRequest request, HttpServletResponse response) throws ServletException{
+    private void doUpdateDescription(HttpServletRequest request, HttpServletResponse response) throws ServletException {
+        try {
+            HibernateUtil.getSessionFactory().getCurrentSession().beginTransaction();
+
+            String description = Optional.ofNullable(request.getParameter("description"))
+                .orElseThrow(() -> new RuntimeException("Description required."));
+            Long fromAccountId = Long.parseLong(request.getParameter("fromAccountId"));
+            Long transactionId = Long.parseLong(request.getParameter("transactionId"));
+
+            Transaction t = Transaction.findById(transactionId)
+                .orElseThrow(Ex::transactionNotFound);
+
+            t.setDescription(description);
+            t.save();
+
+            HibernateUtil.getSessionFactory().getCurrentSession().getTransaction().commit();
+
+            response.sendRedirect(request.getContextPath() + servletPath(TransactionView.class,
+                    "id", transactionId, "from", fromAccountId));
+        } catch(Exception ex) {
+            HibernateUtil.getSessionFactory().getCurrentSession().getTransaction().rollback();
+            throw new ServletException(ex);
+        }
+    }
+
+    private void doUpdateCashflowAmounts(HttpServletRequest request, HttpServletResponse response) throws ServletException {
         try {
             HibernateUtil.getSessionFactory().getCurrentSession().beginTransaction();
 
