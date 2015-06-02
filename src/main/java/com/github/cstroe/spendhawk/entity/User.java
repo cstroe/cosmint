@@ -50,21 +50,35 @@ public class User {
     }
 
     public Optional<Account> getAccountByName(String name) {
-        return this.accounts.stream()
+        return getAccountByName(name, false);
+    }
+
+    private Optional<Account> getAccountByName(String name, boolean createIfNotExists) {
+        Optional<Account> accountOptional = this.accounts.stream()
             .filter(a -> a.getName().equals(name))
             .findFirst();
+
+        if(createIfNotExists && !accountOptional.isPresent()) {
+            Account newAccount = new Account();
+            newAccount.setName(name);
+            newAccount.setUser(this);
+            newAccount.save();
+            return Optional.of(newAccount);
+        } else {
+            return accountOptional;
+        }
     }
 
-    public Optional<Account> getDefaultExpenseAccount() {
-        return getAccountByName(DEFAULT_EXPENSE_ACCOUNT_NAME);
+    public Account getDefaultExpenseAccount() {
+        return getAccountByName(DEFAULT_EXPENSE_ACCOUNT_NAME, true).get();
     }
 
-    public Optional<Account> getDefaultIncomeAccount() {
-        return getAccountByName(DEFAULT_INCOME_ACCOUNT_NAME);
+    public Account getDefaultIncomeAccount() {
+        return getAccountByName(DEFAULT_INCOME_ACCOUNT_NAME, true).get();
     }
 
-    public Optional<Account> getDefaultAssetAccount() {
-        return getAccountByName(DEFAULT_ASSET_ACCOUNT_NAME);
+    public Account getDefaultAssetAccount() {
+        return getAccountByName(DEFAULT_ASSET_ACCOUNT_NAME, true).get();
     }
 
     public static Optional<User> findById(Long id) {
