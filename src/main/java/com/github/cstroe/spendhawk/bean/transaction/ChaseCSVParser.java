@@ -35,7 +35,8 @@ public class ChaseCSVParser implements TransactionParser {
         this.dateBean = dateBean;
     }
 
-    public List<Transaction> parse(InputStream fileContent, Account account) {
+    public List<Transaction> parse(InputStream fileContent, Account account,
+           Account expenseAccount, Account incomeAccount) {
         List<Transaction> generatedTransactions = new LinkedList<>();
         try (InputStreamReader reader = new InputStreamReader(fileContent)){
             Iterable<CSVRecord> records = CSVFormat.newFormat(',')
@@ -47,7 +48,8 @@ public class ChaseCSVParser implements TransactionParser {
                 if(!record.isConsistent()) {
                     continue;
                 }
-                processRecord(record, account).ifPresent(generatedTransactions::add);
+                processRecord(record, account, expenseAccount, incomeAccount)
+                    .ifPresent(generatedTransactions::add);
             }
         } catch(IOException exception) {
             log.error("Exception while parsing Chase CSV file.", exception);
@@ -55,7 +57,8 @@ public class ChaseCSVParser implements TransactionParser {
         return generatedTransactions;
     }
 
-    private Optional<Transaction> processRecord(CSVRecord record, Account account) {
+    private Optional<Transaction> processRecord(CSVRecord record,
+            Account bankAccount, Account expenseAccount, Account incomeAccount) {
         try {
             final String flow = record.get(ROW_TYPE); // CREDIT or DEBIT
 
@@ -78,11 +81,10 @@ public class ChaseCSVParser implements TransactionParser {
                 CashFlow cf_in = new CashFlow();
                 cf_in.setTransaction(newTransaction);
                 cf_in.setAmount(amount);
-                cf_in.setAccount(account);
+                cf_in.setAccount(bankAccount);
                 newTransaction.getCashFlows().add(cf_in);
 
                 // out flow
-                Account incomeAccount = account.getUser().getDefaultIncomeAccount();
                 CashFlow cf_out = new CashFlow();
                 cf_out.setTransaction(newTransaction);
                 cf_out.setAmount(amount * -1);
@@ -98,11 +100,10 @@ public class ChaseCSVParser implements TransactionParser {
                 CashFlow cf_out = new CashFlow();
                 cf_out.setTransaction(newTransaction);
                 cf_out.setAmount(amount);
-                cf_out.setAccount(account);
+                cf_out.setAccount(bankAccount);
                 newTransaction.getCashFlows().add(cf_out);
 
                 // in flow
-                Account expenseAccount = account.getUser().getDefaultExpenseAccount();
                 CashFlow cf_in = new CashFlow();
                 cf_in.setTransaction(newTransaction);
                 cf_in.setAmount(amount * -1);
