@@ -36,7 +36,7 @@ public class ChaseCSVParser implements TransactionParser {
     }
 
     public List<Transaction> parse(InputStream fileContent, Account account,
-           Account expenseAccount, Account incomeAccount) {
+           Account incomeAccount, Account expenseAccount) {
         List<Transaction> generatedTransactions = new LinkedList<>();
         try (InputStreamReader reader = new InputStreamReader(fileContent)){
             Iterable<CSVRecord> records = CSVFormat.newFormat(',')
@@ -48,7 +48,7 @@ public class ChaseCSVParser implements TransactionParser {
                 if(!record.isConsistent()) {
                     continue;
                 }
-                processRecord(record, account, expenseAccount, incomeAccount)
+                processRecord(record, account, incomeAccount, expenseAccount)
                     .ifPresent(generatedTransactions::add);
             }
         } catch(IOException exception) {
@@ -58,7 +58,7 @@ public class ChaseCSVParser implements TransactionParser {
     }
 
     private Optional<Transaction> processRecord(CSVRecord record,
-            Account bankAccount, Account expenseAccount, Account incomeAccount) {
+            Account bankAccount, Account incomeAccount, Account expenseAccount) {
         try {
             final String flow = record.get(ROW_TYPE); // CREDIT or DEBIT
 
