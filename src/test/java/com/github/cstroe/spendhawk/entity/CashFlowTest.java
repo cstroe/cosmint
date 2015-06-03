@@ -2,6 +2,7 @@ package com.github.cstroe.spendhawk.entity;
 
 import org.junit.Test;
 
+import static junit.framework.Assert.assertNotNull;
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertFalse;
 
@@ -50,5 +51,11 @@ public class CashFlowTest {
         cf2.setId(1l);
 
         assertTrue(cf1.hashCode() == cf2.hashCode());
+    }
+
+    @Test
+    public void hashcode_with_null_id() {
+        CashFlow cf1 = new CashFlow();
+        assertNotNull(cf1.hashCode());
     }
 }

@@ -77,6 +77,9 @@ public class CashFlow {
 
     @Override
     public int hashCode() {
+        if(id == null) {
+            return super.hashCode();
+        }
         return id.hashCode();
     }
 }
