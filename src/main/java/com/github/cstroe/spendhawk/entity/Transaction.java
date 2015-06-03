@@ -3,9 +3,7 @@ package com.github.cstroe.spendhawk.entity;
 import com.github.cstroe.spendhawk.util.HibernateUtil;
 import org.hibernate.criterion.Restrictions;
 
-import java.util.Collection;
-import java.util.Date;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * <p>
@@ -26,7 +24,7 @@ public class Transaction {
     private Date effectiveDate;
     private String description;
     private String notes;
-    private Collection<CashFlow> cashFlows;
+    private Collection<CashFlow> cashFlows = new HashSet<>();
 
     public Transaction() {}
 
