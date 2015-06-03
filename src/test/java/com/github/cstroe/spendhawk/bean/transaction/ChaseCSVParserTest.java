@@ -9,7 +9,6 @@ import org.codehaus.plexus.util.StringInputStream;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -72,7 +71,7 @@ public class ChaseCSVParserTest {
                 "DEBIT,08/31/2012,MARIANOS FRESH00085043 CHICAGO IL            08/30,-3.3,Testing the notes";
 
         List<Transaction> transactions =
-            parser.parse(new StringInputStream(data), myBankAccount);
+            parser.parse(new StringInputStream(data), myBankAccount, incomeAccount, expenseAccount);
 
         assertThat(transactions.size(), is(1));
 
@@ -113,7 +112,7 @@ public class ChaseCSVParserTest {
                 "CREDIT,08/01/2012,\"INCOME SOURCE\",1234.56,";
 
         List<Transaction> transactions =
-                parser.parse(new StringInputStream(data), myBankAccount);
+                parser.parse(new StringInputStream(data), myBankAccount, incomeAccount, expenseAccount);
 
         assertThat(transactions.size(), is(1));
 
