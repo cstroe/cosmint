@@ -17,6 +17,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Parse CSV files downloaded from chase.com
+ */
 @Stateful
 public class ChaseCSVParser implements TransactionParser {
 
