@@ -52,7 +52,6 @@ public class TransactionsHelper {
         List<String> messages = new LinkedList<>();
         try (InputStreamReader reader = new InputStreamReader(fileContent)){
             Iterable<CSVRecord> records = CSVFormat.newFormat(',')
-                    .withDelimiter(',')
                     .withQuote('"')
                     .withHeader("Type", "Post Date", "Description", "Amount", "Check or Slip #")
                     .parse(reader);
