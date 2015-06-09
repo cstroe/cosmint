@@ -63,7 +63,7 @@ public class TransactionView extends HttpServlet {
         } else if(updateDescription.isPresent()) {
             doUpdateDescription(request, response);
         } else {
-            doView(request, response);
+            doTransactionDelete(request, response);
         }
     }
 
@@ -124,7 +124,7 @@ public class TransactionView extends HttpServlet {
         }
     }
 
-    private void doView(HttpServletRequest request, HttpServletResponse response) throws ServletException {
+    private void doTransactionDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException {
         try {
             Long accountId;
             Date effectiveDate;
