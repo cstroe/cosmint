@@ -30,3 +30,16 @@ td.note_cell, th.note_cell {
     width: 200px;
     display: none;
 }
+
+td.acct_cell, th.acct_cell {
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+span.acct_span {
+    border-radius: 3px;
+    padding-left: 2px;
+    padding-right: 2px;
+    background: royalblue;
+    color: white;
+}
