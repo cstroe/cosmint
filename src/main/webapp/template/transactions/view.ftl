@@ -43,12 +43,21 @@
 <#list transaction.cashFlows as cashFlow>
     <tr>
         <td>
-            <input type="text" name="cfamount[]" value="${cashFlow.amount}"/>
-        </td>
-        <td>
-            ${cashFlow.account.name}
+            <select name="toAccountId[]">
+                <#list cashFlow.account.user.accounts as acct>
+                    <#if acct.name == cashFlow.account.name>
+                        <option selected="" value="${acct.id}">${acct.name}</option>
+                    <#else>
+                        <option value="${acct.id}">${acct.name}</option>
+                    </#if>
+                </#list>
+            </select>
             <input type="hidden" name="cfid[]" value="${cashFlow.id}"/>
         </td>
+        <td>
+            <input type="text" name="cfamount[]" value="${cashFlow.amount}"/>
+        </td>
+
     </tr>
 </#list>
 </table>

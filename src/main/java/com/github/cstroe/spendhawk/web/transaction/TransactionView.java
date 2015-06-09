@@ -1,5 +1,6 @@
 package com.github.cstroe.spendhawk.web.transaction;
 
+import com.github.cstroe.spendhawk.entity.Account;
 import com.github.cstroe.spendhawk.entity.CashFlow;
 import com.github.cstroe.spendhawk.entity.Transaction;
 import com.github.cstroe.spendhawk.util.DateUtil;
@@ -96,20 +97,30 @@ public class TransactionView extends HttpServlet {
         try {
             HibernateUtil.getSessionFactory().getCurrentSession().beginTransaction();
 
-            String[] cfId = request.getParameterValues("cfid[]");
-            String[] cfAmount = request.getParameterValues("cfamount[]");
+            String[] cfId = Optional.ofNullable(request.getParameterValues("cfid[]"))
+                .orElseThrow(() -> new ServletException("cfid[] not initialized"));
+            String[] cfAmount = Optional.ofNullable(request.getParameterValues("cfamount[]"))
+                .orElseThrow(() -> new ServletException("cfamount[] not initialized"));
+            String[] cfAccounts = Optional.ofNullable(request.getParameterValues("toAccountId[]"))
+                .orElseThrow(() -> new ServletException("toAccountId[] not initialized"));
+
             Long fromAccountId = Long.parseLong(request.getParameter("fromAccountId"));
             Long transactionId = Long.parseLong(request.getParameter("transactionId"));
 
             for (int i = 0; i < cfId.length; i++) {
-                if (cfId[i] == null || cfAmount == null ||
-                        cfId[i].isEmpty() || cfAmount[i].isEmpty()) {
+                if (cfId[i] == null || cfAmount[i] == null || cfAccounts[i] == null ||
+                        cfId[i].isEmpty() || cfAmount[i].isEmpty() || cfAccounts[i].isEmpty()) {
                     continue;
                 }
 
                 CashFlow c = CashFlow.findById(Long.parseLong(cfId[i]))
                         .orElseThrow(Ex::cashFlowNotFound);
                 c.setAmount(Double.parseDouble(cfAmount[i]));
+                if(!c.getAccount().getId().equals(Long.parseLong(cfAccounts[i]))) {
+                    Account newAccount = Account.findById(c.getAccount().getUser(), Long.parseLong(cfAccounts[i]))
+                        .orElseThrow(Ex::accountNotFound);
+                    c.setAccount(newAccount);
+                }
                 c.save();
             }
 
