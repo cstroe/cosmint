@@ -56,6 +56,7 @@ public class TransactionsUploadServlet extends HttpServlet {
         //final boolean duplicateCheck = request.getParameter("duplicate_check") != null;
 
         try {
+            List<String> messages = new ArrayList<>();
             HibernateUtil.getSessionFactory().getCurrentSession().beginTransaction();
             InputStream filecontent = filePart.getInputStream();
             Account account = Account.findById(accountId)
@@ -89,10 +90,11 @@ public class TransactionsUploadServlet extends HttpServlet {
                         f.save();
                     }
                 }
+                messages.add("Created " + transactions.size() + " transactions.");
             }
 
             request.setAttribute("account", account);
-            request.setAttribute("messages", new ArrayList<String>());
+            request.setAttribute("messages", messages);
             request.getRequestDispatcher(TEMPLATE).forward(request, response);
             HibernateUtil.getSessionFactory().getCurrentSession().getTransaction().commit();
         } catch (Exception ex) {
