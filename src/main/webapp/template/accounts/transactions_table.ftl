@@ -1,6 +1,8 @@
 <#-- @ftlvariable name="cashflows" type="com.github.cstroe.spendhawk.entity.CashFlow[]" -->
 <#-- @ftlvariable name="fw" type="com.github.cstroe.spendhawk.util.TemplateForwarder" -->
 
+<link rel="stylesheet" type="text/css" media="all" href="/spendhawk/css/transactions_table.css" />
+
 <table>
     <tr>
         <th class="date_cell">Date</th>
