@@ -1,7 +1,7 @@
 package com.github.cstroe.spendhawk.entity;
 
 import com.github.cstroe.spendhawk.util.HibernateUtil;
-import org.hibernate.criterion.Order;
+import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
 
 import javax.annotation.Nonnull;
@@ -147,17 +147,17 @@ public class Account implements Comparable<Account> {
     }
 
     /**
-     * Find transactions whose description match the search string.
+     * Find transactions whose description match the search string and return
+     * the cashflows that are recorded on the current account.
      * @param query SQL LIKE parameter
      */
     @SuppressWarnings("unchecked")
-    public List<Transaction> findTransactions(String query) {
-        query = "%" + query + "%";
-        return (List<Transaction>) HibernateUtil.getSessionFactory().getCurrentSession()
-                .createCriteria(Transaction.class)
+    public List<CashFlow> findCashFlows(String query) {
+        return (List<CashFlow>) HibernateUtil.getSessionFactory().getCurrentSession()
+                .createCriteria(CashFlow.class)
                 .add(Restrictions.eq("account", this))
-                .add(Restrictions.ilike("description", query))
-                .addOrder(Order.desc("effectiveDate"))
+                    .createCriteria("transaction")
+                    .add(Restrictions.ilike("description", query, MatchMode.ANYWHERE))
                 .list();
     }
 

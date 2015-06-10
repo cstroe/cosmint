@@ -1,18 +1,20 @@
 package com.github.cstroe.spendhawk.web.it;
 
 import com.github.cstroe.spendhawk.entity.Account;
+import com.github.cstroe.spendhawk.entity.CashFlow;
 import com.github.cstroe.spendhawk.entity.User;
 import com.github.cstroe.spendhawk.util.BaseIT;
 import com.github.cstroe.spendhawk.util.Ex;
 import org.jboss.arquillian.junit.Arquillian;
-import org.jboss.arquillian.junit.InSequence;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.util.Collections;
 import java.util.List;
 
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 
 /**
  * Integration tests having to do with transactions.
@@ -21,7 +23,6 @@ import static org.junit.Assert.assertEquals;
 public class TransactionsIT extends BaseIT {
 
     @Test
-    @InSequence(100)
     public void seedDatabaseWorks() {
         startTransaction();
         User currentUser = User.findById(1l).orElseThrow(Ex::userNotFound);
@@ -37,7 +38,6 @@ public class TransactionsIT extends BaseIT {
     }
 
     @Test
-    @InSequence(200)
     public void seedDatabaseWorks2() {
         startTransaction();
         User currentUser = User.findById(1l).orElseThrow(Ex::userNotFound);
@@ -50,5 +50,15 @@ public class TransactionsIT extends BaseIT {
         assertEquals("Expense", accounts.get(1).getName());
         assertEquals("Income", accounts.get(2).getName());
         commitTransaction();
+    }
+
+    @Test
+    public void find_cashflows() {
+        startTransaction();
+        User currentUser = User.findById(3l).orElseThrow(Ex::userNotFound);
+        Account userAccount = Account.findById(currentUser, 17l).orElseThrow(Ex::accountNotFound);
+
+        List<CashFlow> cashFlows = userAccount.findCashFlows("Park");
+        assertThat(cashFlows.size(), is(1));
     }
 }
