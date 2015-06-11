@@ -43,15 +43,20 @@
 <#list transaction.cashFlows as cashFlow>
     <tr>
         <td>
-            <select name="toAccountId[]">
-                <#list cashFlow.account.user.accounts as acct>
-                    <#if acct.name == cashFlow.account.name>
-                        <option selected="" value="${acct.id}">${acct.name}</option>
-                    <#else>
-                        <option value="${acct.id}">${acct.name}</option>
-                    </#if>
-                </#list>
-            </select>
+            <#if cashFlow.account.id == fromAccountId>
+                ${cashFlow.account.name}
+                <input type="hidden" name="toAccountId[]" value="${cashFlow.account.id}"/>
+            <#else>
+                <select name="toAccountId[]">
+                    <#list cashFlow.account.user.accounts as acct>
+                        <#if acct.name == cashFlow.account.name>
+                            <option selected="" value="${acct.id}">${acct.name}</option>
+                        <#else>
+                            <option value="${acct.id}">${acct.name}</option>
+                        </#if>
+                    </#list>
+                </select>
+            </#if>
             <input type="hidden" name="cfid[]" value="${cashFlow.id}"/>
         </td>
         <td>

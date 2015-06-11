@@ -29,6 +29,13 @@ public class TransactionView extends HttpServlet {
         try {
             String transactionIdRaw = request.getParameter("id");
             String fromAccountId = request.getParameter("from");
+            if(fromAccountId == null) {
+                fromAccountId = request.getParameter("fromAccountId");
+            }
+            if(fromAccountId == null) {
+                throw new RuntimeException("Account ID required.");
+            }
+
             if(transactionIdRaw != null) {
                 Long transactionId = Long.parseLong(transactionIdRaw);
                 // Begin unit of work
