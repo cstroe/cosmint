@@ -2,11 +2,18 @@ package com.github.cstroe.spendhawk.util;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.function.Supplier;
 
 /**
  * Keep track of our exceptions.
  */
 public final class Ex {
+
+    public static Supplier<RuntimeException> ception(final String message) {
+        //noinspection ThrowableInstanceNeverThrown
+        return () -> new RuntimeException(message);
+    }
+
     public static RuntimeException transactionIdRequired() {
         return new RuntimeException("Transaction id is required.");
     }
@@ -73,7 +80,7 @@ public final class Ex {
     }
 
     public static RuntimeException actionNotSpecified() {
-        return new RuntimeException("Action not specified.");
+        return ception("Action not specified.").get();
     }
 
     public static RuntimeException cashFlowNotFound() {
