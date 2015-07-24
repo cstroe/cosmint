@@ -1,6 +1,5 @@
 package com.github.cstroe.spendhawk.report;
 
-import com.github.cstroe.spendhawk.entity.Category;
 import com.github.cstroe.spendhawk.entity.User;
 
 import javax.servlet.http.HttpServletRequest;
@@ -30,26 +29,6 @@ public class ReportFormGenerator {
                        .append("<input type=\"text\" name=\"")
                        .append(parameter.getId())
                        .append("\"/><br/>");
-                    break;
-
-                case CATEGORY:
-                    out.append(parameter.getDisplayName())
-                       .append(": ")
-                       .append("<select name=\"")
-                       .append(parameter.getId())
-                       .append("\">\n");
-
-                    List<Category> categories = Category.findAll(currentUser);
-
-                    for(Category category : categories) {
-                        out.append("<option value=\"")
-                           .append(category.getId())
-                           .append("\">")
-                           .append(category.getName())
-                           .append("</option>\n");
-                    }
-
-                    out.append("</select><br/>");
                     break;
 
                 default:

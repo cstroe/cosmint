@@ -1,5 +1,10 @@
 package com.github.cstroe.spendhawk.entity;
 
+import com.github.cstroe.spendhawk.util.HibernateUtil;
+import org.hibernate.criterion.Restrictions;
+
+import java.util.Optional;
+
 /**
  * A CashFlow represents the change in value in a single account.  Value might
  * be put in to the account or might be taken out of the account.
@@ -40,5 +45,41 @@ public class CashFlow {
 
     public void setAmount(Double amount) {
         this.amount = amount;
+    }
+
+    public boolean save() {
+        Long id = (Long) HibernateUtil.getSessionFactory().getCurrentSession().save(this);
+        return id != null;
+    }
+
+    public void delete() {
+        HibernateUtil.getSessionFactory().getCurrentSession().delete(this);
+    }
+
+    public static Optional<CashFlow> findById(Long id) {
+        return Optional.ofNullable((CashFlow) HibernateUtil.getSessionFactory().getCurrentSession()
+            .createCriteria(CashFlow.class)
+            .add(Restrictions.eq("id", id))
+            .uniqueResult());
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj instanceof CashFlow) {
+            if (this.getId() == null) {
+                return false;
+            }
+            return this.getId().equals(((CashFlow) obj).getId());
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        if(id == null) {
+            return super.hashCode();
+        }
+        return id.hashCode();
     }
 }

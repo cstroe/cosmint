@@ -3,32 +3,28 @@ package com.github.cstroe.spendhawk.entity;
 import com.github.cstroe.spendhawk.util.HibernateUtil;
 import org.hibernate.criterion.Restrictions;
 
-import java.util.Collection;
-import java.util.Date;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * <p>
- * A monetary transaction against an account.  Implemented as a JavaBean.
+ * A monetary transaction against accounts, implemented as a collection of
+ * cash flows.
  * </p>
  *
  * A transaction has:
  * <ul>
- *     <li>an amount, can be positive or negative, two decimal places of precision</li>
- *     <li>an effective date and time, at which the expense is applied to an account</li>
- *     <li>an account against which this transaction is executed</li>
+ *     <li>an effective date and time, at which the cashflows are valid</li>
  *     <li>a description</li>
- *     <li>some notes about this description</li>
+ *     <li>some notes about this transaction</li>
+ *     <li>a collection of cash flows</li>
  * </ul>
  */
 public class Transaction {
     private Long id;
-    private Account account;
-    private Double amount;
     private Date effectiveDate;
     private String description;
     private String notes;
-    private Collection<Expense> expenses;
+    private Collection<CashFlow> cashFlows = new HashSet<>();
 
     public Transaction() {}
 
@@ -37,21 +33,6 @@ public class Transaction {
     }
     private void setId(Long id) {
         this.id = id;
-    }
-
-    public Account getAccount() {
-        return account;
-    }
-
-    public void setAccount(Account account) {
-        this.account = account;
-    }
-
-    public Double getAmount() {
-        return amount;
-    }
-    public void setAmount(Double amount) {
-        this.amount = amount;
     }
 
     public Date getEffectiveDate() {
@@ -78,23 +59,12 @@ public class Transaction {
         this.notes = notes;
     }
 
-    public Collection<Expense> getExpenses() {
-        return expenses;
+    public Collection<CashFlow> getCashFlows() {
+        return cashFlows;
     }
 
-    public void setExpenses(Collection<Expense> expenses) {
-        this.expenses = expenses;
-    }
-
-    public boolean isDuplicate() {
-        Transaction t = (Transaction) HibernateUtil.getSessionFactory().getCurrentSession()
-                .createCriteria(Transaction.class)
-                .add(Restrictions.eq("effectiveDate", effectiveDate))
-                .add(Restrictions.eq("amount", amount))
-                .add(Restrictions.eq("account", account))
-                .add(Restrictions.eq("description", description))
-                .uniqueResult();
-        return t != null;
+    public void setCashFlows(Collection<CashFlow> cashFlows) {
+        this.cashFlows = cashFlows;
     }
 
     public boolean save() {

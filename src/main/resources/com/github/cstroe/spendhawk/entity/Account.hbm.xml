@@ -12,9 +12,9 @@
         <!-- properties declared using Hibernate mapping types -->
         <property name="name" type="string" column="NAME"/>
         <many-to-one name="user" column="USER_ID" not-null="true"/>
-        <set name="transactions" inverse="true">
+        <set name="cashFlows" inverse="true">
             <key column="ACCOUNT_ID"/>
-            <one-to-many class="Transaction"/>
+            <one-to-many class="CashFlow"/>
         </set>
         <many-to-one name="parent" column="PARENT_ID" class="Account" not-null="false"/>
         <set name="subAccounts" table="ACCOUNTS" lazy="false" inverse="false">

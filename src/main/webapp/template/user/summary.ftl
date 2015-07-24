@@ -4,14 +4,20 @@
 
 <#include "/template/layouts/global_header.ftl">
 
-<p>
-    User: ${user.name}
-</p>
+<div class="container_12">
+    <div class="grid_12 clearfix">
+        <p>
+            User: ${user.name}
+        </p>
+    </div>
 
-<#include "/template/user/summary/accounts.ftl">
+    <div class="grid_12 clearfix">
+        <#include "/template/user/summary/accounts.ftl">
+    </div>
 
-<#include "/template/user/summary/categories.ftl">
-
-<#include "/template/user/summary/reports.ftl">
+    <div class="grid_12 clearfix">
+        <#include "/template/user/summary/reports.ftl">
+    </div>
+</div>
 
 <#include "/template/layouts/global_footer.ftl">

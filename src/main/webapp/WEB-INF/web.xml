@@ -51,13 +51,13 @@
         <url-pattern>*.ftl</url-pattern>
     </servlet-mapping>
     <!--
-        Prevent the visiting of MVC Views from outside the servlet container.
+        Prevent the visiting of templates from outside the servlet container.
         RequestDispatcher.forward/include should and will still work. Removing
         this may open security holes!
     -->
     <security-constraint>
         <web-resource-collection>
-            <web-resource-name>FreeMarker MVC Views</web-resource-name>
+            <web-resource-name>FreeMarker Templates</web-resource-name>
             <url-pattern>*.ftl</url-pattern>
         </web-resource-collection>
         <auth-constraint>

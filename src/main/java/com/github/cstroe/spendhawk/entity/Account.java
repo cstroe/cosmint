@@ -1,7 +1,7 @@
 package com.github.cstroe.spendhawk.entity;
 
 import com.github.cstroe.spendhawk.util.HibernateUtil;
-import org.hibernate.criterion.Order;
+import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
 
 import javax.annotation.Nonnull;
@@ -44,7 +44,7 @@ public class Account implements Comparable<Account> {
     private Long id;
     private User user;
     private String name;
-    private Collection<Transaction> transactions;
+    private Collection<CashFlow> cashFlows;
     private Account parent;
     private Set<Account> subAccounts;
 
@@ -75,12 +75,12 @@ public class Account implements Comparable<Account> {
         this.name = name;
     }
 
-    public Collection<Transaction> getTransactions() {
-        return transactions;
+    public Collection<CashFlow> getCashFlows() {
+        return cashFlows;
     }
 
-    public void setTransactions(Collection<Transaction> transactions) {
-        this.transactions = transactions;
+    public void setCashFlows(Collection<CashFlow> cashFlows) {
+        this.cashFlows = cashFlows;
     }
 
     public Account getParent() {
@@ -109,12 +109,12 @@ public class Account implements Comparable<Account> {
      */
     public Double getBalance() {
         final Date now = new Date();
-        if(transactions == null || transactions.isEmpty()) {
+        if(cashFlows == null || cashFlows.isEmpty()) {
             return ZERO;
         }
-        return transactions.stream()
-                .filter(t -> !t.getEffectiveDate().after(now))
-                .mapToDouble(Transaction::getAmount)
+        return cashFlows.stream()
+                .filter(c -> !c.getTransaction().getEffectiveDate().after(now))
+                .mapToDouble(CashFlow::getAmount)
                 .sum();
     }
 
@@ -147,17 +147,17 @@ public class Account implements Comparable<Account> {
     }
 
     /**
-     * Find transactions whose description match the search string.
+     * Find transactions whose description match the search string and return
+     * the cashflows that are recorded on the current account.
      * @param query SQL LIKE parameter
      */
     @SuppressWarnings("unchecked")
-    public List<Transaction> findTransactions(String query) {
-        query = "%" + query + "%";
-        return (List<Transaction>) HibernateUtil.getSessionFactory().getCurrentSession()
-                .createCriteria(Transaction.class)
+    public List<CashFlow> findCashFlows(String query) {
+        return (List<CashFlow>) HibernateUtil.getSessionFactory().getCurrentSession()
+                .createCriteria(CashFlow.class)
                 .add(Restrictions.eq("account", this))
-                .add(Restrictions.ilike("description", query))
-                .addOrder(Order.desc("effectiveDate"))
+                    .createCriteria("transaction")
+                    .add(Restrictions.ilike("description", query, MatchMode.ANYWHERE))
                 .list();
     }
 

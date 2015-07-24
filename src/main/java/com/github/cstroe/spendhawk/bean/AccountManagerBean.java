@@ -1,16 +1,15 @@
 package com.github.cstroe.spendhawk.bean;
 
 import com.github.cstroe.spendhawk.entity.Account;
-import com.github.cstroe.spendhawk.entity.Category;
-import com.github.cstroe.spendhawk.entity.Expense;
+import com.github.cstroe.spendhawk.entity.CashFlow;
 import com.github.cstroe.spendhawk.entity.User;
-import com.github.cstroe.spendhawk.util.Exceptions;
+import com.github.cstroe.spendhawk.util.Ex;
 import com.github.cstroe.spendhawk.util.HibernateUtil;
 
 import javax.ejb.Stateful;
 import javax.inject.Inject;
-import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Operations on accounts.
@@ -43,7 +42,7 @@ public class AccountManagerBean extends DatabaseBean {
             startTransaction();
 
             final User currentUser = User.findById(userId)
-                .orElseThrow(Exceptions::userNotFound);
+                .orElseThrow(Ex::userNotFound);
 
             final Account theAccount = new Account();
             theAccount.setName(accountName);
@@ -71,7 +70,7 @@ public class AccountManagerBean extends DatabaseBean {
             startTransaction();
 
             User currentUser = User.findById(userId)
-                .orElseThrow(Exceptions::userNotFound);
+                .orElseThrow(Ex::userNotFound);
 
             final Account parentAccount = Account.findById(currentUser, parentAccountId)
                 .orElseThrow(() -> new IllegalArgumentException("Parent account id is not valid."));
@@ -97,17 +96,19 @@ public class AccountManagerBean extends DatabaseBean {
             startTransaction();
 
             User currentUser = User.findById(userId)
-                .orElseThrow(Exceptions::userNotFound);
+                .orElseThrow(Ex::userNotFound);
 
             Account account = currentUser.getAccounts().stream()
                 .filter(a->a.getId().equals(accountId)).findFirst()
-                .orElseThrow(Exceptions::accountNotFound);
+                .orElseThrow(Ex::accountNotFound);
 
             // I have a feeling that this can be handled by hibernate.
-            account.getTransactions().stream().forEach(t -> {
-                t.getExpenses().stream().forEach(Expense::delete);
-                t.delete();
-            });
+            account.getCashFlows().stream()
+                .map(CashFlow::getTransaction).collect(Collectors.toSet())
+                .stream().forEach(t -> {
+                    t.getCashFlows().forEach(CashFlow::delete);
+                    t.delete();
+                });
 
             currentUser.getAccounts().remove(account);
             account.delete();
@@ -115,39 +116,7 @@ public class AccountManagerBean extends DatabaseBean {
             return true;
         } catch(Exception ex) {
             rollbackTransaction();
-            message = Exceptions.getDescriptiveMessage(ex);
-            return false;
-        }
-    }
-
-    public boolean convertCategoriesToAccounts(Long userId) {
-        try {
-            startTransaction();
-            User currentUser = User.findById(userId).orElseThrow(Exceptions::userNotFound);
-            List<Category> categories = Category.findAll(currentUser);
-            List<Account> accounts = Account.findAll(currentUser);
-            Account expensesAccount = accounts.stream()
-                .filter(a -> a.getName().equals("Expenses")).findFirst().orElse(null);
-            for(Category category : categories) {
-                boolean accountExists = false;
-                for(Account account : accounts) {
-                    if(account.getName().equals(category.getName())) {
-                        accountExists = true;
-                        break;
-                    }
-                }
-                if(!accountExists) {
-                    Account newAccount = new Account()
-                        .withName(category.getName()).andParent(expensesAccount);
-                    newAccount.setUser(currentUser);
-                    newAccount.save();
-                }
-            }
-            commitTransaction();
-            return true;
-        } catch(Exception ex) {
-            rollbackTransaction();
-            message = Exceptions.getDescriptiveMessage(ex);
+            message = Ex.getDescriptiveMessage(ex);
             return false;
         }
     }

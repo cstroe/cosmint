@@ -1,10 +1,10 @@
 package com.github.cstroe.spendhawk.web.transaction;
 
 import com.github.cstroe.spendhawk.entity.Account;
-import com.github.cstroe.spendhawk.entity.Transaction;
-import com.github.cstroe.spendhawk.helper.TListTotaler;
-import com.github.cstroe.spendhawk.util.Exceptions;
+import com.github.cstroe.spendhawk.entity.CashFlow;
+import com.github.cstroe.spendhawk.util.Ex;
 import com.github.cstroe.spendhawk.util.HibernateUtil;
+import com.github.cstroe.spendhawk.util.TemplateForwarder;
 import org.hibernate.Session;
 
 import javax.servlet.ServletException;
@@ -31,12 +31,12 @@ public class TransactionSearchServlet extends HttpServlet {
         try {
             currentSession.beginTransaction();
             Account account = Account.findById(Long.parseLong(accountId))
-                .orElseThrow(Exceptions::accountNotFound);
+                .orElseThrow(Ex::accountNotFound);
             req.setAttribute("account", account);
             req.setAttribute("query", searchString);
-            Collection<Transaction> tList = account.findTransactions(searchString);
-            req.setAttribute("transactions", tList);
-            req.setAttribute("totaler", new TListTotaler(tList));
+            Collection<CashFlow> tList = account.findCashFlows(searchString);
+            req.setAttribute("cashflows", tList);
+            req.setAttribute("fw", new TemplateForwarder(req));
             req.getRequestDispatcher(TEMPLATE).forward(req,resp);
             currentSession.getTransaction().commit();
         } catch(Exception ex) {

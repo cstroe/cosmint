@@ -4,7 +4,6 @@ import com.github.cstroe.spendhawk.testutil.web.DBUnitServlet;
 import com.github.cstroe.spendhawk.web.AccountManagerServlet;
 import com.github.cstroe.spendhawk.web.BaseClientIT;
 import com.github.cstroe.spendhawk.web.user.UserSummaryServlet;
-import com.mashape.unirest.http.HttpResponse;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.junit.InSequence;
@@ -21,9 +20,7 @@ import static org.junit.Assert.assertThat;
 @RunWith(Arquillian.class)
 public class AccountManagerServletIT extends BaseClientIT {
 
-    private HttpResponse<String> response;
-
-    private static final String USER_ID = "7";
+    private static final Long USER_ID = 7l;
 
     @Test
     @RunAsClient
@@ -51,4 +48,5 @@ public class AccountManagerServletIT extends BaseClientIT {
 
         assertThat(backToUserSummaryHref,
             is(equalTo(servletPath(UserSummaryServlet.class, "user.id", USER_ID))));
-    }}
+    }
+}

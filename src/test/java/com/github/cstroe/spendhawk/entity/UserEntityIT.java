@@ -1,7 +1,7 @@
 package com.github.cstroe.spendhawk.entity;
 
 import com.github.cstroe.spendhawk.util.BaseIT;
-import com.github.cstroe.spendhawk.util.Exceptions;
+import com.github.cstroe.spendhawk.util.Ex;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,7 +14,7 @@ public class UserEntityIT extends BaseIT {
     @Test
     public void testFindById() {
         startTransaction();
-        User.findById(1l).orElseThrow(Exceptions::userNotFound);
+        User.findById(1l).orElseThrow(Ex::userNotFound);
         commitTransaction();
     }
 

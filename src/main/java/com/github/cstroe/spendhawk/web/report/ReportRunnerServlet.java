@@ -5,7 +5,7 @@ import com.github.cstroe.spendhawk.report.ReportFormGenerator;
 import com.github.cstroe.spendhawk.report.ReportResultRenderer;
 import com.github.cstroe.spendhawk.report.ReportRunner;
 import com.github.cstroe.spendhawk.report.impl.TableRenderer;
-import com.github.cstroe.spendhawk.util.Exceptions;
+import com.github.cstroe.spendhawk.util.Ex;
 import com.github.cstroe.spendhawk.util.HibernateUtil;
 import com.github.cstroe.spendhawk.util.TemplateForwarder;
 import org.apache.commons.lang3.StringEscapeUtils;
@@ -41,7 +41,7 @@ public class ReportRunnerServlet extends HttpServlet {
         try {
             HibernateUtil.getSessionFactory().getCurrentSession().beginTransaction();
             User currentUser = User.findById(Long.parseLong(userId))
-                .orElseThrow(Exceptions::userNotFound);
+                .orElseThrow(Ex::userNotFound);
             req.setAttribute("user", currentUser);
             req.setAttribute("reports", getReports(currentUser));
             req.getRequestDispatcher(TEMPLATE_SELECT_REPORT).forward(req, resp);
@@ -60,9 +60,9 @@ public class ReportRunnerServlet extends HttpServlet {
         try {
             HibernateUtil.getSessionFactory().getCurrentSession().beginTransaction();
             User currentUser = User.findById(Long.parseLong(userId))
-                .orElseThrow(Exceptions::userNotFound);
+                .orElseThrow(Ex::userNotFound);
             ReportRunner report = getReportByName(currentUser, reportName)
-                .orElseThrow(Exceptions::reportNotFound);
+                .orElseThrow(Ex::reportNotFound);
             ReportFormGenerator rfg =
                 new ReportFormGenerator(currentUser, report.getParameters());
 

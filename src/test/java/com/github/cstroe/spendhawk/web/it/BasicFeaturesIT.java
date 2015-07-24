@@ -4,7 +4,6 @@ import com.github.cstroe.spendhawk.testutil.web.DBUnitServlet;
 import com.github.cstroe.spendhawk.web.AccountManagerServlet;
 import com.github.cstroe.spendhawk.web.BaseClientIT;
 import com.github.cstroe.spendhawk.web.WelcomeServlet;
-import com.github.cstroe.spendhawk.web.category.CategoryManagerServlet;
 import com.github.cstroe.spendhawk.web.user.UserManagerServlet;
 import com.github.cstroe.spendhawk.web.user.UserSummaryServlet;
 import com.github.cstroe.spendhawk.web.user.UsersServlet;
@@ -14,7 +13,6 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.junit.InSequence;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.junit.Before;
 import org.junit.Test;
@@ -180,43 +178,5 @@ public class BasicFeaturesIT extends BaseClientIT {
 
         assertTrue("The accounts page must link to the individual account.",
             findLinkByText(links, accountName) != null );
-    }
-
-    @Test
-    @RunAsClient
-    @InSequence(700)
-    public void t0700_shouldBeAbleToAddCategory() throws Exception {
-        response = connect(CategoryManagerServlet.class,
-                "user.id", Long.toString(userId));
-        assertResponseStatus(200, response);
-
-        Document doc = Jsoup.parse(response.getBody());
-        Elements forms = doc.getElementsByTag("form");
-        assertThat("A form must exist on the category management page.", forms.size(), is(1));
-
-        response = createCategory(userId, "New Category");
-
-        String redirectUrl = response.getHeaders().getFirst("location");
-        String urlPath = new URL(redirectUrl).getPath();
-        assertTrue("Creating a category should take you to the summary page for that user.",
-                urlPath.startsWith(servletPath(UserSummaryServlet.class)));
-    }
-
-    @Test
-    @RunAsClient
-    @InSequence(800)
-    public void t0800_shouldNotAddBlankCategory() throws Exception {
-        response = Unirest.post(fullURL(CategoryManagerServlet.class))
-                .field("user.id", userId)
-                .field("action", "store")
-                .asString();
-
-        assertResponseStatus(200, response);
-
-        Document doc = Jsoup.parse(response.getBody());
-        Element errorMessage = doc.getElementById("errorMessage");
-        assertThat("The error must be described to the user.",
-                errorMessage.ownText().trim(),
-                is("Category name cannot be blank."));
     }
 }

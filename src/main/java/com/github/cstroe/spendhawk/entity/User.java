@@ -16,10 +16,14 @@ import java.util.Optional;
  * </ul>
  */
 public class User {
+
+    public static final String DEFAULT_INCOME_ACCOUNT_NAME = "Income";
+    public static final String DEFAULT_EXPENSE_ACCOUNT_NAME = "Expenses";
+    public static final String DEFAULT_ASSET_ACCOUNT_NAME = "Assets";
+
     private Long id;
     private String name;
     private Collection<Account> accounts;
-    private Collection<Category> categories;
 
     public Long getId() {
         return id;
@@ -45,12 +49,22 @@ public class User {
         this.accounts = accounts;
     }
 
-    public Collection<Category> getCategories() {
-        return categories;
+    public Optional<Account> getAccountByName(String name) {
+        return this.accounts.stream()
+                .filter(a -> a.getName().equals(name))
+                .findFirst();
     }
 
-    public void setCategories(Collection<Category> categories) {
-        this.categories = categories;
+    public Optional<Account> getDefaultExpenseAccount() {
+        return getAccountByName(DEFAULT_EXPENSE_ACCOUNT_NAME);
+    }
+
+    public Optional<Account> getDefaultIncomeAccount() {
+        return getAccountByName(DEFAULT_INCOME_ACCOUNT_NAME);
+    }
+
+    public Optional<Account> getDefaultAssetAccount() {
+        return getAccountByName(DEFAULT_ASSET_ACCOUNT_NAME);
     }
 
     public static Optional<User> findById(Long id) {

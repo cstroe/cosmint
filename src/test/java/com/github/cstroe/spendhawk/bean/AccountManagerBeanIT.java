@@ -1,11 +1,10 @@
 package com.github.cstroe.spendhawk.bean;
 
 import com.github.cstroe.spendhawk.entity.Account;
-import com.github.cstroe.spendhawk.entity.Expense;
 import com.github.cstroe.spendhawk.entity.Transaction;
 import com.github.cstroe.spendhawk.entity.User;
 import com.github.cstroe.spendhawk.util.BaseIT;
-import com.github.cstroe.spendhawk.util.Exceptions;
+import com.github.cstroe.spendhawk.util.Ex;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,7 +31,7 @@ public class AccountManagerBeanIT extends BaseIT {
         assertTrue("Account should be created.", account.isPresent());
 
         startTransaction();
-        User currentUser = User.findById(1l).orElseThrow(Exceptions::userNotFound);
+        User currentUser = User.findById(1l).orElseThrow(Ex::userNotFound);
         Optional<Account> maybeRetrieved = Account.findById(currentUser, account.get().getId());
 
         assertTrue("Account should be persisted.", maybeRetrieved.isPresent());
@@ -40,7 +39,7 @@ public class AccountManagerBeanIT extends BaseIT {
         Account retrieved = maybeRetrieved.get();
         assertEquals("Account name should be correctly persisted.", accountName, retrieved.getName());
         assertEquals("Account user should be correctly persisted.", 1l, (long)retrieved.getUser().getId());
-        assertEquals("Empty account should have 0 transactions.", 0, retrieved.getTransactions().size());
+//        assertEquals("Empty account should have 0 transactions.", 0, retrieved.getTransactions().size());
         assertEquals("Empty account should have a 0 balance.", 0d, retrieved.getBalance(), 0.0001);
         commitTransaction();
     }
@@ -48,7 +47,7 @@ public class AccountManagerBeanIT extends BaseIT {
     @Test
     public void testCreateAccountWithParent() {
         startTransaction();
-        User currentUser = User.findById(1l).orElseThrow(Exceptions::userNotFound);
+        User currentUser = User.findById(1l).orElseThrow(Ex::userNotFound);
         Account parent = Account.findById(currentUser, 1l)
             .orElseThrow(() -> new AssertionError("Account 1 should exist in the seed data."));
 
@@ -66,13 +65,13 @@ public class AccountManagerBeanIT extends BaseIT {
     @Test
     public void testSeedSubAccount() {
         startTransaction();
-        User currentUser = User.findById(3l).orElseThrow(Exceptions::userNotFound);
-        Account parent = Account.findById(currentUser, 2l)
-            .orElseThrow(() -> new AssertionError("Account 2 should exist in the seed data."));
+        User currentUser = User.findById(3l).orElseThrow(Ex::userNotFound);
+        Account parent = Account.findById(currentUser, 10l)
+            .orElseThrow(() -> new AssertionError("Account 10 should exist in the seed data."));
 
         assertThat(parent.getSubAccounts().size(), is(1));
         assertThat(parent.getSubAccounts().iterator().next().getName(),
-            is(equalTo("General Spending Account")));
+            is(equalTo("MegaCorp Inc.")));
     }
 
     @Test
@@ -81,7 +80,7 @@ public class AccountManagerBeanIT extends BaseIT {
         final String account2name = "Sub Account 2";
 
         startTransaction();
-        User currentUser = User.findById(1l).orElseThrow(Exceptions::userNotFound);
+        User currentUser = User.findById(1l).orElseThrow(Ex::userNotFound);
         Account parent = Account.findById(currentUser, 1l)
             .orElseThrow(() -> new AssertionError("Account 1 should exist in the seed data."));
 
@@ -117,20 +116,20 @@ public class AccountManagerBeanIT extends BaseIT {
     @Test
     public void testNestAccounts() {
         startTransaction();
-        User currentUser = User.findById(3l).orElseThrow(Exceptions::userNotFound);
+        User currentUser = User.findById(3l).orElseThrow(Ex::userNotFound);
 
-        Account subAccount = Account.findById(currentUser, 2l)
-            .orElseThrow(Exceptions::accountNotFound);
+        Account subAccount = Account.findById(currentUser, 18l)
+            .orElseThrow(Ex::accountNotFound);
 
         assertNull("The sub account should not have a parent.", subAccount.getParent());
 
-        accountManager.nestAccount(currentUser.getId(), 4l, 2l);
+        accountManager.nestAccount(currentUser.getId(), 11l, 18l);
         commitTransaction();
 
         startTransaction();
 
-        Account parentAccount = Account.findById(currentUser, 4l).get();
-        subAccount = Account.findById(currentUser, 2l).get();
+        Account parentAccount = Account.findById(currentUser, 11l).get();
+        subAccount = Account.findById(currentUser, 18l).get();
 
         assertThat(subAccount.getParent(), is(equalTo(parentAccount)));
         commitTransaction();
@@ -178,10 +177,10 @@ public class AccountManagerBeanIT extends BaseIT {
         }
 
         startTransaction();
-        User currentUser = User.findById(1l).orElseThrow(Exceptions::userNotFound);
+        User currentUser = User.findById(1l).orElseThrow(Ex::userNotFound);
         Account.findById(currentUser, 1l).ifPresent(a -> fail("Account deletion should be persisted."));
         Transaction.findById(1l).ifPresent(t -> fail("Transaction in the account should be deleted."));
-        Expense.findById(1l).ifPresent(t -> fail("Expenses in the transactions of the account should be deleted."));
+//        Expense.findById(1l).ifPresent(t -> fail("Expenses in the transactions of the account should be deleted."));
         commitTransaction();
     }
 }

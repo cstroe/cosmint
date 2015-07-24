@@ -1,8 +1,6 @@
 package com.github.cstroe.spendhawk.helper;
 
 import com.github.cstroe.spendhawk.entity.Account;
-import com.github.cstroe.spendhawk.entity.Category;
-import com.github.cstroe.spendhawk.entity.Expense;
 import com.github.cstroe.spendhawk.entity.Transaction;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
@@ -54,7 +52,6 @@ public class TransactionsHelper {
         List<String> messages = new LinkedList<>();
         try (InputStreamReader reader = new InputStreamReader(fileContent)){
             Iterable<CSVRecord> records = CSVFormat.newFormat(',')
-                    .withDelimiter(',')
                     .withQuote('"')
                     .withHeader("Type", "Post Date", "Description", "Amount", "Check or Slip #")
                     .parse(reader);
@@ -65,22 +62,22 @@ public class TransactionsHelper {
                 }
                 try {
                     Transaction newTransaction = new Transaction();
-                    newTransaction.setAccount(account);
-                    newTransaction.setAmount(Double.parseDouble(record.get("Amount")));
+//                    newTransaction.setAccount(account);
+//                    newTransaction.setAmount(Double.parseDouble(record.get("Amount")));
                     newTransaction.setEffectiveDate(dateFormatter.parse(record.get("Post Date")));
                     newTransaction.setDescription(record.get("Description"));
                     newTransaction.setNotes(record.get("Check or Slip #"));
 
-                    if(duplicateCheck && newTransaction.isDuplicate()) {
-                        messages.add(newTransaction.getDescription() + " is a duplicate");
-                        continue;
-                    }
+//                    if(duplicateCheck && newTransaction.isDuplicate()) {
+//                        messages.add(newTransaction.getDescription() + " is a duplicate");
+//                        continue;
+//                    }
 
-                    if (!newTransaction.save()) {
-                        messages.add("Something went wrong with saving transaction");
-                    } else {
-                        messages.add("New transaction was added.");
-                    }
+//                    if (!newTransaction.save()) {
+//                        messages.add("Something went wrong with saving transaction");
+//                    } else {
+//                        messages.add("New transaction was added.");
+//                    }
                 } catch(NumberFormatException nfe) {
                     messages.add(nfe.getMessage() + "\n" + record.toString());
                 }
@@ -108,7 +105,7 @@ public class TransactionsHelper {
                 }
                 try {
                     Transaction newTransaction = new Transaction();
-                    newTransaction.setAccount(account);
+//                    newTransaction.setAccount(account);
 
 
                     String debit = record.get("Debit");
@@ -122,20 +119,20 @@ public class TransactionsHelper {
                         amount = Double.parseDouble(credit);
                     }
 
-                    newTransaction.setAmount(amount);
+//                    newTransaction.setAmount(amount);
                     newTransaction.setEffectiveDate(dateFormatter.parse(record.get("Date")));
                     newTransaction.setDescription(record.get("Description"));
 
-                    if(duplicateCheck && newTransaction.isDuplicate()) {
-                        messages.add(newTransaction.getDescription() + " is a duplicate");
-                        continue;
-                    }
+//                    if(duplicateCheck && newTransaction.isDuplicate()) {
+//                        messages.add(newTransaction.getDescription() + " is a duplicate");
+//                        continue;
+//                    }
 
-                    if (!newTransaction.save()) {
-                        messages.add("Something went wrong with saving transaction");
-                    } else {
-                        messages.add("New transaction was added.");
-                    }
+//                    if (!newTransaction.save()) {
+//                        messages.add("Something went wrong with saving transaction");
+//                    } else {
+//                        messages.add("New transaction was added.");
+//                    }
                 } catch(NumberFormatException nfe) {
                     messages.add(nfe.getMessage() + "\n" + record.toString());
                 }
@@ -145,45 +142,5 @@ public class TransactionsHelper {
         }
 
         return messages;
-    }
-
-    /**
-     * Creates expenses for the given transactions with the given category.  The
-     * expense amount will be the entire amount of the Transaction.
-     *
-     * @param duplicateCheck If true, checks to see if an expense with the given
-     *                       category already exists.  If the expense exists, it
-     *                       will not enter another expense with the same category.
-     */
-    public static List<Transaction> createExpenses(List<Transaction> transactions, Category category, String merchant, boolean duplicateCheck, boolean persist) {
-        for(Transaction currentTransaction : transactions) {
-            boolean expenseExists = false;
-            if(duplicateCheck) {
-                for (Expense currentExpense : currentTransaction.getExpenses()) {
-                    if (currentExpense.getCategory().getId().equals(category.getId())) {
-                        expenseExists = true;
-                        break;
-                    }
-                }
-            }
-
-            if(expenseExists) {
-                continue;
-            }
-
-            Expense newExpense = new Expense();
-            newExpense.setAmount(currentTransaction.getAmount());
-            newExpense.setCategory(category);
-            newExpense.setTransaction(currentTransaction);
-            newExpense.setMerchant(merchant);
-            if(persist) {
-                newExpense.save();
-            } else {
-                // just for preview purposes
-                currentTransaction.getExpenses().add(newExpense);
-            }
-        }
-
-        return transactions;
     }
 }
