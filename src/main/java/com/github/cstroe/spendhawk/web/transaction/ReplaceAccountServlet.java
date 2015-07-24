@@ -3,7 +3,6 @@ package com.github.cstroe.spendhawk.web.transaction;
 import com.github.cstroe.spendhawk.bean.BulkUpdateBean;
 import com.github.cstroe.spendhawk.entity.Account;
 import com.github.cstroe.spendhawk.entity.CashFlow;
-import com.github.cstroe.spendhawk.entity.Transaction;
 import com.github.cstroe.spendhawk.util.Ex;
 import com.github.cstroe.spendhawk.util.HibernateUtil;
 import com.github.cstroe.spendhawk.util.TemplateForwarder;
@@ -52,8 +51,6 @@ public class ReplaceAccountServlet extends HttpServlet {
             Collection<Account> allAccounts = buBean.getAccounts(relevantCashFlows);
             Collection<Account> relevantAccounts = allAccounts
                 .stream().filter(a -> !a.equals(account)).collect(Collectors.toList());
-            Collection<Transaction> transactions = relevantCashFlows.stream()
-                .map(CashFlow::getTransaction).collect(Collectors.toList());
             req.setAttribute("fromAccount", account);
             req.setAttribute("query", queryString);
             req.setAttribute("cashflows", relevantCashFlows);
@@ -108,6 +105,7 @@ public class ReplaceAccountServlet extends HttpServlet {
             Collection<CashFlow> updatedCashFlows = buBean.previewReplace(cashflows, toReplace, replacement);
 
             req.setAttribute("fromAccountId", fromAccountId);
+            req.setAttribute("account", account);
             req.setAttribute("query", query);
             req.setAttribute("toReplace", toReplace);
             req.setAttribute("replacement", replacement);
@@ -123,23 +121,40 @@ public class ReplaceAccountServlet extends HttpServlet {
     }
 
     private void doCategorize(HttpServletRequest req, HttpServletResponse resp) throws ServletException {
-        final Long accountId = Long.parseLong(req.getParameter("account.id"));
-        final String query = req.getParameter("q");
-        final String merchant = StringEscapeUtils.escapeHtml4(req.getParameter("expense.merchant"));
-        final Long categoryId = Long.parseLong(req.getParameter("category.id"));
-        final boolean duplicateCheck = req.getParameter("duplicate_check") != null;
+        final Long fromAccountId = Long.parseLong(req.getParameter("fromAccountId"));
+        final Long accountToReplaceId = Long.parseLong(req.getParameter("accountToReplaceId"));
+        final Long replacementAccountId = Long.parseLong(req.getParameter("replacementAccountId"));
+
+        final List<Long> cashFlowIds = Arrays.asList(req.getParameterValues("selected[]"))
+                .stream().map(Long::parseLong).collect(Collectors.toList());
 
         try {
             HibernateUtil.getSessionFactory().getCurrentSession().beginTransaction();
 
-            Account account = Account.findById(accountId)
-                .orElseThrow(Ex.ception("Account not found."));
+            @SuppressWarnings("RedundantTypeArguments") // see https://bugs.openjdk.java.net/browse/JDK-8054569
+                    List<CashFlow> cashflows = cashFlowIds.stream()
+                    .map(id -> CashFlow.findById(id).<RuntimeException>orElseThrow(Ex::cashFlowNotFound))
+                    .collect(Collectors.toList());
 
-            resp.sendRedirect(req.getContextPath() + servletPath(AccountServlet.class) +
-                    "?id=" + account.getId().toString() +
-                    "&relDate=currentMonth");
+            Account account = Account.findById(fromAccountId)
+                    .orElseThrow(Ex::accountNotFound);
+
+            Account toReplace = Account.findById(accountToReplaceId)
+                    .orElseThrow(Ex::accountNotFound);
+
+            Account replacement = Account.findById(replacementAccountId)
+                    .orElseThrow(Ex::accountNotFound);
+
+
+            Collection<CashFlow> updatedCashFlows = buBean.previewReplace(cashflows, toReplace, replacement);
+
+            for (CashFlow updatedCashFlow : updatedCashFlows) {
+                updatedCashFlow.save();
+            }
 
             HibernateUtil.getSessionFactory().getCurrentSession().getTransaction().commit();
+
+            resp.sendRedirect(req.getContextPath() + servletPath(AccountServlet.class, "id", account.getId(), "relDate", "currentMonth"));
         } catch (Exception ex) {
             HibernateUtil.getSessionFactory().getCurrentSession().getTransaction().rollback();
             throw new ServletException(ex);
