@@ -71,8 +71,8 @@ public class ReplaceAccountServlet extends HttpServlet {
         final String action = StringEscapeUtils.escapeHtml4(req.getParameter("action"));
         if("Preview".equals(action)) {
             doPreview(req, resp);
-        } else if("Apply categories".equals(action)) {
-            doCategorize(req, resp);
+        } else if("Apply changes".equals(action)) {
+            doChange(req, resp);
         }
     }
 
@@ -120,7 +120,7 @@ public class ReplaceAccountServlet extends HttpServlet {
         }
     }
 
-    private void doCategorize(HttpServletRequest req, HttpServletResponse resp) throws ServletException {
+    private void doChange(HttpServletRequest req, HttpServletResponse resp) throws ServletException {
         final Long fromAccountId = Long.parseLong(req.getParameter("fromAccountId"));
         final Long accountToReplaceId = Long.parseLong(req.getParameter("accountToReplaceId"));
         final Long replacementAccountId = Long.parseLong(req.getParameter("replacementAccountId"));
