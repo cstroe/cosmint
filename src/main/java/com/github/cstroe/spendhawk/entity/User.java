@@ -1,5 +1,7 @@
 package com.github.cstroe.spendhawk.entity;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.github.cstroe.spendhawk.json.UserSerializer;
 import com.github.cstroe.spendhawk.util.HibernateUtil;
 import org.hibernate.criterion.Restrictions;
 
@@ -15,6 +17,7 @@ import java.util.Optional;
  *     <li>Many expense categories.</li>
  * </ul>
  */
+@JsonSerialize(using = UserSerializer.class)
 public class User {
 
     public static final String DEFAULT_INCOME_ACCOUNT_NAME = "Income";

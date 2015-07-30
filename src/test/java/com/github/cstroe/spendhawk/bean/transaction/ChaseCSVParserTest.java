@@ -4,7 +4,7 @@ import com.github.cstroe.spendhawk.bean.DateBean;
 import com.github.cstroe.spendhawk.entity.Account;
 import com.github.cstroe.spendhawk.entity.CashFlow;
 import com.github.cstroe.spendhawk.entity.Transaction;
-import com.github.cstroe.spendhawk.entity.User;
+import com.github.cstroe.spendhawk.mocks.BareAccountsMock;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -29,41 +29,11 @@ public class ChaseCSVParserTest {
     public void setUp() {
         parser = new ChaseCSVParser(new DateBean());
 
-        Long accountIdSeq = 1l;
-
-        User mockUser = new User();
-        mockUser.setId(13l);
-
-        incomeAccount = new Account();
-        incomeAccount.setId(++accountIdSeq);
-        incomeAccount.setName(User.DEFAULT_INCOME_ACCOUNT_NAME);
-        incomeAccount.setParent(null);
-        incomeAccount.setUser(mockUser);
-
-        expenseAccount = new Account();
-        expenseAccount.setId(++accountIdSeq);
-        expenseAccount.setName(User.DEFAULT_EXPENSE_ACCOUNT_NAME);
-        expenseAccount.setParent(null);
-        expenseAccount.setUser(mockUser);
-
-        assetAccount = new Account();
-        assetAccount.setId(++accountIdSeq);
-        assetAccount.setName(User.DEFAULT_ASSET_ACCOUNT_NAME);
-        assetAccount.setParent(null);
-        assetAccount.setUser(mockUser);
-
-        myBankAccount = new Account();
-        myBankAccount.setId(++accountIdSeq);
-        myBankAccount.setName("My Bank Account");
-        myBankAccount.setParent(assetAccount);
-        myBankAccount.setUser(mockUser);
-
-        List<Account> accounts = new ArrayList<>(4);
-        accounts.add(incomeAccount);
-        accounts.add(expenseAccount);
-        accounts.add(assetAccount);
-        accounts.add(myBankAccount);
-        mockUser.setAccounts(accounts);
+        BareAccountsMock mock = new BareAccountsMock();
+        incomeAccount = mock.getIncomeAccount();
+        expenseAccount = mock.getExpenseAccount();
+        assetAccount = mock.getAssetAccount();
+        myBankAccount = mock.getMyBankAccount();
     }
 
     @Test
