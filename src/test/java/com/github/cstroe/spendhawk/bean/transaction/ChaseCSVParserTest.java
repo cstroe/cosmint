@@ -9,7 +9,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -22,7 +21,7 @@ public class ChaseCSVParserTest {
 
     private ChaseCSVParser parser;
 
-    @SuppressWarnings("FieldCanBeLocal")
+    @SuppressWarnings({"FieldCanBeLocal", "unused"})
     private Account incomeAccount, expenseAccount, assetAccount, myBankAccount;
 
     @Before

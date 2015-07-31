@@ -1,0 +1,32 @@
+{
+  "version" : 1,
+  "id" : 13,
+  "name" : "MockUser",
+  "accounts" : [ {
+    "id" : 2,
+    "name" : "Income",
+    "parent" : null,
+    "cashflows" : [ ]
+  }, {
+    "id" : 3,
+    "name" : "Expenses",
+    "parent" : null,
+    "cashflows" : [ ]
+  }, {
+    "id" : 4,
+    "name" : "Assets",
+    "parent" : null,
+    "cashflows" : [ ]
+  }, {
+    "id" : 5,
+    "name" : "My Bank Account",
+    "parent" : 4,
+    "cashflows" : [ {
+      "id" : 1,
+      "amount" : -10.0
+    }, {
+      "id" : 2,
+      "amount" : -43.11
+    } ]
+  } ]
+}
