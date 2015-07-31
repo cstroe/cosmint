@@ -41,7 +41,16 @@ public class ExportBean_v1Test {
         Account expenseAccount = mock.getExpenseAccount();
         expenseAccount.setCashFlows(new LinkedList<>());
 
-        // record an expense
+        recordAnExpense(bankAccount, expenseAccount);
+
+        ExportBean v1 = new ExportBean();
+        final String s = v1.doExportJson(mock.getMockUser());
+
+        assertNotNull("doExportJson should not return null.", s);
+        assertEquals(cashFlowExport, s);
+    }
+
+    private void recordAnExpense(Account bankAccount, Account expenseAccount) {
         Calendar cal = new GregorianCalendar();
         cal.clear();
         cal.set(2012, 1, 1);
@@ -55,16 +64,10 @@ public class ExportBean_v1Test {
         }{
             CashFlow cf2 = new CashFlow();
             cf2.setId(2l);
-            cf2.setAccount(bankAccount);
+            cf2.setAccount(expenseAccount);
             cf2.setAmount(-43.11d);
             cal.set(2013,12,31);
-            bankAccount.getCashFlows().add(cf2);
+            expenseAccount.getCashFlows().add(cf2);
         }
-
-        ExportBean v1 = new ExportBean();
-        final String s = v1.doExportJson(mock.getMockUser());
-
-        assertNotNull("doExportJson should not return null.", s);
-        assertEquals(cashFlowExport, s);
     }
 }

@@ -11,7 +11,10 @@
     "id" : 3,
     "name" : "Expenses",
     "parent" : null,
-    "cashflows" : [ ]
+    "cashflows" : [ {
+      "id" : 2,
+      "amount" : -43.11
+    } ]
   }, {
     "id" : 4,
     "name" : "Assets",
@@ -24,9 +27,6 @@
     "cashflows" : [ {
       "id" : 1,
       "amount" : -10.0
-    }, {
-      "id" : 2,
-      "amount" : -43.11
     } ]
   } ]
 }
