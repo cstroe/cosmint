@@ -17,7 +17,6 @@ import java.util.Optional;
  *     <li>Many expense categories.</li>
  * </ul>
  */
-@JsonSerialize(using = UserSerializer.class)
 public class User {
 
     public static final String DEFAULT_INCOME_ACCOUNT_NAME = "Income";

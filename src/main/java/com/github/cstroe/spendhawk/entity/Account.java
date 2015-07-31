@@ -40,7 +40,6 @@ import java.util.Set;
  *     <li>a list of sub accounts (accounts whose parent is this account)</li>
  * </ul>
  */
-@JsonSerialize(using = AccountSerializer.class)
 public class Account implements Comparable<Account> {
     private static final Double ZERO = 0d;
 
