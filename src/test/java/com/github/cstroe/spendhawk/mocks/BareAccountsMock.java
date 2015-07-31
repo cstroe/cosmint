@@ -4,6 +4,7 @@ import com.github.cstroe.spendhawk.entity.Account;
 import com.github.cstroe.spendhawk.entity.User;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public class BareAccountsMock {
@@ -26,24 +27,28 @@ public class BareAccountsMock {
         incomeAccount.setName(User.DEFAULT_INCOME_ACCOUNT_NAME);
         incomeAccount.setParent(null);
         incomeAccount.setUser(mockUser);
+        incomeAccount.setCashFlows(new LinkedList<>());
 
         expenseAccount = new Account();
         expenseAccount.setId(++accountIdSeq);
         expenseAccount.setName(User.DEFAULT_EXPENSE_ACCOUNT_NAME);
         expenseAccount.setParent(null);
         expenseAccount.setUser(mockUser);
+        expenseAccount.setCashFlows(new LinkedList<>());
 
         assetAccount = new Account();
         assetAccount.setId(++accountIdSeq);
         assetAccount.setName(User.DEFAULT_ASSET_ACCOUNT_NAME);
         assetAccount.setParent(null);
         assetAccount.setUser(mockUser);
+        assetAccount.setCashFlows(new LinkedList<>());
 
         myBankAccount = new Account();
         myBankAccount.setId(++accountIdSeq);
         myBankAccount.setName("My Bank Account");
         myBankAccount.setParent(assetAccount);
         myBankAccount.setUser(mockUser);
+        myBankAccount.setCashFlows(new LinkedList<>());
 
         List<Account> accounts = new ArrayList<>(4);
         accounts.add(incomeAccount);
