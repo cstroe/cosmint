@@ -31,7 +31,7 @@ public class Transaction {
     public Long getId() {
         return id;
     }
-    private void setId(Long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

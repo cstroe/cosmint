@@ -13,7 +13,8 @@
     "parent" : null,
     "cashflows" : [ {
       "id" : 2,
-      "amount" : 43.11
+      "amount" : 43.11,
+      "transaction" : 1
     } ]
   }, {
     "id" : 4,
@@ -26,7 +27,12 @@
     "parent" : 4,
     "cashflows" : [ {
       "id" : 1,
-      "amount" : -10.0
+      "amount" : -10.0,
+      "transaction" : 1
     } ]
+  } ],
+  "transactions" : [ {
+    "id" : 1,
+    "notes" : "Notes."
   } ]
 }

@@ -14,7 +14,6 @@ public class ExportBean {
         om.configure(SerializationFeature.INDENT_OUTPUT, true);
 
         StringWriter sw = new StringWriter();
-        sw.write("");
         SimpleModule testModule = new SimpleModule("MyModule", new Version(1,0,0,null));
         testModule.addSerializer(new UserSerializer(1));
         testModule.addSerializer(new AccountSerializer());
