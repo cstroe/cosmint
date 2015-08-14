@@ -45,7 +45,7 @@ temporary directory for our standalone WildFly server and start the server:
   ln -s ../target/spendhawk.war
   cd ..
   mvn wildfly:run -Dwildfly.deployment.targetDir=wildfly \
-  -Dwildfly.version=8.2.0.Final
+  -Dwildfly.version=9.0.0.Final
   ```
   
   NOTE: If you would like to attach a debugger to the WildFly server, see below.
@@ -79,7 +79,7 @@ session.  Use the following command instead of the normal one from step 3 above:
 
   ```
   mvn wildfly:run -Dwildfly.deployment.targetDir=wildfly \
-  -Dwildfly.version=8.2.0.Final \
+  -Dwildfly.version=9.0.0.Final \
   -Dwildfly.jvmArgs="-Xms64m -Xmx512m -XX:MaxPermSize=256m -Djava.net.preferIPv4Stack=true -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8787"
   ```
   
@@ -90,7 +90,7 @@ session.  Use the following command instead of the normal one from step 3 above:
 
 ```
 cd spendhawk
-cd wildfly/wildfly-run/wildfly-8.2.0.Final
+cd wildfly/wildfly-run/wildfly-9.0.0.Final
 bash ./bin/add-user.sh
 ```
 
