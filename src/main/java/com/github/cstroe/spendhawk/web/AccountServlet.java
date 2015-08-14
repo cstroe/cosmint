@@ -68,8 +68,7 @@ public class AccountServlet extends HttpServlet {
             Criteria query = HibernateUtil.getSessionFactory()
                 .getCurrentSession()
                 .createCriteria(CashFlow.class)
-                    .add(Restrictions.eq("account", account))
-                    .createCriteria("transaction");
+                    .add(Restrictions.eq("account", account));
 
             if(startDate != null) {
                 query.add(Restrictions.ge("effectiveDate", DateUtil.asDate(startDate)));
@@ -80,7 +79,7 @@ public class AccountServlet extends HttpServlet {
             }
 
             @SuppressWarnings("unchecked")
-            List<Transaction> result = (List<Transaction>) query.addOrder(Order.desc("effectiveDate")).list();
+            List<CashFlow> result = (List<CashFlow>) query.addOrder(Order.desc("effectiveDate")).list();
 
             request.setAttribute("account", account);
             request.setAttribute("cashflows", result);

@@ -14,11 +14,11 @@
 
 <#list cashflows as cashflow>
     <tr>
-        <td class="date_cell">${cashflow.transaction.effectiveDate?date?iso("CST")}</td>
+        <td class="date_cell">${cashflow.effectiveDate?date?iso("CST")}</td>
         <td class="desc_cell">
             <a href="${fw.servlet("com.github.cstroe.spendhawk.web.transaction.TransactionView",
                         "id", cashflow.transaction.id, "fromAccountId", cashflow.account.id)}">
-            ${cashflow.transaction.description}
+            ${cashflow.description}
             </a>
         </td>
         <td class="amnt_cell">${cashflow.amount?string["0.00"]}</td>

@@ -64,8 +64,8 @@ public class TransactionsHelper {
                     Transaction newTransaction = new Transaction();
 //                    newTransaction.setAccount(account);
 //                    newTransaction.setAmount(Double.parseDouble(record.get("Amount")));
-                    newTransaction.setEffectiveDate(dateFormatter.parse(record.get("Post Date")));
-                    newTransaction.setDescription(record.get("Description"));
+//                    newTransaction.setEffectiveDate(dateFormatter.parse(record.get("Post Date")));
+//                    newTransaction.setDescription(record.get("Description"));
                     newTransaction.setNotes(record.get("Check or Slip #"));
 
 //                    if(duplicateCheck && newTransaction.isDuplicate()) {
@@ -82,7 +82,7 @@ public class TransactionsHelper {
                     messages.add(nfe.getMessage() + "\n" + record.toString());
                 }
             }
-        } catch(IOException | ParseException exception) {
+        } catch(IOException exception) {
             messages.add(exception.getMessage());
         }
 
@@ -120,8 +120,8 @@ public class TransactionsHelper {
                     }
 
 //                    newTransaction.setAmount(amount);
-                    newTransaction.setEffectiveDate(dateFormatter.parse(record.get("Date")));
-                    newTransaction.setDescription(record.get("Description"));
+//                    newTransaction.setEffectiveDate(dateFormatter.parse(record.get("Date")));
+//                    newTransaction.setDescription(record.get("Description"));
 
 //                    if(duplicateCheck && newTransaction.isDuplicate()) {
 //                        messages.add(newTransaction.getDescription() + " is a duplicate");
@@ -137,7 +137,7 @@ public class TransactionsHelper {
                     messages.add(nfe.getMessage() + "\n" + record.toString());
                 }
             }
-        } catch(IOException | ParseException exception) {
+        } catch(IOException exception) {
             messages.add(exception.getMessage());
         }
 

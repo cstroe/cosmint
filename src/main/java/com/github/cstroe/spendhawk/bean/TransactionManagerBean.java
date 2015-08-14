@@ -20,9 +20,7 @@ public class TransactionManagerBean extends DatabaseBean {
         User currentUser = User.findById(userId).orElseThrow(Ex::userNotFound);
 
         Transaction newT = new Transaction();
-        newT.setDescription(description);
         newT.setNotes(notes);
-        newT.setEffectiveDate(effectiveDate);
 
         if(cashflowAccounts.length != cashflowAmounts.length) {
             this.message = "The number of CashFlow accounts doesn't match the number of CashFlow amounts.";

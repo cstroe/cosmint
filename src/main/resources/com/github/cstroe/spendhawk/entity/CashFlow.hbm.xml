@@ -10,6 +10,8 @@
         </id>
 
         <!-- properties declared using Hibernate mapping types -->
+        <property name="effectiveDate" type="timestamp" column="EFFECTIVE_DATE" not-null="false"/>
+        <property name="description"   type="string"    column="DESCRIPTION"    not-null="false"/>
         <property name="amount"     type="double"    column="AMOUNT"      not-null="true"/>
         <many-to-one name="transaction" column="TRANSACTION_ID" class="Transaction" not-null="true"/>
         <many-to-one name="account" column="ACCOUNT_ID" class="Account" not-null="true"/>

@@ -66,7 +66,7 @@ public class AccountServletIT extends BaseClientIT {
             .filter(e -> e.attr("href").startsWith(servletPath(TransactionView.class) + "?"))
             .collect(Collectors.toList());
 
-        assertThat("Seed database contains 3 transactions for account 17.",
+        assertThat("AccountServlet should respect date range and display 3 transactions.",
             transactionLinks.size(), is(3));
     }
 

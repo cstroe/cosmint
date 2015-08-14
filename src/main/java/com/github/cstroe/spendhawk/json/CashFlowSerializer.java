@@ -18,6 +18,12 @@ public class CashFlowSerializer extends StdSerializer<CashFlow> {
         jsonGenerator.writeStartObject();
         jsonGenerator.writeNumberField("id", cashFlow.getId());
         jsonGenerator.writeNumberField("amount", cashFlow.getAmount());
+        if(cashFlow.getEffectiveDate() != null) {
+            jsonGenerator.writeObjectField("effectiveDate", cashFlow.getEffectiveDate());
+        }
+        if(cashFlow.getDescription() != null) {
+            jsonGenerator.writeObjectField("description", cashFlow.getDescription());
+        }
         if(cashFlow.getTransaction() != null) {
             jsonGenerator.writeNumberField("transaction", cashFlow.getTransaction().getId());
         }

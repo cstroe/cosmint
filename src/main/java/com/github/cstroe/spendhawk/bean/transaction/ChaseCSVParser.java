@@ -69,9 +69,9 @@ public class ChaseCSVParser implements TransactionParser {
 
         Transaction newTransaction = new Transaction();
 
-        newTransaction.setDescription(record.get(ROW_DESCRIPTION));
+//        newTransaction.setDescription(record.get(ROW_DESCRIPTION));
         newTransaction.setNotes(record.get(ROW_NOTES));
-        newTransaction.setEffectiveDate(dateBean.parse(record.get(ROW_DATE)));
+//        newTransaction.setEffectiveDate(dateBean.parse(record.get(ROW_DATE)));
 
 
         // see: http://stackoverflow.com/questions/6724031/how-can-a-primitive-float-value-be-0-0-what-does-that-mean/8153449#8153449

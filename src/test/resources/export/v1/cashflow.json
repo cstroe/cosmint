@@ -13,7 +13,9 @@
     "parent" : null,
     "cashflows" : [ {
       "id" : 2,
-      "amount" : 43.11
+      "amount" : 43.11,
+      "effectiveDate" : 1325484000000,
+      "description" : "Description 2"
     } ]
   }, {
     "id" : 4,
@@ -26,7 +28,9 @@
     "parent" : 4,
     "cashflows" : [ {
       "id" : 1,
-      "amount" : -10.0
+      "amount" : -10.0,
+      "effectiveDate" : 1325397600000,
+      "description" : "Description 1"
     } ]
   } ]
 }

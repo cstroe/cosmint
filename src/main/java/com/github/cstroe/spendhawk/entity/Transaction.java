@@ -13,16 +13,12 @@ import java.util.*;
  *
  * A transaction has:
  * <ul>
- *     <li>an effective date and time, at which the cashflows are valid</li>
- *     <li>a description</li>
  *     <li>some notes about this transaction</li>
  *     <li>a collection of cash flows</li>
  * </ul>
  */
 public class Transaction {
     private Long id;
-    private Date effectiveDate;
-    private String description;
     private String notes;
     private Collection<CashFlow> cashFlows = new HashSet<>();
 
@@ -33,22 +29,6 @@ public class Transaction {
     }
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Date getEffectiveDate() {
-        return effectiveDate;
-    }
-
-    public void setEffectiveDate(Date effectiveDate) {
-        this.effectiveDate = effectiveDate;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 
     public String getNotes() {

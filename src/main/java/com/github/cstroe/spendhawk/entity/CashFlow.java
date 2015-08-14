@@ -3,6 +3,7 @@ package com.github.cstroe.spendhawk.entity;
 import com.github.cstroe.spendhawk.util.HibernateUtil;
 import org.hibernate.criterion.Restrictions;
 
+import java.util.Date;
 import java.util.Optional;
 
 /**
@@ -13,6 +14,8 @@ public class CashFlow {
     private Long id;
     private Transaction transaction;
     private Account account;
+    private Date effectiveDate;
+    private String description;
     private Double amount;
 
     public Long getId() {
@@ -37,6 +40,22 @@ public class CashFlow {
 
     public void setAccount(Account account) {
         this.account = account;
+    }
+
+    public Date getEffectiveDate() {
+        return effectiveDate;
+    }
+
+    public void setEffectiveDate(Date effectiveDate) {
+        this.effectiveDate = effectiveDate;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Double getAmount() {

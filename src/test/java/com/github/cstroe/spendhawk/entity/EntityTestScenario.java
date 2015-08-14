@@ -76,8 +76,8 @@ public class EntityTestScenario {
                 idField.setAccessible(false);
 //                transaction.setAccount(account);
 //                transaction.setAmount(amount);
-                transaction.setEffectiveDate(effectiveDate);
-                transaction.setDescription(transactionName);
+//                transaction.setEffectiveDate(effectiveDate);
+//                transaction.setDescription(transactionName);
 //                transaction.getAccount().getTransactions().add(transaction); // add the Transaction to the Account.
 
                 transactionList.add(transaction);

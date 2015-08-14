@@ -87,7 +87,6 @@ public class TransactionView extends HttpServlet {
             Transaction t = Transaction.findById(transactionId)
                 .orElseThrow(Ex::transactionNotFound);
 
-            t.setDescription(description);
             t.save();
 
             HibernateUtil.getSessionFactory().getCurrentSession().getTransaction().commit();
@@ -145,7 +144,7 @@ public class TransactionView extends HttpServlet {
     private void doTransactionDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException {
         try {
             Long accountId;
-            Date effectiveDate;
+            Date effectiveDate = null;
 
             String transactionIdRaw = Optional.ofNullable(request.getParameter("id"))
                     .orElseThrow(Ex::transactionIdRequired);
@@ -159,9 +158,10 @@ public class TransactionView extends HttpServlet {
             Transaction transaction = Transaction.findById(transactionId)
                     .orElseThrow(Ex::transactionNotFound);
 
-            effectiveDate = transaction.getEffectiveDate();
-
             for (CashFlow cashFlow : transaction.getCashFlows()) {
+                if(cashFlow.getEffectiveDate() != null) {
+                    effectiveDate = cashFlow.getEffectiveDate();
+                }
                 cashFlow.delete();
             }
             transaction.delete();
@@ -169,8 +169,13 @@ public class TransactionView extends HttpServlet {
             // End unit of work
             HibernateUtil.getSessionFactory().getCurrentSession().getTransaction().commit();
 
-            response.sendRedirect(request.getContextPath() + servletPath(AccountServlet.class,
-                    "id", accountId, "relDate", AccountServlet.formatter.format(DateUtil.asLocalDate(effectiveDate))));
+            if(effectiveDate == null) {
+                response.sendRedirect(request.getContextPath() + servletPath(AccountServlet.class,
+                        "id", accountId, "relDate", "currentMonth"));
+            } else {
+                response.sendRedirect(request.getContextPath() + servletPath(AccountServlet.class,
+                        "id", accountId, "relDate", AccountServlet.formatter.format(DateUtil.asLocalDate(effectiveDate))));
+            }
         } catch (Exception ex) {
             HibernateUtil.getSessionFactory().getCurrentSession().getTransaction().rollback();
             throw new ServletException(ex);

@@ -10,8 +10,6 @@
         </id>
 
         <!-- properties declared using Hibernate mapping types -->
-        <property name="effectiveDate" type="timestamp" column="EFFECTIVE_DATE" not-null="true"/>
-        <property name="description"   type="string"    column="DESCRIPTION"    not-null="true"/>
         <property name="notes"         type="string"    column="NOTES"/>
         <set name="cashFlows" inverse="true">
             <key column="TRANSACTION_ID"/>

@@ -1,7 +1,5 @@
 package com.github.cstroe.spendhawk.entity;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.github.cstroe.spendhawk.json.AccountSerializer;
 import com.github.cstroe.spendhawk.util.HibernateUtil;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
@@ -115,7 +113,7 @@ public class Account implements Comparable<Account> {
             return ZERO;
         }
         return cashFlows.stream()
-                .filter(c -> !c.getTransaction().getEffectiveDate().after(now))
+                .filter(c -> !c.getEffectiveDate().after(now))
                 .mapToDouble(CashFlow::getAmount)
                 .sum();
     }
@@ -158,8 +156,7 @@ public class Account implements Comparable<Account> {
         return (List<CashFlow>) HibernateUtil.getSessionFactory().getCurrentSession()
                 .createCriteria(CashFlow.class)
                 .add(Restrictions.eq("account", this))
-                    .createCriteria("transaction")
-                    .add(Restrictions.ilike("description", query, MatchMode.ANYWHERE))
+                .add(Restrictions.ilike("description", query, MatchMode.ANYWHERE))
                 .list();
     }
 
