@@ -79,14 +79,14 @@ It also runs well in a <a href="https://www.virtualbox.org">Virtual Machine</a>.
 1. Clone the SpendHawk repository somewhere on your computer:
 
   ```
-  git clone https://github.com/cstroe/SpendHawk.git
+  git clone https://github.com/cstroe/spendhawk-java.git spendhawk
   ```
   
 2. In a new terminal window, change your directory to the SpendHawk directory 
 and start the hsqldb in server mode:
   
   ```
-  cd SpendHawk
+  cd spendhawk/modules/web
   mvn exec:java -Dexec.mainClass="org.hsqldb.Server" -Dexec.args="-database.0 file:data/testing"
   ```
   
@@ -104,7 +104,7 @@ and start the hsqldb in server mode:
 temporary directory for our standalone WildFly server and start the server:
 
   ```
-  cd SpendHawk
+  cd spendhawk/modules/web
   mvn package
   mkdir wildfly
   cd wildfly
@@ -155,7 +155,7 @@ session.  Use the following command instead of the normal one from step 3 above:
 ## Running Integration Tests
 
 ```
-cd spendhawk
+cd spendhawk/modules/web
 cd wildfly/wildfly-run/wildfly-9.0.0.Final
 bash ./bin/add-user.sh
 ```
