@@ -9,5 +9,6 @@
 
     <modules>
         <module>modules/web</module>
+        <module>modules/rest</module>
     </modules>
 </project>
