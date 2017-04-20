@@ -108,7 +108,7 @@ temporary directory for our standalone WildFly server and start the server:
   mvn package
   mkdir wildfly
   cd wildfly
-  ln -s ../target/spendhawk.war
+  ln -s ../target/spendhawk-web.war
   cd ..
   mvn wildfly:run -Dwildfly.deployment.targetDir=wildfly \
   -Dwildfly.version=9.0.0.Final
@@ -125,7 +125,7 @@ temporary directory for our standalone WildFly server and start the server:
 4. Because the previous step deployed the application, you can browse to:
   
   ```
-  http://localhost:8080/spendhawk
+  http://localhost:8080/spendhawk-web
   ```
   
   and access the SpendHawk webapp.
