@@ -7,9 +7,9 @@ import com.github.cstroe.spendhawk.entity.Transaction;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
 import org.jboss.logging.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-import javax.ejb.Stateful;
-import javax.inject.Inject;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -19,7 +19,7 @@ import java.util.List;
 /**
  * Parse CSV files downloaded from chase.com
  */
-@Stateful
+@Service
 public class ChaseCSVParser implements TransactionParser {
 
     private final static String ROW_TYPE = "Type";
@@ -32,7 +32,7 @@ public class ChaseCSVParser implements TransactionParser {
 
     private static final Logger log = Logger.getLogger(ChaseCSVParser.class);
 
-    @Inject
+    @Autowired
     public ChaseCSVParser(DateBean dateBean) {
         this.dateBean = dateBean;
     }
