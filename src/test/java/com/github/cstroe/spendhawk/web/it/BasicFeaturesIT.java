@@ -1,6 +1,5 @@
 package com.github.cstroe.spendhawk.web.it;
 
-import com.github.cstroe.spendhawk.testutil.web.DBUnitServlet;
 import com.github.cstroe.spendhawk.web.AccountManagerServlet;
 import com.github.cstroe.spendhawk.web.BaseClientIT;
 import com.github.cstroe.spendhawk.web.WelcomeServlet;
@@ -8,15 +7,11 @@ import com.github.cstroe.spendhawk.web.user.UserManagerServlet;
 import com.github.cstroe.spendhawk.web.user.UserSummaryServlet;
 import com.github.cstroe.spendhawk.web.user.UsersServlet;
 import com.mashape.unirest.http.Unirest;
-import org.jboss.arquillian.container.test.api.RunAsClient;
-import org.jboss.arquillian.junit.Arquillian;
-import org.jboss.arquillian.junit.InSequence;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
 import java.net.URL;
 import java.util.regex.Matcher;
@@ -41,7 +36,6 @@ import static org.junit.Assert.*;
  * tests.  But we would lose the granularity we get when we split them up in
  * separate tests.
  */
-@RunWith(Arquillian.class)
 public class BasicFeaturesIT extends BaseClientIT {
 
     private static String userDetailPath;
@@ -53,16 +47,6 @@ public class BasicFeaturesIT extends BaseClientIT {
     }
 
     @Test
-    @RunAsClient
-    @InSequence(50)
-    public void t0050_seedDatabase() throws Exception {
-        response = connect(DBUnitServlet.class);
-        assertResponseStatus(200, response);
-    }
-
-    @Test
-    @RunAsClient
-    @InSequence(100)
     public void t0100_connectToWelcomeServlet() throws Exception {
         response = connect(WelcomeServlet.class);
         assertResponseStatus(200, response);
@@ -81,24 +65,18 @@ public class BasicFeaturesIT extends BaseClientIT {
     }
 
     @Test
-    @RunAsClient
-    @InSequence(200)
     public void t0200_connectToUsersServlet() throws Exception {
         response = connect(UsersServlet.class);
         assertResponseStatus(200, response);
     }
 
     @Test
-    @RunAsClient
-    @InSequence(300)
     public void t0300_connectToUserManagerServlet() throws Exception {
         response = connect(UserManagerServlet.class);
         assertResponseStatus(200, response);
     }
 
     @Test
-    @RunAsClient
-    @InSequence(400)
     public void t0400_createUser() throws Exception {
         // record how many users are in the system before we create another
         final String viewUsersUrl = fullURL(UsersServlet.class);
@@ -144,8 +122,6 @@ public class BasicFeaturesIT extends BaseClientIT {
     }
 
     @Test
-    @RunAsClient
-    @InSequence(500)
     public void t0500_viewAccounts() throws Exception {
         response = connect(userDetailPath);
         assertResponseStatus(200, response);
@@ -156,8 +132,6 @@ public class BasicFeaturesIT extends BaseClientIT {
     }
 
     @Test
-    @RunAsClient
-    @InSequence(600)
     public void t0600_addAccount() throws Exception {
         String accountName = "Account 1";
         response = Unirest.post(fullURL(AccountManagerServlet.class))

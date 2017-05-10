@@ -4,11 +4,8 @@ import com.github.cstroe.spendhawk.util.ServletUtil;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
-import org.jboss.arquillian.junit.Arquillian;
-import org.jboss.arquillian.test.api.ArquillianResource;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.junit.runner.RunWith;
 
 import javax.servlet.http.HttpServlet;
 import java.io.File;
@@ -23,10 +20,8 @@ import static org.junit.Assert.assertEquals;
 /**
  * A base class for integration tests that are on run on the client side.
  */
-@RunWith(Arquillian.class)
 public class BaseClientIT {
 
-    @ArquillianResource
     protected URL deploymentUrl;
 
     protected HttpResponse<String> response;

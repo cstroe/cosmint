@@ -1,37 +1,22 @@
 package com.github.cstroe.spendhawk.web.it;
 
-import com.github.cstroe.spendhawk.testutil.web.DBUnitServlet;
 import com.github.cstroe.spendhawk.web.BaseClientIT;
 import com.github.cstroe.spendhawk.web.report.ReportRunnerServlet;
 import com.github.cstroe.spendhawk.web.user.UserSummaryServlet;
 import com.mashape.unirest.http.Unirest;
-import org.jboss.arquillian.container.test.api.RunAsClient;
-import org.jboss.arquillian.junit.Arquillian;
-import org.jboss.arquillian.junit.InSequence;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertThat;
 
-@RunWith(Arquillian.class)
 public class ReportRunnerServletIT extends BaseClientIT {
 
     @Test
-    @RunAsClient
-    @InSequence(50)
-    public void t0050_seed_database() throws Exception {
-        connect200(DBUnitServlet.class);
-    }
-
-    @Test
-    @RunAsClient
-    @InSequence(100)
     public void t0100_link_back_to_user_summary_page_should_be_correct() throws Exception {
         // connect to main report runner page
         response = connect(ReportRunnerServlet.class, "user.id", "3");
