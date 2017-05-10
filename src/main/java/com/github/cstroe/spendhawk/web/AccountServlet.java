@@ -90,9 +90,9 @@ public class AccountServlet extends HttpServlet {
             HibernateUtil.getSessionFactory().getCurrentSession().getTransaction().commit();
         } catch (Exception ex) {
             org.hibernate.Transaction t = HibernateUtil.getSessionFactory().getCurrentSession().getTransaction();
-            if(t.isActive()) {
+            //if(t.isActive()) {
                 HibernateUtil.getSessionFactory().getCurrentSession().getTransaction().rollback();
-            }
+            //}
             throw new ServletException(ex);
         }
     }

@@ -7,9 +7,13 @@ import com.github.cstroe.spendhawk.util.Ex;
 import com.github.cstroe.spendhawk.util.HibernateUtil;
 import com.github.cstroe.spendhawk.util.TemplateForwarder;
 import com.github.cstroe.spendhawk.web.AccountServlet;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringEscapeUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 
-import javax.inject.Inject;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -31,12 +35,15 @@ import static com.github.cstroe.spendhawk.util.ServletUtil.servletPath;
  * This is a bulk operation, for updating the categorization of transactions.
  */
 @WebServlet("/transaction/update")
+@Slf4j
+@Controller
+@RequestMapping("/export")
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class ReplaceAccountServlet extends HttpServlet {
     private static final String CONFIGURE_TEMPLATE = "/template/cashflow/bulk_configure.ftl";
     private static final String PREVIEW_TEMPLATE = "/template/cashflow/bulk_preview.ftl";
 
-    @Inject
-    private BulkUpdateBean buBean;
+    private final BulkUpdateBean buBean;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -82,8 +89,9 @@ public class ReplaceAccountServlet extends HttpServlet {
         final Long accountToReplaceId = Long.parseLong(req.getParameter("accountToReplaceId"));
         final Long replacementAccountId = Long.parseLong(req.getParameter("replacementAccountId"));
 
-        final List<Long> cashFlowIds = Arrays.asList(req.getParameterValues("selected"))
-            .stream().map(Long::parseLong).collect(Collectors.toList());
+        final List<Long> cashFlowIds = Arrays.stream(req.getParameterValues("selected"))
+                .map(Long::parseLong)
+                .collect(Collectors.toList());
 
         try {
             HibernateUtil.getSessionFactory().getCurrentSession().beginTransaction();
@@ -125,8 +133,9 @@ public class ReplaceAccountServlet extends HttpServlet {
         final Long accountToReplaceId = Long.parseLong(req.getParameter("accountToReplaceId"));
         final Long replacementAccountId = Long.parseLong(req.getParameter("replacementAccountId"));
 
-        final List<Long> cashFlowIds = Arrays.asList(req.getParameterValues("selected[]"))
-                .stream().map(Long::parseLong).collect(Collectors.toList());
+        final List<Long> cashFlowIds = Arrays.stream(req.getParameterValues("selected[]"))
+                .map(Long::parseLong)
+                .collect(Collectors.toList());
 
         try {
             HibernateUtil.getSessionFactory().getCurrentSession().beginTransaction();

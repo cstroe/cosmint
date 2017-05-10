@@ -4,14 +4,16 @@ import com.github.cstroe.spendhawk.bean.TransactionManagerBean;
 import com.github.cstroe.spendhawk.entity.Account;
 import com.github.cstroe.spendhawk.entity.Transaction;
 import com.github.cstroe.spendhawk.entity.User;
-import com.github.cstroe.spendhawk.util.DateUtil;
 import com.github.cstroe.spendhawk.util.Ex;
 import com.github.cstroe.spendhawk.util.HibernateUtil;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringEscapeUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 
-import javax.inject.Inject;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -22,11 +24,12 @@ import java.util.Optional;
 
 import static com.github.cstroe.spendhawk.util.ServletUtil.servletPath;
 
-@WebServlet("/transactions/add")
+@Slf4j
+@Controller
+@RequestMapping("/transactions/add")
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class AddTransactionServlet extends HttpServlet {
-
-    @Inject
-    private TransactionManagerBean tMan;
+    private final TransactionManagerBean tMan;
 
     private static final String TEMPLATE = "/template/transactions/add.ftl";
 
@@ -77,12 +80,12 @@ public class AddTransactionServlet extends HttpServlet {
             account = Account.findById(accountId)
                 .orElseThrow(Ex::accountNotFound);
 
-            Optional<Transaction> newT = tMan.createTransaction(
-                Long.parseLong(userIdRaw), date, description, notes,
-                request.getParameterValues("cfaccount[]"),
-                request.getParameterValues("cfamount[]"));
+//            Optional<Transaction> newT = tMan.createTransaction(
+//                Long.parseLong(userIdRaw), date, description, notes,
+//                request.getParameterValues("cfaccount[]"),
+//                request.getParameterValues("cfamount[]"));
 
-            t = newT.get();
+//            t = newT.get();
 
             //HibernateUtil.getSessionFactory().getCurrentSession().save(t);
             HibernateUtil.getSessionFactory().getCurrentSession().getTransaction().commit();
@@ -92,11 +95,7 @@ public class AddTransactionServlet extends HttpServlet {
             throw new ServletException(ex.getMessage(), ex);
         }
 
-        if(t == null) {
-            response.sendRedirect(request.getContextPath() + servletPath(WelcomeServlet.class));
-        } else {
-            response.sendRedirect(request.getContextPath() + servletPath(AccountServlet.class) +
-                "?id=" + account.getId() + "&relDate=" + "currentMonth");
-        }
+        response.sendRedirect(request.getContextPath() + servletPath(AccountServlet.class) +
+            "?id=" + account.getId() + "&relDate=" + "currentMonth");
     }
 }

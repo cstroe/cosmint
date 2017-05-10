@@ -4,10 +4,13 @@ import com.github.cstroe.spendhawk.entity.User;
 import com.github.cstroe.spendhawk.json.ExportBean;
 import com.github.cstroe.spendhawk.util.Ex;
 import com.github.cstroe.spendhawk.util.HibernateUtil;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 
-import javax.inject.Inject;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -17,11 +20,12 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.zip.GZIPOutputStream;
 
-@WebServlet("/export")
+@Slf4j
+@Controller
+@RequestMapping("/export")
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class ExportServlet extends HttpServlet {
-
-    @Inject
-    private ExportBean exportBean;
+    private final ExportBean exportBean;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -42,9 +46,9 @@ public class ExportServlet extends HttpServlet {
             HibernateUtil.getSessionFactory().getCurrentSession().getTransaction().commit();
         } catch(Exception ex) {
             org.hibernate.Transaction t = HibernateUtil.getSessionFactory().getCurrentSession().getTransaction();
-            if(t.isActive()) {
+            //if(t.isActive()) {
                 HibernateUtil.getSessionFactory().getCurrentSession().getTransaction().rollback();
-            }
+            //}
 
             throw new ServletException(ex);
         }

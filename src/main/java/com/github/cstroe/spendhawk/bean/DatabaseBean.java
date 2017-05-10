@@ -11,20 +11,20 @@ public abstract class DatabaseBean {
     protected Transaction currentTransaction = null;
 
     protected void startTransaction() {
-        if(!HibernateUtil.getSessionFactory().getCurrentSession().getTransaction().isActive()) {
+        //if(!HibernateUtil.getSessionFactory().getCurrentSession().getTransaction().isActive()) {
             currentTransaction = HibernateUtil.getSessionFactory().getCurrentSession().beginTransaction();
-        }
+        //}
     }
 
     protected void commitTransaction() {
-        if(currentTransaction != null && !currentTransaction.wasCommitted()) {
+        //if(currentTransaction != null && !currentTransaction.wasCommitted()) {
             currentTransaction.commit();
-        }
+        //}
     }
 
     protected void rollbackTransaction() {
-        if(currentTransaction != null && currentTransaction.isActive() && !currentTransaction.wasCommitted()) {
+        //if(currentTransaction != null && currentTransaction.isActive() && !currentTransaction.wasCommitted()) {
             currentTransaction.rollback();
-        }
+        //}
     }
 }
