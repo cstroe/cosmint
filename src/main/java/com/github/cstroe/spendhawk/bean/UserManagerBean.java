@@ -4,14 +4,14 @@ import com.github.cstroe.spendhawk.entity.User;
 import com.github.cstroe.spendhawk.util.HibernateUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Session;
+import org.springframework.stereotype.Service;
 
-import javax.ejb.Stateless;
 import java.util.Optional;
 
 /**
  * A bean to keep user management business logic.
  */
-@Stateless
+@Service
 public class UserManagerBean {
 
     private String message;

@@ -3,12 +3,14 @@ package com.github.cstroe.spendhawk.bean;
 import com.github.cstroe.spendhawk.entity.Account;
 import com.github.cstroe.spendhawk.entity.CashFlow;
 import com.github.cstroe.spendhawk.entity.Transaction;
+import org.springframework.stereotype.Service;
 
-import javax.ejb.Stateful;
-import java.util.*;
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.stream.Collectors;
 
-@Stateful
+@Service
 public class BulkUpdateBean {
 
     /**

@@ -5,32 +5,35 @@ import com.github.cstroe.spendhawk.entity.CashFlow;
 import com.github.cstroe.spendhawk.entity.User;
 import com.github.cstroe.spendhawk.util.Ex;
 import com.github.cstroe.spendhawk.util.HibernateUtil;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-import javax.ejb.Stateful;
-import javax.inject.Inject;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
  * Operations on accounts.
  */
-@Stateful
+@Slf4j
+@Service
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class AccountManagerBean extends DatabaseBean {
 
     private String message;
 
-    @Inject
-    private JanitorBean janitor;
+    private final JanitorBean janitor;
 
     public String getMessage() {
         return message;
     }
 
     public Optional<Account> createAccount(Long userId, String accountName) {
-        return createAccount(userId, accountName, Optional.<Long>empty());
+        return createAccount(userId, accountName, null);
     }
 
-    public Optional<Account> createAccount(Long userId, String accountName, Optional<Long> parentId) {
+    public Optional<Account> createAccount(Long userId, String accountName, Long parentId) {
         if(janitor.isBlank(accountName)) {
             message = "Account name cannot be blank.";
             return Optional.empty();
@@ -48,11 +51,11 @@ public class AccountManagerBean extends DatabaseBean {
             theAccount.setName(accountName);
             theAccount.setUser(currentUser);
 
-            parentId.ifPresent((pId) -> {
-                Account parentAccount = Account.findById(currentUser, pId)
+            if(parentId != null) {
+                Account parentAccount = Account.findById(currentUser, parentId)
                     .orElseThrow(() -> new IllegalArgumentException("Parent account id is not valid."));
                 theAccount.setParent(parentAccount);
-            });
+            }
 
             HibernateUtil.getSessionFactory().getCurrentSession().save(theAccount);
             commitTransaction();
@@ -104,8 +107,9 @@ public class AccountManagerBean extends DatabaseBean {
 
             // I have a feeling that this can be handled by hibernate.
             account.getCashFlows().stream()
-                .map(CashFlow::getTransaction).collect(Collectors.toSet())
-                .stream().forEach(t -> {
+                .map(CashFlow::getTransaction)
+                .collect(Collectors.toSet())
+                .forEach(t -> {
                     t.getCashFlows().forEach(CashFlow::delete);
                     t.delete();
                 });
