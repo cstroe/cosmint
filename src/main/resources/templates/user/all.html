@@ -3,26 +3,39 @@
 <head lang="en">
     <title>SpendHawk</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <link rel="stylesheet" type="text/css" media="all" href="/css/960gs/reset.css" />
-    <link rel="stylesheet" type="text/css" media="all" href="/css/960gs/text.css" />
-    <link rel="stylesheet" type="text/css" media="all" href="/css/960gs/960_12_10_10.css" />
+    <link rel="stylesheet" type="text/css" media="all" href="/webjars/Semantic-UI/semantic.css" />
+    <script src="/webjars/jquery/jquery.js"></script>
+    <script src="/webjars/Semantic-UI/semantic.js"></script>
 </head>
 <body>
 
-<div class="container_12">
-    <div class="grid_12 clearfix">
-        <h2>Users in database:</h2>
-        <table border='1'>
-            <tr>
-                <th>User Name</th>
-            </tr>
+<div class="ui grid container">
+    <div class="ui four column grid">
+        <div class="row">
+            <div class="column">
+                <h2>Users in database:</h2>
+            </div>
+        </div>
 
-            <tr th:each="user : ${users}">
-                <td>
-                    <a class="userLink" th:href="@{|/user/${user.id}|}" th:text="${user.name}">User Name</a>
-                </td>
-            </tr>
-        </table>
+        <div class="row">
+            <div class="column">
+                <table class="ui celled striped table">
+                    <thead>
+                    <tr>
+                        <th>User Name</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    <tr th:each="user : ${users}">
+                        <td>
+                            <a class="userLink" th:href="@{|/user/${user.id}|}" th:text="${user.name}">User Name</a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 </div>
 
