@@ -13,8 +13,8 @@ public class CashFlowIT {
 
     @Test
     public void save() {
-        User user = User.findById(USER_ID).orElseThrow(Ex::userNotFound);
-        Account account = Account.findById(user, 1L).orElseThrow(Ex::accountNotFound);
+        User user = null; //User.findById(USER_ID).orElseThrow(Ex::userNotFound);
+        Account account = Account.findById(user, 1).orElseThrow(Ex::accountNotFound);
         Transaction transaction = Transaction.findById(1L).orElseThrow(Ex::transactionNotFound);
         CashFlow cashFlow = new CashFlow();
         cashFlow.setAccount(account);

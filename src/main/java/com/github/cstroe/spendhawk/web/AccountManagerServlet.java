@@ -1,53 +1,39 @@
 package com.github.cstroe.spendhawk.web;
 
-import com.github.cstroe.spendhawk.bean.AccountManagerBean;
+import com.github.cstroe.spendhawk.bean.AccountService;
 import com.github.cstroe.spendhawk.entity.Account;
-import com.github.cstroe.spendhawk.entity.User;
+import com.github.cstroe.spendhawk.repository.AccountRepository;
+import com.github.cstroe.spendhawk.repository.UserRepository;
 import com.github.cstroe.spendhawk.util.Ex;
-import com.github.cstroe.spendhawk.util.HibernateUtil;
-import com.github.cstroe.spendhawk.util.TemplateForwarder;
-import org.apache.commons.lang3.StringEscapeUtils;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 
-import javax.ejb.EJB;
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.Optional;
-
-@WebServlet("/accounts/manage")
-public class AccountManagerServlet extends HttpServlet {
-
+@Controller
+@RequestMapping("/user/{userId}/account")
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
+public class AccountManagerServlet {
     private static final String TEMPLATE = "/template/accounts/manage.ftl";
 
-    @EJB
-    private AccountManagerBean accountManager;
+    private final UserRepository userRepository;
+    private final AccountRepository accountRepository;
+    private final AccountService accountService;
 
-    @Override
-    protected void doGet( HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        String userId = StringEscapeUtils.escapeHtml4(request.getParameter("user.id"));
+    @GetMapping(path = "/{accountId}")
+    public String doGet(@PathVariable String userId, @PathVariable String accountId, Model model) {
+        Account account = accountRepository.findByIdAndUserId(Integer.parseInt(userId), Integer.parseInt(accountId))
+            .orElseThrow(Ex::userNotFound);
 
-        try {
-            HibernateUtil.getSessionFactory().getCurrentSession().beginTransaction();
-            User currentUser = User.findById(Long.parseLong(userId))
-                .orElseThrow(Ex::userNotFound);
-
-            request.setAttribute("fw", new TemplateForwarder(request));
-            request.setAttribute("user", currentUser);
-            request.getRequestDispatcher(TEMPLATE).forward(request, response);
-            HibernateUtil.getSessionFactory().getCurrentSession().getTransaction().commit();
-        } catch (Exception ex) {
-            HibernateUtil.getSessionFactory().getCurrentSession().getTransaction().rollback();
-            throw new ServletException(ex);
-        }
+        model.addAttribute("account", account);
+        return "index";
     }
 
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+/*    @PostMapping(path = "/{userId}")
+    public String doPost() {
         String userIdRaw = Optional.ofNullable(request.getParameter("user.id"))
                 .map(StringEscapeUtils::escapeHtml4)
                 .orElseThrow(Ex::userIdRequired);
@@ -114,5 +100,5 @@ public class AccountManagerServlet extends HttpServlet {
         request.setAttribute("fw", new TemplateForwarder(request));
         request.getRequestDispatcher(TEMPLATE).forward(request,response);
         HibernateUtil.getSessionFactory().getCurrentSession().getTransaction().commit();
-    }
+    }*/
 }

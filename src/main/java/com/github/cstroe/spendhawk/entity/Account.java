@@ -1,10 +1,12 @@
 package com.github.cstroe.spendhawk.entity;
 
 import com.github.cstroe.spendhawk.util.HibernateUtil;
+import lombok.Data;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
 
 import javax.annotation.Nonnull;
+import javax.persistence.*;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Date;
@@ -38,84 +40,43 @@ import java.util.Set;
  *     <li>a list of sub accounts (accounts whose parent is this account)</li>
  * </ul>
  */
+@Entity
+@Table(name = "accounts")
+@Data
 public class Account implements Comparable<Account> {
     private static final Double ZERO = 0d;
 
-    private Long id;
-    private User user;
+    @Id
+    @Column
+    @GeneratedValue
+    private Integer id;
+
+    @Column
     private String name;
-    private Collection<CashFlow> cashFlows;
-    private Account parent;
-    private Set<Account> subAccounts;
+
+    @ManyToOne(cascade = CascadeType.REMOVE)
+    private User user;
+
+    //private Collection<CashFlow> cashFlows;
+    //private Account parent;
+    //private Set<Account> subAccounts;
 
     public static Comparator<Account> HIERARCHICAL_COMPARATOR =
-            (Account a, Account b) -> a.getPath().compareTo(b.getPath());
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Collection<CashFlow> getCashFlows() {
-        return cashFlows;
-    }
-
-    public void setCashFlows(Collection<CashFlow> cashFlows) {
-        this.cashFlows = cashFlows;
-    }
-
-    public Account getParent() {
-        return parent;
-    }
-
-    public void setParent(Account parent) {
-        this.parent = parent;
-    }
-
-    public Set<Account> getSubAccounts() {
-        return subAccounts;
-    }
-
-    public void setSubAccounts(Set<Account> subAccounts) {
-        this.subAccounts = subAccounts;
-    }
-
-    @Override
-    public String toString() {
-        return "Account " + name;
-    }
+            Comparator.comparing(Account::getPath);
 
     /**
      * @return The balance of the account as of the current date and time.
      */
     public Double getBalance() {
         final Date now = new Date();
-        if(cashFlows == null || cashFlows.isEmpty()) {
-            return ZERO;
-        }
-        return cashFlows.stream()
-                .filter(c -> !c.getEffectiveDate().after(now))
-                .mapToDouble(CashFlow::getAmount)
-                .sum();
+        return ZERO;
+//        if(cashFlows == null || cashFlows.isEmpty()) {
+//            return ZERO;
+//        }
+//        return cashFlows.stream()
+//                .filter(c -> !c.getEffectiveDate().after(now))
+//                .mapToDouble(CashFlow::getAmount)
+//                .sum();
     }
 
     @SuppressWarnings("unchecked")
@@ -133,7 +94,7 @@ public class Account implements Comparable<Account> {
             .uniqueResult());
     }
 
-    public static Optional<Account> findById(User currentUser, Long id) {
+    public static Optional<Account> findById(User currentUser, Integer id) {
         return Optional.ofNullable((Account) HibernateUtil.getSessionFactory().getCurrentSession()
             .createCriteria(Account.class)
             .add(Restrictions.eq("id", id))
@@ -170,16 +131,16 @@ public class Account implements Comparable<Account> {
     }
 
     public int getDepth() {
-        if(getParent() == null) {
+//        if(getParent() == null) {
             return 0;
-        }
-        return 1 + getParent().getDepth();
+//        }
+//        return 1 + getParent().getDepth();
     }
 
     public String getPath() {
-        if(parent != null) {
-            return parent.getPath() + getName();
-        }
+//        if(parent != null) {
+//            return parent.getPath() + getName();
+//        }
         return getName();
     }
 
@@ -190,12 +151,12 @@ public class Account implements Comparable<Account> {
     }
 
     public Account andParent(Account parent) {
-        this.setParent(parent);
+//        this.setParent(parent);
         return this;
     }
 
     public Account withParent(Account parent) {
-        this.setParent(parent);
+//        this.setParent(parent);
         return this;
     }
 }

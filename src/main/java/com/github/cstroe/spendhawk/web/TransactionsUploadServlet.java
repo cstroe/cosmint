@@ -62,35 +62,35 @@ public class TransactionsUploadServlet extends HttpServlet {
             Account account = Account.findById(accountId)
                 .orElseThrow(Ex::accountNotFound);
 
-            Account incomeAccount = account.getUser().getDefaultIncomeAccount()
-                .orElseGet(() -> {
-                    Account ic = new Account();
-                    ic.setName(User.DEFAULT_INCOME_ACCOUNT_NAME);
-                    ic.setUser(account.getUser());
-                    ic.save();
-                    return ic;
-                });
-
-            Account expenseAccount = account.getUser().getDefaultExpenseAccount()
-                .orElseGet(() -> {
-                    Account ec = new Account();
-                    ec.setName(User.DEFAULT_EXPENSE_ACCOUNT_NAME);
-                    ec.setUser(account.getUser());
-                    ec.save();
-                    return ec;
-                });
+//            Account incomeAccount = account.getUser().getDefaultIncomeAccount()
+//                .orElseGet(() -> {
+//                    Account ic = new Account();
+//                    ic.setName(User.DEFAULT_INCOME_ACCOUNT_NAME);
+//                    ic.setUser(account.getUser());
+//                    ic.save();
+//                    return ic;
+//                });
+//
+//            Account expenseAccount = account.getUser().getDefaultExpenseAccount()
+//                .orElseGet(() -> {
+//                    Account ec = new Account();
+//                    ec.setName(User.DEFAULT_EXPENSE_ACCOUNT_NAME);
+//                    ec.setUser(account.getUser());
+//                    ec.save();
+//                    return ec;
+//                });
 
             if("chase".equals(fileFormat)) {
                 DateBean dateBean = new DateBean();
                 ChaseCSVParser parser = new ChaseCSVParser(dateBean);
-                List<Transaction> transactions = parser.parse(filecontent, account, incomeAccount, expenseAccount);
-                for(Transaction t : transactions) {
-                    t.save();
-                    for(CashFlow f : t.getCashFlows()) {
-                        f.save();
-                    }
-                }
-                messages.add("Created " + transactions.size() + " transactions.");
+//                List<Transaction> transactions = parser.parse(filecontent, account, incomeAccount, expenseAccount);
+//                for(Transaction t : transactions) {
+//                    t.save();
+//                    for(CashFlow f : t.getCashFlows()) {
+//                        f.save();
+//                    }
+//                }
+//                messages.add("Created " + transactions.size() + " transactions.");
             }
 
             request.setAttribute("account", account);

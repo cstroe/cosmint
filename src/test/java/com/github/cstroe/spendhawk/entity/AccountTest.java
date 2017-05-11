@@ -46,7 +46,7 @@ public class AccountTest {
         char c = 'z';
 
         List<Account> accountList = new ArrayList<>();
-        for (long i = 0; i <= 'z' - 'a'; i++) {
+        for (int i = 0; i <= 'z' - 'a'; i++) {
             Account currentAccount = new Account();
             currentAccount.setId(i);
             currentAccount.setName("Account " + Character.toString((char) (c - i)));
@@ -76,7 +76,7 @@ public class AccountTest {
         assertThat("Depth should be incremented by 1.", c1.getDepth(), is(1));
 
         Account c2 = new Account();
-        c2.setParent(c1);
+//        c2.setParent(c1);
 
         assertThat("Depth should work for deeper sub-accounts.", c2.getDepth(), is(2));
     }

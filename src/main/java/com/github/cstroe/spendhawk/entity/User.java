@@ -1,10 +1,11 @@
 package com.github.cstroe.spendhawk.entity;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.github.cstroe.spendhawk.json.UserSerializer;
 import com.github.cstroe.spendhawk.util.HibernateUtil;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.hibernate.criterion.Restrictions;
 
+import javax.persistence.*;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -17,63 +18,18 @@ import java.util.Optional;
  *     <li>Many expense categories.</li>
  * </ul>
  */
+@Entity
+@Table(name = "users")
+@Data
+@EqualsAndHashCode(exclude = {"name", "accounts"})
 public class User {
+    @Id
+    @Column
+    private Integer id;
 
-    public static final String DEFAULT_INCOME_ACCOUNT_NAME = "Income";
-    public static final String DEFAULT_EXPENSE_ACCOUNT_NAME = "Expenses";
-    public static final String DEFAULT_ASSET_ACCOUNT_NAME = "Assets";
-
-    private Long id;
+    @Column
     private String name;
+
+    @OneToMany(mappedBy = "user")
     private Collection<Account> accounts;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Collection<Account> getAccounts() {
-        return accounts;
-    }
-
-    public void setAccounts(Collection<Account> accounts) {
-        this.accounts = accounts;
-    }
-
-    public Optional<Account> getAccountByName(String name) {
-        return this.accounts.stream()
-                .filter(a -> a.getName().equals(name))
-                .findFirst();
-    }
-
-    public Optional<Account> getDefaultExpenseAccount() {
-        return getAccountByName(DEFAULT_EXPENSE_ACCOUNT_NAME);
-    }
-
-    public Optional<Account> getDefaultIncomeAccount() {
-        return getAccountByName(DEFAULT_INCOME_ACCOUNT_NAME);
-    }
-
-    public Optional<Account> getDefaultAssetAccount() {
-        return getAccountByName(DEFAULT_ASSET_ACCOUNT_NAME);
-    }
-
-    public static Optional<User> findById(Long id) {
-        return Optional.ofNullable((User) HibernateUtil.getSessionFactory().getCurrentSession()
-                .createCriteria(User.class)
-                .add(Restrictions.eq("id", id))
-                .uniqueResult());
-    }
-
 }

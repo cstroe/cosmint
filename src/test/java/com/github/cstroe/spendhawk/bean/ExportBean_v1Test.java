@@ -38,9 +38,9 @@ public class ExportBean_v1Test {
 
         BareAccountsMock mock = new BareAccountsMock();
         Account bankAccount = mock.getMyBankAccount();
-        bankAccount.setCashFlows(new LinkedList<>());
+//        bankAccount.setCashFlows(new LinkedList<>());
         Account expenseAccount = mock.getExpenseAccount();
-        expenseAccount.setCashFlows(new LinkedList<>());
+//        expenseAccount.setCashFlows(new LinkedList<>());
 
         createCashflow(bankAccount, 1, "01/01/2012", -10d, "Description 1");
         createCashflow(expenseAccount, 2, "01/02/2012", 43.11d, "Description 2");
@@ -62,7 +62,7 @@ public class ExportBean_v1Test {
             cf1.setEffectiveDate(dateBean.parse(effectiveDate));
         }
         cf1.setDescription(description);
-        account.getCashFlows().add(cf1);
+//        account.getCashFlows().add(cf1);
         return cf1;
     }
 
@@ -77,9 +77,9 @@ public class ExportBean_v1Test {
 
         BareAccountsMock mock = new BareAccountsMock();
         Account bankAccount = mock.getMyBankAccount();
-        bankAccount.setCashFlows(new LinkedList<>());
+//        bankAccount.setCashFlows(new LinkedList<>());
         Account expenseAccount = mock.getExpenseAccount();
-        expenseAccount.setCashFlows(new LinkedList<>());
+//        expenseAccount.setCashFlows(new LinkedList<>());
 
         CashFlow outFlow = createCashflow(bankAccount, 1, "01/01/2012",  -10d, "Description 1");
         CashFlow inFlow = createCashflow(expenseAccount, 2, "01/02/2012", 43.11d, "Description 2");

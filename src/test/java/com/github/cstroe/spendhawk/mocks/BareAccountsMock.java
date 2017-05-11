@@ -1,5 +1,6 @@
 package com.github.cstroe.spendhawk.mocks;
 
+import com.github.cstroe.spendhawk.bean.AccountService;
 import com.github.cstroe.spendhawk.entity.Account;
 import com.github.cstroe.spendhawk.entity.User;
 
@@ -16,39 +17,39 @@ public class BareAccountsMock {
     private Account myBankAccount;
 
     public BareAccountsMock() {
-        Long accountIdSeq = 1l;
+        Integer accountIdSeq = 1;
 
         mockUser = new User();
-        mockUser.setId(13l);
+        mockUser.setId(13);
         mockUser.setName("MockUser");
 
         incomeAccount = new Account();
         incomeAccount.setId(++accountIdSeq);
-        incomeAccount.setName(User.DEFAULT_INCOME_ACCOUNT_NAME);
-        incomeAccount.setParent(null);
+        incomeAccount.setName(AccountService.DEFAULT_INCOME_ACCOUNT_NAME);
+//        incomeAccount.setParent(null);
         incomeAccount.setUser(mockUser);
-        incomeAccount.setCashFlows(new LinkedList<>());
+//        incomeAccount.setCashFlows(new LinkedList<>());
 
         expenseAccount = new Account();
         expenseAccount.setId(++accountIdSeq);
-        expenseAccount.setName(User.DEFAULT_EXPENSE_ACCOUNT_NAME);
-        expenseAccount.setParent(null);
+        expenseAccount.setName(AccountService.DEFAULT_EXPENSE_ACCOUNT_NAME);
+//        expenseAccount.setParent(null);
         expenseAccount.setUser(mockUser);
-        expenseAccount.setCashFlows(new LinkedList<>());
+//        expenseAccount.setCashFlows(new LinkedList<>());
 
         assetAccount = new Account();
         assetAccount.setId(++accountIdSeq);
-        assetAccount.setName(User.DEFAULT_ASSET_ACCOUNT_NAME);
-        assetAccount.setParent(null);
+        assetAccount.setName(AccountService.DEFAULT_ASSET_ACCOUNT_NAME);
+//        assetAccount.setParent(null);
         assetAccount.setUser(mockUser);
-        assetAccount.setCashFlows(new LinkedList<>());
+//        assetAccount.setCashFlows(new LinkedList<>());
 
         myBankAccount = new Account();
         myBankAccount.setId(++accountIdSeq);
         myBankAccount.setName("My Bank Account");
-        myBankAccount.setParent(assetAccount);
+//        myBankAccount.setParent(assetAccount);
         myBankAccount.setUser(mockUser);
-        myBankAccount.setCashFlows(new LinkedList<>());
+//        myBankAccount.setCashFlows(new LinkedList<>());
 
         List<Account> accounts = new ArrayList<>(4);
         accounts.add(incomeAccount);

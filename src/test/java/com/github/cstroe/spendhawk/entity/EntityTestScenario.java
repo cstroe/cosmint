@@ -46,7 +46,7 @@ public class EntityTestScenario {
                     Account parentAccount = accountsList.stream()
                         .filter(a -> a.getId().equals(parentAccountId))
                         .findFirst().orElseThrow(Ex::accountNotFound);
-                    account.setParent(parentAccount);
+//                    account.setParent(parentAccount);
                 }
                 accountsList.add(account);
             }

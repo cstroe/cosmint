@@ -35,11 +35,11 @@ public class UserSerializer extends StdSerializer<User> {
             new TreeSet<Transaction>((o1, o2) -> o1.getId().compareTo(o2.getId()));
 
         for (Account account : user.getAccounts()) {
-            for (CashFlow cashFlow : account.getCashFlows()) {
-                if(cashFlow.getTransaction() != null) {
-                    transactionSet.add(cashFlow.getTransaction());
-                }
-            }
+//            for (CashFlow cashFlow : account.getCashFlows()) {
+//                if(cashFlow.getTransaction() != null) {
+//                    transactionSet.add(cashFlow.getTransaction());
+//                }
+//            }
         }
 
         if(!transactionSet.isEmpty()) {

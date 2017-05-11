@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en">
+    <title>SpendHawk</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" type="text/css" media="all" href="/css/960gs/reset.css" />
+    <link rel="stylesheet" type="text/css" media="all" href="/css/960gs/text.css" />
+    <link rel="stylesheet" type="text/css" media="all" href="/css/960gs/960_12_10_10.css" />
+</head>
+<body>
+
+<div class="container_12">
+    <div class="grid_12 clearfix">
+        <h2>Users in database:</h2>
+        <table border='1'>
+            <tr>
+                <th>User Name</th>
+            </tr>
+
+            <tr th:each="user : ${users}">
+                <td>
+                    <a class="userLink" th:href="@{|/user/${user.id}|}" th:text="${user.name}">User Name</a>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+</body>
+</html>

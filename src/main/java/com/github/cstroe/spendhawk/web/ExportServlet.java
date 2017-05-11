@@ -36,7 +36,7 @@ public class ExportServlet extends HttpServlet {
             // Begin unit of work
             HibernateUtil.getSessionFactory().getCurrentSession().beginTransaction();
 
-            User currentUser = User.findById(userId).orElseThrow(Ex::userNotFound);
+            User currentUser = null; //User.findById(userId).orElseThrow(Ex::userNotFound);
 
             resp.setContentType("application/x-gzip");
             resp.setHeader("Content-Disposition", "filename=\"" + currentUser.getName() + "-" + getDateTag() + ".json.gz\"");

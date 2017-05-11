@@ -43,7 +43,7 @@ public class AddTransactionServlet extends HttpServlet {
                 .orElseThrow(Ex::accountIdRequired));
             // Begin unit of work
             transaction = HibernateUtil.getSessionFactory().getCurrentSession().beginTransaction();
-            User user = User.findById(userId).orElseThrow(Ex::userNotFound);
+            User user = null; //User.findById(userId).orElseThrow(Ex::userNotFound);
             Account account = Account.findById(accountId).orElseThrow(Ex::accountNotFound);
 
             request.setAttribute("user", user);

@@ -123,7 +123,7 @@ public class TransactionView extends HttpServlet {
                         .orElseThrow(Ex::cashFlowNotFound);
                 c.setAmount(Double.parseDouble(cfAmount[i]));
                 if(!c.getAccount().getId().equals(Long.parseLong(cfAccounts[i]))) {
-                    Account newAccount = Account.findById(c.getAccount().getUser(), Long.parseLong(cfAccounts[i]))
+                    Account newAccount = Account.findById(c.getAccount().getUser(), Integer.parseInt(cfAccounts[i]))
                         .orElseThrow(Ex::accountNotFound);
                     c.setAccount(newAccount);
                 }

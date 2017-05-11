@@ -19,7 +19,7 @@ public class AccountManagerServletIT extends BaseClientIT {
     @Test
     public void t0100_should_have_correct_link_back_to_user_summary_page() throws Exception {
 
-        response = connect(AccountManagerServlet.class, "user.id", USER_ID);
+//        response = connect(AccountManagerServlet.class, "user.id", USER_ID);
         assertResponseStatus(200, response);
 
         // assert on link back to user summary page

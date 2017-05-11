@@ -16,15 +16,15 @@ public class AccountSerializer extends StdSerializer<Account> {
 
     @Override
     public void serialize(Account account, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException, JsonProcessingException {
-        jsonGenerator.writeStartObject();
-        jsonGenerator.writeNumberField("id", account.getId());
-        jsonGenerator.writeStringField("name", account.getName());
-        if(account.getParent() == null) {
-            jsonGenerator.writeNullField("parent");
-        } else {
-            jsonGenerator.writeNumberField("parent", account.getParent().getId());
-        }
-        jsonGenerator.writeObjectField("cashflows", account.getCashFlows());
-        jsonGenerator.writeEndObject();
+//        jsonGenerator.writeStartObject();
+//        jsonGenerator.writeNumberField("id", account.getId());
+//        jsonGenerator.writeStringField("name", account.getName());
+//        if(account.getParent() == null) {
+//            jsonGenerator.writeNullField("parent");
+//        } else {
+//            jsonGenerator.writeNumberField("parent", account.getParent().getId());
+//        }
+//        jsonGenerator.writeObjectField("cashflows", account.getCashFlows());
+//        jsonGenerator.writeEndObject();
     }
 }

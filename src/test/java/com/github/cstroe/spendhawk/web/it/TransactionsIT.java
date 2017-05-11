@@ -20,7 +20,7 @@ public class TransactionsIT {
 
     @Test
     public void seedDatabaseWorks() {
-        User currentUser = User.findById(1L).orElseThrow(Ex::userNotFound);
+        User currentUser = null; //User.findById(1).orElseThrow(Ex::userNotFound);
         List<Account> accounts = Account.findAll(currentUser);
         assertEquals(3, accounts.size());
 
@@ -33,7 +33,7 @@ public class TransactionsIT {
 
     @Test
     public void seedDatabaseWorks2() {
-        User currentUser = User.findById(1L).orElseThrow(Ex::userNotFound);
+        User currentUser = null; //User.findById(1L).orElseThrow(Ex::userNotFound);
         List<Account> accounts = Account.findAll(currentUser);
         assertEquals(3, accounts.size());
 
@@ -46,8 +46,8 @@ public class TransactionsIT {
 
     @Test
     public void find_cashflows() {
-        User currentUser = User.findById(3L).orElseThrow(Ex::userNotFound);
-        Account userAccount = Account.findById(currentUser, 17L).orElseThrow(Ex::accountNotFound);
+        User currentUser = null; //User.findById(3L).orElseThrow(Ex::userNotFound);
+        Account userAccount = Account.findById(currentUser, 17).orElseThrow(Ex::accountNotFound);
 
         List<CashFlow> cashFlows = userAccount.findCashFlows("Park");
         assertThat(cashFlows.size(), is(1));
