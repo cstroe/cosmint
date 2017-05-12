@@ -27,9 +27,6 @@ import java.util.List;
 @RequestMapping("/user")
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class UserController {
-    private static final String TEMPLATE = "/template/user/view.ftl";
-    private final UserRepository userRepository;
-
     @GetMapping
     public String all(Model model) {
         List<User> fakeUsers = Lists.newArrayList(
@@ -37,7 +34,7 @@ public class UserController {
                 genUser(2, "User 2"));
 
         model.addAttribute("users", fakeUsers);
-        return "user/all";
+        return "users";
     }
 
     @GetMapping("/{userId}")
@@ -52,7 +49,7 @@ public class UserController {
         );
 
         model.addAttribute("user", user1);
-        return "user/view";
+        return "accounts";
     }
 
     private User genUser(Integer id, String name) {

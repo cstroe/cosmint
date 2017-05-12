@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en">
+    <title>SpendHawk</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" type="text/css" media="all" href="/webjars/Semantic-UI/semantic.css" />
+    <script src="/webjars/jquery/jquery.js"></script>
+    <script src="/webjars/Semantic-UI/semantic.js"></script>
+</head>
+<body>
+
+<div class="ui grid container">
+    <div class="ui four column grid">
+        <div class="row">
+            <div class="column">
+                <h1 class="ui header">Users in database:</h1>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="column">
+                <table class="ui celled striped table">
+                    <thead>
+                        <tr>
+                            <th>User Name</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr th:each="user : ${users}">
+                            <td>
+                                <a class="userLink" th:href="@{|/user/${user.id}|}" th:text="${user.name}">User Name</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

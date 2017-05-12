@@ -13,31 +13,42 @@
     <div class="ui four column grid">
         <div class="row">
             <div class="column">
-                <h2>Users in database:</h2>
+                <h1 class="ui header">Chart of Accounts:</h1>
             </div>
         </div>
-
+        <div class="row">
+            <div class="column">
+                <a th:href="@{/user}">
+                <button class="ui basic button">
+                    <i class="icon user"></i>
+                    Users
+                </button>
+                </a>
+            </div>
+        </div>
         <div class="row">
             <div class="column">
                 <table class="ui celled striped table">
                     <thead>
-                    <tr>
-                        <th>User Name</th>
-                    </tr>
+                        <tr>
+                            <th>Name</th>
+                            <th>Balance</th>
+                        </tr>
                     </thead>
-
                     <tbody>
-                    <tr th:each="user : ${users}">
-                        <td>
-                            <a class="userLink" th:href="@{|/user/${user.id}|}" th:text="${user.name}">User Name</a>
-                        </td>
-                    </tr>
+                        <tr th:each="account : ${user.accounts}">
+                            <td class="account_cell">
+                                <a href="#" th:text="${account.name}">Account 1</a>
+                            </td>
+                            <td class="coa_balance" th:text="${account.balance}">0.00</td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
 </div>
+
 
 </body>
 </html>
