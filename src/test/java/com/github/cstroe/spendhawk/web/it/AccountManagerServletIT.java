@@ -1,6 +1,5 @@
 package com.github.cstroe.spendhawk.web.it;
 
-import com.github.cstroe.spendhawk.web.AccountManagerServlet;
 import com.github.cstroe.spendhawk.web.BaseClientIT;
 import com.github.cstroe.spendhawk.web.user.UserSummaryServlet;
 import org.jsoup.Jsoup;

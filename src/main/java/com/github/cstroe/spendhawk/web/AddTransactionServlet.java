@@ -95,7 +95,7 @@ public class AddTransactionServlet extends HttpServlet {
             throw new ServletException(ex.getMessage(), ex);
         }
 
-        response.sendRedirect(request.getContextPath() + servletPath(AccountServlet.class) +
-            "?id=" + account.getId() + "&relDate=" + "currentMonth");
+//        response.sendRedirect(request.getContextPath() + servletPath(AccountServlet.class) +
+//            "?id=" + account.getId() + "&relDate=" + "currentMonth");/
     }
 }

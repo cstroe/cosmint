@@ -2,6 +2,7 @@ package com.github.cstroe.spendhawk.entity;
 
 import com.github.cstroe.spendhawk.util.HibernateUtil;
 import lombok.Data;
+import lombok.ToString;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
 
@@ -43,12 +44,13 @@ import java.util.Set;
 @Entity
 @Table(name = "accounts")
 @Data
+@ToString(exclude = "user")
 public class Account implements Comparable<Account> {
     private static final Double ZERO = 0d;
 
     @Id
     @Column
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Column

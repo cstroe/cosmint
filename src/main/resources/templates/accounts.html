@@ -19,10 +19,16 @@
         <div class="row">
             <div class="column">
                 <a th:href="@{/user}">
-                <button class="ui basic button">
-                    <i class="icon user"></i>
+                <button class="ui basic left floated button">
+                    <i class="icon arrow left"></i>
                     Users
                 </button>
+                </a>
+                <a th:href="@{|/user/${user.id}/account/add|}">
+                    <button class="ui basic right floated button">
+                        <i class="icon add circle"></i>
+                        Add Account
+                    </button>
                 </a>
             </div>
         </div>

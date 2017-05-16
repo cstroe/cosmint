@@ -6,7 +6,7 @@ import com.github.cstroe.spendhawk.entity.CashFlow;
 import com.github.cstroe.spendhawk.util.Ex;
 import com.github.cstroe.spendhawk.util.HibernateUtil;
 import com.github.cstroe.spendhawk.util.TemplateForwarder;
-import com.github.cstroe.spendhawk.web.AccountServlet;
+//import com.github.cstroe.spendhawk.web.AccountServlet;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringEscapeUtils;
@@ -163,7 +163,7 @@ public class ReplaceAccountServlet extends HttpServlet {
 
             HibernateUtil.getSessionFactory().getCurrentSession().getTransaction().commit();
 
-            resp.sendRedirect(req.getContextPath() + servletPath(AccountServlet.class, "id", account.getId(), "relDate", "currentMonth"));
+//            resp.sendRedirect(req.getContextPath() + servletPath(AccountServlet.class, "id", account.getId(), "relDate", "currentMonth"));
         } catch (Exception ex) {
             HibernateUtil.getSessionFactory().getCurrentSession().getTransaction().rollback();
             throw new ServletException(ex);

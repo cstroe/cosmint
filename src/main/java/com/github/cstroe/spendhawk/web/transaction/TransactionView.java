@@ -6,7 +6,7 @@ import com.github.cstroe.spendhawk.entity.Transaction;
 import com.github.cstroe.spendhawk.util.DateUtil;
 import com.github.cstroe.spendhawk.util.Ex;
 import com.github.cstroe.spendhawk.util.HibernateUtil;
-import com.github.cstroe.spendhawk.web.AccountServlet;
+//import com.github.cstroe.spendhawk.web.AccountServlet;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -169,13 +169,13 @@ public class TransactionView extends HttpServlet {
             // End unit of work
             HibernateUtil.getSessionFactory().getCurrentSession().getTransaction().commit();
 
-            if(effectiveDate == null) {
-                response.sendRedirect(request.getContextPath() + servletPath(AccountServlet.class,
-                        "id", accountId, "relDate", "currentMonth"));
-            } else {
-                response.sendRedirect(request.getContextPath() + servletPath(AccountServlet.class,
-                        "id", accountId, "relDate", AccountServlet.formatter.format(DateUtil.asLocalDate(effectiveDate))));
-            }
+//            if(effectiveDate == null) {
+//                response.sendRedirect(request.getContextPath() + servletPath(AccountServlet.class,
+//                        "id", accountId, "relDate", "currentMonth"));
+//            } else {
+//                response.sendRedirect(request.getContextPath() + servletPath(AccountServlet.class,
+//                        "id", accountId, "relDate", AccountServlet.formatter.format(DateUtil.asLocalDate(effectiveDate))));
+//            }
         } catch (Exception ex) {
             HibernateUtil.getSessionFactory().getCurrentSession().getTransaction().rollback();
             throw new ServletException(ex);

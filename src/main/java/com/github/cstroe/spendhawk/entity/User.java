@@ -21,10 +21,11 @@ import java.util.Optional;
 @Entity
 @Table(name = "users")
 @Data
-@EqualsAndHashCode(exclude = {"name", "accounts"})
+@EqualsAndHashCode(exclude = "accounts")
 public class User {
     @Id
     @Column
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Column

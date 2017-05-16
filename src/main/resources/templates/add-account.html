@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en">
+    <title>SpendHawk</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" type="text/css" media="all" href="/webjars/Semantic-UI/semantic.css" />
+    <script src="/webjars/jquery/jquery.js"></script>
+    <script src="/webjars/Semantic-UI/semantic.js"></script>
+</head>
+<body>
+
+<div class="ui grid container">
+    <div class="ui four column grid">
+        <div class="row">
+            <div class="column">
+                <h1 class="ui header">Add account:</h1>
+            </div>
+        </div>
+
+        <a th:href="@{/user/${user.id}}">
+            <button class="ui basic button">
+                <i class="icon">
+                    <div class="ui middle aligned image">
+                        <svg width="1.18em" height="1.18em">
+                            <image xlink:href="/images/back.svg" x="0" y="0" width="100%" height="100%">
+                            </image>
+                        </svg>
+                    </div>
+                </i>
+                Back
+            </button>
+        </a>
+
+        <div class="row">
+            <div class="column">
+                <form class="ui form" method="post">
+                    <div class="field">
+                        <label>User name</label>
+                        <input name="accountName" placeholder="Account Name" type="text"/>
+                        <input name="userId" type="hidden" th:value="${user.id}"/>
+                    </div>
+                    <button class="ui button" type="submit">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
