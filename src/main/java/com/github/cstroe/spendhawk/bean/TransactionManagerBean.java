@@ -1,16 +1,10 @@
 package com.github.cstroe.spendhawk.bean;
 
-import com.github.cstroe.spendhawk.entity.Account;
-import com.github.cstroe.spendhawk.entity.CashFlow;
 import com.github.cstroe.spendhawk.entity.Transaction;
-import com.github.cstroe.spendhawk.entity.User;
-import com.github.cstroe.spendhawk.util.Ex;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Optional;
-import java.util.Set;
 
 @Service
 public class TransactionManagerBean extends DatabaseBean {

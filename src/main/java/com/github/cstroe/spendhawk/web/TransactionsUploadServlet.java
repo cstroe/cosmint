@@ -3,9 +3,7 @@ package com.github.cstroe.spendhawk.web;
 import com.github.cstroe.spendhawk.bean.DateBean;
 import com.github.cstroe.spendhawk.bean.transaction.ChaseCSVParser;
 import com.github.cstroe.spendhawk.entity.Account;
-import com.github.cstroe.spendhawk.entity.CashFlow;
-import com.github.cstroe.spendhawk.entity.Transaction;
-import com.github.cstroe.spendhawk.entity.User;
+import com.github.cstroe.spendhawk.repository.AccountRepository;
 import com.github.cstroe.spendhawk.util.Ex;
 import com.github.cstroe.spendhawk.util.HibernateUtil;
 
@@ -25,6 +23,7 @@ import java.util.List;
 @WebServlet("/transactions/upload")
 @MultipartConfig
 public class TransactionsUploadServlet extends HttpServlet {
+    private AccountRepository accountRepository;
 
     private static final String TEMPLATE = "/template/transactions/upload.ftl";
 
@@ -33,8 +32,8 @@ public class TransactionsUploadServlet extends HttpServlet {
         try {
             HibernateUtil.getSessionFactory().getCurrentSession().beginTransaction();
 
-            Long accountId = Long.parseLong(req.getParameter("id"));
-            Account account = Account.findById(accountId)
+            Integer accountId = Integer.parseInt(req.getParameter("id"));
+            Account account = accountRepository.findByIdAndUserId(accountId, null)
                 .orElseThrow(Ex::accountNotFound);
             req.setAttribute("messages", new LinkedList<String>());
             req.setAttribute("account", account);
@@ -52,14 +51,14 @@ public class TransactionsUploadServlet extends HttpServlet {
         // Create path components to save the file
         final String fileFormat = request.getParameter("format");
         final Part filePart = request.getPart("file");
-        final Long accountId = Long.parseLong(request.getParameter("id"));
+        final Integer accountId = Integer.parseInt(request.getParameter("id"));
         //final boolean duplicateCheck = request.getParameter("duplicate_check") != null;
 
         try {
             List<String> messages = new ArrayList<>();
             HibernateUtil.getSessionFactory().getCurrentSession().beginTransaction();
             InputStream filecontent = filePart.getInputStream();
-            Account account = Account.findById(accountId)
+            Account account = accountRepository.findByIdAndUserId(accountId, null)
                 .orElseThrow(Ex::accountNotFound);
 
 //            Account incomeAccount = account.getUser().getDefaultIncomeAccount()

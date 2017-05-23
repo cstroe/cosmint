@@ -4,7 +4,7 @@ CREATE TABLE users (
 );
 
 CREATE TABLE accounts (
-    id      SERIAL,
+    id      SERIAL PRIMARY KEY,
     name    VARCHAR(255),
     user_id INTEGER NOT NULL REFERENCES users ON DELETE CASCADE
 );

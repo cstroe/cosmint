@@ -1,12 +1,9 @@
 package com.github.cstroe.spendhawk.web.transaction;
 
-import com.github.cstroe.spendhawk.entity.Account;
-import com.github.cstroe.spendhawk.entity.CashFlow;
 import com.github.cstroe.spendhawk.entity.Transaction;
-import com.github.cstroe.spendhawk.util.DateUtil;
+import com.github.cstroe.spendhawk.repository.TransactionRepository;
 import com.github.cstroe.spendhawk.util.Ex;
 import com.github.cstroe.spendhawk.util.HibernateUtil;
-//import com.github.cstroe.spendhawk.web.AccountServlet;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -24,6 +21,8 @@ public class TransactionView extends HttpServlet {
 
     private static final String TEMPLATE = "/template/transactions/view.ftl";
 
+    private TransactionRepository transactionRepository;
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
@@ -37,20 +36,14 @@ public class TransactionView extends HttpServlet {
             }
 
             if(transactionIdRaw != null) {
-                Long transactionId = Long.parseLong(transactionIdRaw);
+                Integer transactionId = Integer.parseInt(transactionIdRaw);
                 // Begin unit of work
                 HibernateUtil.getSessionFactory().getCurrentSession().beginTransaction();
 
-                Transaction transaction = Transaction.findById(transactionId)
+                Transaction transaction = transactionRepository.findById(transactionId)
                     .orElseThrow(Ex::transactionNotFound);
 
-                if(fromAccountId != null) {
-                    request.setAttribute("fromAccountId", Long.parseLong(fromAccountId));
-                } else {
-                    CashFlow cf =transaction.getCashFlows().iterator().next();
-                    request.setAttribute("fromAccountId", cf.getAccount().getId());
-                }
-
+                request.setAttribute("fromAccountId", Long.parseLong(fromAccountId));
                 request.setAttribute("transaction", transaction);
                 request.getRequestDispatcher(TEMPLATE).forward(request, response);
             }
@@ -77,19 +70,13 @@ public class TransactionView extends HttpServlet {
 
     private void doUpdateDescription(HttpServletRequest request, HttpServletResponse response) throws ServletException {
         try {
-            HibernateUtil.getSessionFactory().getCurrentSession().beginTransaction();
-
             String description = Optional.ofNullable(request.getParameter("description"))
                 .orElseThrow(() -> new RuntimeException("Description required."));
-            Long fromAccountId = Long.parseLong(request.getParameter("fromAccountId"));
-            Long transactionId = Long.parseLong(request.getParameter("transactionId"));
+            Integer fromAccountId = Integer.parseInt(request.getParameter("fromAccountId"));
+            Integer transactionId = Integer.parseInt(request.getParameter("transactionId"));
 
-            Transaction t = Transaction.findById(transactionId)
+            Transaction transaction = transactionRepository.findById(transactionId)
                 .orElseThrow(Ex::transactionNotFound);
-
-            t.save();
-
-            HibernateUtil.getSessionFactory().getCurrentSession().getTransaction().commit();
 
             response.sendRedirect(request.getContextPath() + servletPath(TransactionView.class,
                     "id", transactionId, "from", fromAccountId));
@@ -118,16 +105,6 @@ public class TransactionView extends HttpServlet {
                         cfId[i].isEmpty() || cfAmount[i].isEmpty() || cfAccounts[i].isEmpty()) {
                     continue;
                 }
-
-                CashFlow c = CashFlow.findById(Long.parseLong(cfId[i]))
-                        .orElseThrow(Ex::cashFlowNotFound);
-                c.setAmount(Double.parseDouble(cfAmount[i]));
-                if(!c.getAccount().getId().equals(Long.parseLong(cfAccounts[i]))) {
-                    Account newAccount = Account.findById(c.getAccount().getUser(), Integer.parseInt(cfAccounts[i]))
-                        .orElseThrow(Ex::accountNotFound);
-                    c.setAccount(newAccount);
-                }
-                c.save();
             }
 
             // End unit of work
@@ -151,20 +128,12 @@ public class TransactionView extends HttpServlet {
             String fromAccountIdRaw = Optional.ofNullable(request.getParameter("fromAccountId"))
                     .orElseThrow(Ex::accountIdRequired);
             accountId = Long.parseLong(fromAccountIdRaw);
-            Long transactionId = Long.parseLong(transactionIdRaw);
+            Integer transactionId = Integer.parseInt(transactionIdRaw);
 
             // Begin unit of work
             HibernateUtil.getSessionFactory().getCurrentSession().beginTransaction();
-            Transaction transaction = Transaction.findById(transactionId)
+            Transaction transaction = transactionRepository.findById(transactionId)
                     .orElseThrow(Ex::transactionNotFound);
-
-            for (CashFlow cashFlow : transaction.getCashFlows()) {
-                if(cashFlow.getEffectiveDate() != null) {
-                    effectiveDate = cashFlow.getEffectiveDate();
-                }
-                cashFlow.delete();
-            }
-            transaction.delete();
 
             // End unit of work
             HibernateUtil.getSessionFactory().getCurrentSession().getTransaction().commit();

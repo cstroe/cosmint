@@ -4,6 +4,7 @@ import com.github.cstroe.spendhawk.bean.TransactionManagerBean;
 import com.github.cstroe.spendhawk.entity.Account;
 import com.github.cstroe.spendhawk.entity.Transaction;
 import com.github.cstroe.spendhawk.entity.User;
+import com.github.cstroe.spendhawk.repository.AccountRepository;
 import com.github.cstroe.spendhawk.util.Ex;
 import com.github.cstroe.spendhawk.util.HibernateUtil;
 import lombok.RequiredArgsConstructor;
@@ -22,13 +23,12 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Optional;
 
-import static com.github.cstroe.spendhawk.util.ServletUtil.servletPath;
-
 @Slf4j
 @Controller
 @RequestMapping("/transactions/add")
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class AddTransactionServlet extends HttpServlet {
+    private final AccountRepository accountRepository;
     private final TransactionManagerBean tMan;
 
     private static final String TEMPLATE = "/template/transactions/add.ftl";
@@ -37,14 +37,14 @@ public class AddTransactionServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         org.hibernate.Transaction transaction = null;
         try {
-            Long userId = Long.parseLong(Optional.ofNullable(request.getParameter("user.id"))
+            Integer userId = Integer.parseInt(Optional.ofNullable(request.getParameter("user.id"))
                 .orElseThrow(Ex::userIdRequired));
-            Long accountId = Long.parseLong(Optional.ofNullable(request.getParameter("account.id"))
+            Integer accountId = Integer.parseInt(Optional.ofNullable(request.getParameter("account.id"))
                 .orElseThrow(Ex::accountIdRequired));
             // Begin unit of work
             transaction = HibernateUtil.getSessionFactory().getCurrentSession().beginTransaction();
             User user = null; //User.findById(userId).orElseThrow(Ex::userNotFound);
-            Account account = Account.findById(accountId).orElseThrow(Ex::accountNotFound);
+            Account account = accountRepository.findByIdAndUserId(accountId, userId).orElseThrow(Ex::accountNotFound);
 
             request.setAttribute("user", user);
             request.setAttribute("account", account);
@@ -75,9 +75,9 @@ public class AddTransactionServlet extends HttpServlet {
 
             SimpleDateFormat dateFormatter = new SimpleDateFormat("MM/dd/yyyy");
             Date date = dateFormatter.parse(dateRaw);
-            Long accountId = Long.parseLong(accountIdRaw);
+            Integer accountId = Integer.parseInt(accountIdRaw);
 
-            account = Account.findById(accountId)
+            account = accountRepository.findByIdAndUserId(accountId, null)
                 .orElseThrow(Ex::accountNotFound);
 
 //            Optional<Transaction> newT = tMan.createTransaction(

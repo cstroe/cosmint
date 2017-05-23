@@ -52,13 +52,13 @@ public class AccountService {
         theAccount.setUser(currentUser);
 
         if(parentId != null) {
-            Account parentAccount = Account.findById(currentUser, parentId)
+            Account parentAccount = accountRepository.findByIdAndUserId(parentId, currentUser.getId())
                 .orElseThrow(() -> new ServiceException(format("Parent account id is not valid, id = %d", parentId)));
 //            theAccount.setParent(parentAccount);
         }
 
-        boolean saved = theAccount.save();
-        if(!saved) {
+        Account saved = accountRepository.save(theAccount);
+        if(saved.getId() == null) {
             throw new ServiceException("Could not save account.");
         }
 
@@ -77,8 +77,8 @@ public class AccountService {
 
 //        subAccount.setParent(parentAccount);
 
-        boolean saved = subAccount.save();
-        if(!saved) {
+        Account saved = accountRepository.save(subAccount);
+        if(saved.getId() == null) {
             throw new ServiceException("Could not save account.");
         }
 

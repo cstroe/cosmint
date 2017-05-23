@@ -44,7 +44,9 @@
                     <tbody>
                         <tr th:each="account : ${user.accounts}">
                             <td class="account_cell">
-                                <a href="#" th:text="${account.name}">Account 1</a>
+                                <a href="#"
+                                   th:href="@{|/user/${user.id}/account/${account.id}|}"
+                                   th:text="${account.name}">Account 1</a>
                             </td>
                             <td class="coa_balance" th:text="${account.balance}">0.00</td>
                         </tr>

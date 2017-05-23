@@ -20,7 +20,6 @@ public class ExportBean {
         SimpleModule testModule = new SimpleModule("MyModule", new Version(1,0,0,null, null, null));
         testModule.addSerializer(new UserSerializer(1));
         testModule.addSerializer(new AccountSerializer());
-        testModule.addSerializer(new CashFlowSerializer());
         om.registerModule(testModule);
         return om;
     }

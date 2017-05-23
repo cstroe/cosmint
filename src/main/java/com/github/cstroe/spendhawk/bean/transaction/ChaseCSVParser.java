@@ -2,7 +2,6 @@ package com.github.cstroe.spendhawk.bean.transaction;
 
 import com.github.cstroe.spendhawk.bean.DateBean;
 import com.github.cstroe.spendhawk.entity.Account;
-import com.github.cstroe.spendhawk.entity.CashFlow;
 import com.github.cstroe.spendhawk.entity.Transaction;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
@@ -86,47 +85,26 @@ public class ChaseCSVParser implements TransactionParser {
                 throw new Exception("CREDIT transactions must have positive amount.");
             }
 
-            createCashFlows(newTransaction, incomeAccount, bankAccount, amount);
+            //createCashFlows(newTransaction, incomeAccount, bankAccount, amount);
         } else if("DEBIT".equals(flow)) {
             if (amount > 0d) {
                 throw new Exception("DEBIT transactions must have negative amount.");
             }
 
             // Remember: amount is negative, so the outflow account must be the expenseAccount
-            createCashFlows(newTransaction, expenseAccount, bankAccount, amount);
+            //createCashFlows(newTransaction, expenseAccount, bankAccount, amount);
         } else if("CHECK".equals(flow)) {
             if(amount.compareTo(0d) < 0 ) {
                 // DEBIT
-                createCashFlows(newTransaction, expenseAccount, bankAccount, amount);
+                //createCashFlows(newTransaction, expenseAccount, bankAccount, amount);
             } else {
                 // CREDIT
-                createCashFlows(newTransaction, incomeAccount, bankAccount, amount);
+                //createCashFlows(newTransaction, incomeAccount, bankAccount, amount);
             }
         } else {
             throw new Exception("Invalid type of transaction: " + flow);
         }
 
         return newTransaction;
-    }
-
-    /**
-     * The amountToTransfer is taken out of the outFlowAccount and added to the inFlowAccount.
-     * Therefore, the outFlowAccount gets a CashFlow with -1 * amountToTransfer.
-     */
-    private void createCashFlows(Transaction t, Account outFlowAccount, Account inFlowAccount, Double amountToTransfer) {
-        // out flow
-        CashFlow cf_out = new CashFlow();
-        cf_out.setTransaction(t);
-        cf_out.setAmount(amountToTransfer * -1);
-        cf_out.setAccount(outFlowAccount);
-        t.getCashFlows().add(cf_out);
-
-
-        // in flow
-        CashFlow cf_in = new CashFlow();
-        cf_in.setTransaction(t);
-        cf_in.setAmount(amountToTransfer);
-        cf_in.setAccount(inFlowAccount);
-        t.getCashFlows().add(cf_in);
     }
 }

@@ -1,9 +1,9 @@
 package com.github.cstroe.spendhawk.entity;
 
-import com.github.cstroe.spendhawk.util.HibernateUtil;
-import org.hibernate.criterion.Restrictions;
+import lombok.Data;
 
-import java.util.*;
+import javax.persistence.*;
+import java.util.Date;
 
 /**
  * <p>
@@ -17,49 +17,32 @@ import java.util.*;
  *     <li>a collection of cash flows</li>
  * </ul>
  */
+@Entity
+@Table(name = "transactions")
+@Data
 public class Transaction {
-    private Long id;
+    @Id
+    @Column
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+
+    @Column(name = "effective_date")
+    private Date effectiveDate;
+
+    @Column
+    private Double amount;
+
+    @Column
+    private String description;
+
+    @Column
     private String notes;
-    private Collection<CashFlow> cashFlows = new HashSet<>();
 
-    public Transaction() {}
+    @ManyToOne
+    @JoinColumn(name = "source_account_id")
+    private Account source;
 
-    public Long getId() {
-        return id;
-    }
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getNotes() {
-        return notes;
-    }
-
-    public void setNotes(String notes) {
-        this.notes = notes;
-    }
-
-    public Collection<CashFlow> getCashFlows() {
-        return cashFlows;
-    }
-
-    public void setCashFlows(Collection<CashFlow> cashFlows) {
-        this.cashFlows = cashFlows;
-    }
-
-    public boolean save() {
-        Long id = (Long) HibernateUtil.getSessionFactory().getCurrentSession().save(this);
-        return id != null;
-    }
-
-    public void delete() {
-        HibernateUtil.getSessionFactory().getCurrentSession().delete(this);
-    }
-
-    public static Optional<Transaction> findById(Long id) {
-        return Optional.ofNullable((Transaction) HibernateUtil.getSessionFactory().getCurrentSession()
-            .createCriteria(Transaction.class)
-            .add(Restrictions.eq("id", id))
-            .uniqueResult());
-    }
+    @ManyToOne
+    @JoinColumn(name = "target_account_id")
+    private Account target;
 }
