@@ -2,6 +2,7 @@ package com.github.cstroe.spendhawk.bean;
 
 import com.github.cstroe.spendhawk.entity.User;
 import com.github.cstroe.spendhawk.util.HibernateUtil;
+import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Session;
 import org.springframework.stereotype.Service;
@@ -29,8 +30,7 @@ public class UserManagerBean {
             return Optional.empty();
         }
 
-        User newUser = new User();
-        newUser.setName(username);
+        User newUser = new User(-1l, username, Lists.newArrayList());
 
         Session currentSession = HibernateUtil.getSessionFactory().getCurrentSession();
         try {

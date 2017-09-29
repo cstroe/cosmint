@@ -3,8 +3,6 @@ package com.github.cstroe.spendhawk.web.user;
 import com.github.cstroe.spendhawk.dto.AddUserForm;
 import com.github.cstroe.spendhawk.entity.User;
 import com.github.cstroe.spendhawk.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,13 +11,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.validation.Valid;
 
+import java.util.Collections;
+
 import static java.lang.String.format;
 
 @Controller
 @RequestMapping("/user")
-@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class UserAddController {
     private final UserRepository userRepository;
+
+    public UserAddController(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     @GetMapping("/add")
     public String add() {
@@ -37,8 +40,6 @@ public class UserAddController {
     }
 
     private User genUser(AddUserForm userForm) {
-        User newUser = new User();
-        newUser.setName(userForm.getUsername());
-        return newUser;
+        return new User(-1l, userForm.getUsername(), Collections.emptyList());
     }
 }

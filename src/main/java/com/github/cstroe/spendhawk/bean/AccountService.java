@@ -52,7 +52,7 @@ public class AccountService {
         theAccount.setUser(currentUser);
 
         if(parentId != null) {
-            Account parentAccount = accountRepository.findByIdAndUserId(parentId, currentUser.getId())
+            Account parentAccount = accountRepository.findByIdAndUserId(parentId.longValue(), currentUser.getId())
                 .orElseThrow(() -> new ServiceException(format("Parent account id is not valid, id = %d", parentId)));
 //            theAccount.setParent(parentAccount);
         }
@@ -97,11 +97,11 @@ public class AccountService {
     }
 
     private <T extends Exception> User getUser(Integer userId, Supplier<T> exceptionSupplier) throws T {
-        return userRepository.findById(userId).orElseThrow(exceptionSupplier);
+        return Optional.ofNullable(userRepository.findById(userId)).orElseThrow(exceptionSupplier);
     }
 
     private <T extends Exception> Account getAccount(User user, Integer accountId, Supplier<T> exceptionSupplier) throws T {
-        return accountRepository.findByIdAndUserId(user.getId(), accountId).orElseThrow(exceptionSupplier);
+        return accountRepository.findByIdAndUserId(user.getId(), accountId.longValue()).orElseThrow(exceptionSupplier);
     }
 
     public Optional<Account> getDefaultExpenseAccount() {

@@ -5,8 +5,6 @@ import com.github.cstroe.spendhawk.entity.Account;
 import com.github.cstroe.spendhawk.entity.User;
 import com.github.cstroe.spendhawk.repository.AccountRepository;
 import com.github.cstroe.spendhawk.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -23,16 +21,20 @@ import static java.lang.String.format;
 
 @Controller
 @RequestMapping("/user/{userId}/account/add")
-@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class AccountAddController {
     private final UserRepository userRepository;
     private final AccountRepository accountRepository;
 
+    public AccountAddController(UserRepository userRepository, AccountRepository accountRepository) {
+        this.userRepository = userRepository;
+        this.accountRepository = accountRepository;
+    }
+
     @GetMapping
     public String add(@PathVariable Integer userId, Model model) {
-        Optional<User> currentUser = userRepository.findById(userId);
-        if(currentUser.isPresent()) {
-            model.addAttribute("user", currentUser.get());
+        User currentUser = userRepository.findById(userId);
+        if(currentUser != null) {
+            model.addAttribute("user", currentUser);
             return "add-account";
         } else {
             return "error";
@@ -41,17 +43,17 @@ public class AccountAddController {
 
     @PostMapping
     public String create(@Valid AddAccountForm accountForm, BindingResult bindingResult, Model model) {
-        Optional<User> currentUser = userRepository.findById(accountForm.getUserId());
-        if(currentUser.isPresent()) {
+        User currentUser = userRepository.findById(accountForm.getUserId());
+        if(currentUser != null) {
             if(bindingResult.hasErrors()) {
-                model.addAttribute("user", currentUser.get());
+                model.addAttribute("user", currentUser);
                 return "add-account";
             } else {
                 Account account = new Account();
                 account.setName(accountForm.getAccountName());
-                account.setUser(currentUser.get());
+                account.setUser(currentUser);
                 Account newAccount = accountRepository.save(account);
-                return format("redirect:/user/%d/account/%d", currentUser.get().getId(), newAccount.getId());
+                return format("redirect:/user/%d/account/%d", currentUser.getId(), newAccount.getId());
             }
         } else {
             return "error";

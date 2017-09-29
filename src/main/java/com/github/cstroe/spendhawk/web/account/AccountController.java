@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -25,8 +24,8 @@ public class AccountController {
 
     @GetMapping
     public String view(
-            @PathVariable Integer userId,
-            @PathVariable Integer accountId,
+            @PathVariable Long userId,
+            @PathVariable Long accountId,
             Model model)
     {
         Account account = accountRepository.findByIdAndUserId(accountId, userId)

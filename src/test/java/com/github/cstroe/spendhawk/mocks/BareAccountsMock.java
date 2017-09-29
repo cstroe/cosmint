@@ -5,6 +5,7 @@ import com.github.cstroe.spendhawk.entity.Account;
 import com.github.cstroe.spendhawk.entity.User;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -19,9 +20,7 @@ public class BareAccountsMock {
     public BareAccountsMock() {
         Integer accountIdSeq = 1;
 
-        mockUser = new User();
-        mockUser.setId(13);
-        mockUser.setName("MockUser");
+        mockUser = new User(13l, "MockUser", Collections.emptyList());
 
         incomeAccount = new Account();
         incomeAccount.setId(++accountIdSeq);

@@ -48,7 +48,7 @@ public class ReplaceAccountServlet extends HttpServlet {
             .orElseThrow(Ex.ception("Query not defined."));
         try {
             HibernateUtil.getSessionFactory().getCurrentSession().beginTransaction();
-            Account account = accountRepository.findByIdAndUserId(accountId, null)
+            Account account = accountRepository.findByIdAndUserId(accountId.longValue(), null)
                 .orElseThrow(Ex.ception("Account not found."));
             req.setAttribute("fromAccount", account);
             req.setAttribute("query", queryString);
@@ -83,13 +83,13 @@ public class ReplaceAccountServlet extends HttpServlet {
                 .map(Long::parseLong)
                 .collect(Collectors.toList());
 
-        Account account = accountRepository.findByIdAndUserId(fromAccountId, null)
+        Account account = accountRepository.findByIdAndUserId(fromAccountId.longValue(), null)
             .orElseThrow(Ex::accountNotFound);
 
-        Account toReplace = accountRepository.findByIdAndUserId(accountToReplaceId, null)
+        Account toReplace = accountRepository.findByIdAndUserId(accountToReplaceId.longValue(), null)
             .orElseThrow(Ex::accountNotFound);
 
-        Account replacement = accountRepository.findByIdAndUserId(replacementAccountId, null)
+        Account replacement = accountRepository.findByIdAndUserId(replacementAccountId.longValue(), null)
             .orElseThrow(Ex::accountNotFound);
 
         req.setAttribute("fromAccountId", fromAccountId);
@@ -109,13 +109,13 @@ public class ReplaceAccountServlet extends HttpServlet {
                 .map(Long::parseLong)
                 .collect(Collectors.toList());
 
-        Account account = accountRepository.findByIdAndUserId(fromAccountId, null)
+        Account account = accountRepository.findByIdAndUserId(fromAccountId.longValue(), null)
                 .orElseThrow(Ex::accountNotFound);
 
-        Account toReplace = accountRepository.findByIdAndUserId(accountToReplaceId, null)
+        Account toReplace = accountRepository.findByIdAndUserId(accountToReplaceId.longValue(), null)
                 .orElseThrow(Ex::accountNotFound);
 
-        Account replacement = accountRepository.findByIdAndUserId(replacementAccountId, null)
+        Account replacement = accountRepository.findByIdAndUserId(replacementAccountId.longValue(), null)
                 .orElseThrow(Ex::accountNotFound);
     }
 }

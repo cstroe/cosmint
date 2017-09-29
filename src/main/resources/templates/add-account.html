@@ -13,7 +13,7 @@
     <div class="ui four column grid">
         <div class="row">
             <div class="column">
-                <h1 class="ui header">Add account:</h1>
+                <h1 class="ui header">Create account:</h1>
             </div>
         </div>
 
@@ -31,20 +31,49 @@
             </button>
         </a>
 
-        <div class="row">
-            <div class="column">
-                <form class="ui form" method="post">
+        <form class="ui form" method="post">
+            <div class="row" style="margin-top: 20px; margin-bottom: 20px;">
+                <div class="ui column">
                     <div class="field">
-                        <label>User name</label>
+                        <label>Account Name</label>
                         <input name="accountName" placeholder="Account Name" type="text"/>
                         <input name="userId" type="hidden" th:value="${user.id}"/>
                     </div>
-                    <button class="ui button" type="submit">Submit</button>
-                </form>
+                </div>
             </div>
-        </div>
+            <div class="row">
+                <div class="ui column">
+                    <div class="ui top attached tabular menu">
+                        <div class="active item">Add Transactions</div>
+                    </div>
+                    <div class="ui bottom attached active tab segment">
+                        <div class="field">
+                            <div class="ui radio checkbox">
+                                <input name="accountType" tabindex="0" class="hidden" type="radio" value="blank"/>
+                                <label>Account with no transactions</label>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <div class="ui radio checkbox">
+                                <input name="accountType" tabindex="0" class="hidden" type="radio" value="csv"/>
+                                <label>Import transactions from CSV</label>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <input name="csvFile" type="file"/>
+                        </div>
+                    </div>
+
+                    <button class="ui button" type="submit">Submit</button>
+                </div>
+            </div>
+        </form>
     </div>
 </div>
+
+<script>
+$('.ui.radio.checkbox').checkbox();
+</script>
 
 </body>
 </html>

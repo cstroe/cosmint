@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface AccountRepository extends CrudRepository<Account, Integer> {
-    Optional<Account> findByIdAndUserId(Integer accountId, Integer userId);
+    Optional<Account> findByIdAndUserId(Long accountId, Long userId);
     Optional<Account> findByName(String name);
-    List<Account> findByUserId(Integer userId);
+    List<Account> findByUserId(Long userId);
 }

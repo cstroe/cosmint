@@ -44,7 +44,7 @@ public class AddTransactionServlet extends HttpServlet {
             // Begin unit of work
             transaction = HibernateUtil.getSessionFactory().getCurrentSession().beginTransaction();
             User user = null; //User.findById(userId).orElseThrow(Ex::userNotFound);
-            Account account = accountRepository.findByIdAndUserId(accountId, userId).orElseThrow(Ex::accountNotFound);
+            Account account = accountRepository.findByIdAndUserId(accountId.longValue(), userId.longValue()).orElseThrow(Ex::accountNotFound);
 
             request.setAttribute("user", user);
             request.setAttribute("account", account);
@@ -77,7 +77,7 @@ public class AddTransactionServlet extends HttpServlet {
             Date date = dateFormatter.parse(dateRaw);
             Integer accountId = Integer.parseInt(accountIdRaw);
 
-            account = accountRepository.findByIdAndUserId(accountId, null)
+            account = accountRepository.findByIdAndUserId(accountId.longValue(), null)
                 .orElseThrow(Ex::accountNotFound);
 
 //            Optional<Transaction> newT = tMan.createTransaction(

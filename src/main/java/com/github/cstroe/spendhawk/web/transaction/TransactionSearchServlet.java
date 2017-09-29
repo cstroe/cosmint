@@ -31,7 +31,7 @@ public class TransactionSearchServlet extends HttpServlet {
         Session currentSession = HibernateUtil.getSessionFactory().getCurrentSession();
         try {
             currentSession.beginTransaction();
-            Account account = accountRepository.findByIdAndUserId(Integer.parseInt(accountId), null)
+            Account account = accountRepository.findByIdAndUserId(Long.parseLong(accountId), null)
                 .orElseThrow(Ex::accountNotFound);
             req.setAttribute("account", account);
             req.setAttribute("query", searchString);

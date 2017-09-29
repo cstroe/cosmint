@@ -33,7 +33,7 @@ public class TransactionsUploadServlet extends HttpServlet {
             HibernateUtil.getSessionFactory().getCurrentSession().beginTransaction();
 
             Integer accountId = Integer.parseInt(req.getParameter("id"));
-            Account account = accountRepository.findByIdAndUserId(accountId, null)
+            Account account = accountRepository.findByIdAndUserId(accountId.longValue(), null)
                 .orElseThrow(Ex::accountNotFound);
             req.setAttribute("messages", new LinkedList<String>());
             req.setAttribute("account", account);
@@ -58,7 +58,7 @@ public class TransactionsUploadServlet extends HttpServlet {
             List<String> messages = new ArrayList<>();
             HibernateUtil.getSessionFactory().getCurrentSession().beginTransaction();
             InputStream filecontent = filePart.getInputStream();
-            Account account = accountRepository.findByIdAndUserId(accountId, null)
+            Account account = accountRepository.findByIdAndUserId(accountId.longValue(), null)
                 .orElseThrow(Ex::accountNotFound);
 
 //            Account incomeAccount = account.getUser().getDefaultIncomeAccount()
