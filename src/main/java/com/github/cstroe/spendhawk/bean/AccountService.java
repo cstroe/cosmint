@@ -34,11 +34,11 @@ public class AccountService {
         return null;
     }
 
-    public Account createAccount(Integer userId, String accountName) throws ServiceException {
+    public Account createAccount(Long userId, String accountName) throws ServiceException {
         return createAccount(userId, accountName, null);
     }
 
-    public Account createAccount(Integer userId, String accountName, Integer parentId) throws ServiceException {
+    public Account createAccount(Long userId, String accountName, Integer parentId) throws ServiceException {
         if(janitor.isBlank(accountName)) {
             throw new ServiceException("Account name cannot be blank.");
         }
@@ -65,7 +65,7 @@ public class AccountService {
         return theAccount;
     }
 
-    public Account nestAccount(Integer userId, Integer parentAccountId, Integer subAccountId) throws ServiceException {
+    public Account nestAccount(Long userId, Integer parentAccountId, Integer subAccountId) throws ServiceException {
         final User currentUser = getUser(userId,
                 () -> new ServiceException(format("User not found, id = %d", userId)));
 
@@ -85,7 +85,7 @@ public class AccountService {
         return subAccount;
     }
 
-    public void deleteAccount(Integer userId, Integer accountId) throws ServiceException {
+    public void deleteAccount(Long userId, Integer accountId) throws ServiceException {
         final User currentUser = getUser(userId,
                 () -> new ServiceException(format("User not found, id = %d", userId)));
 
@@ -96,7 +96,7 @@ public class AccountService {
         accountRepository.delete(account);
     }
 
-    private <T extends Exception> User getUser(Integer userId, Supplier<T> exceptionSupplier) throws T {
+    private <T extends Exception> User getUser(Long userId, Supplier<T> exceptionSupplier) throws T {
         return Optional.ofNullable(userRepository.findById(userId)).orElseThrow(exceptionSupplier);
     }
 

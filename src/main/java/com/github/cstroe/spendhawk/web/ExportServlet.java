@@ -2,7 +2,6 @@ package com.github.cstroe.spendhawk.web;
 
 import com.github.cstroe.spendhawk.entity.User;
 import com.github.cstroe.spendhawk.json.ExportBean;
-import com.github.cstroe.spendhawk.util.Ex;
 import com.github.cstroe.spendhawk.util.HibernateUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

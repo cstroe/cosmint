@@ -10,6 +10,7 @@ import org.junit.Test;
 import java.io.InputStream;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.LinkedList;
 
 import static junit.framework.Assert.assertNotNull;
 import static org.junit.Assert.assertEquals;
@@ -36,7 +37,7 @@ public class ExportBean_v1Test {
 
         BareAccountsMock mock = new BareAccountsMock();
         Account bankAccount = mock.getMyBankAccount();
-//        bankAccount.setCashFlows(new LinkedList<>());
+        bankAccount.setTransactions(new LinkedList<>());
         Account expenseAccount = mock.getExpenseAccount();
 //        expenseAccount.setCashFlows(new LinkedList<>());
 

@@ -4,6 +4,7 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 /**
  * <p>
@@ -38,11 +39,6 @@ public class Transaction {
     @Column
     private String notes;
 
-    @ManyToOne
-    @JoinColumn(name = "source_account_id")
-    private Account source;
-
-    @ManyToOne
-    @JoinColumn(name = "target_account_id")
-    private Account target;
+    @OneToMany
+    private List<Transfer> transfers;
 }

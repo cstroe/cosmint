@@ -15,8 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.validation.Valid;
 
-import java.util.Optional;
-
 import static java.lang.String.format;
 
 @Controller
@@ -31,7 +29,7 @@ public class AccountAddController {
     }
 
     @GetMapping
-    public String add(@PathVariable Integer userId, Model model) {
+    public String add(@PathVariable Long userId, Model model) {
         User currentUser = userRepository.findById(userId);
         if(currentUser != null) {
             model.addAttribute("user", currentUser);

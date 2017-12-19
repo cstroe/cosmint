@@ -1,7 +1,6 @@
 package com.github.cstroe.spendhawk.entity;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.cstroe.spendhawk.util.Ex;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

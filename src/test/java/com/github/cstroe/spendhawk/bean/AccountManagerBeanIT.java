@@ -14,7 +14,7 @@ public class AccountManagerBeanIT {
     @Test
     public void testCreateAccount() throws ServiceException {
         String accountName = "Test Created Account";
-        Account account = accountManager.createAccount(1, accountName);
+        Account account = accountManager.createAccount(1L, accountName);
 
         assertNotNull("Account should be created.", account);
 

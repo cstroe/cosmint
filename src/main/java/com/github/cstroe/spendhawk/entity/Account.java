@@ -60,10 +60,7 @@ public class Account implements Comparable<Account> {
     private User user;
 
     @OneToMany
-    private List<Transaction> debits;
-
-    @OneToMany
-    private List<Transaction> credits;
+    private List<Transaction> transactions;
 
     public Double getBalance() {
         return ZERO;
