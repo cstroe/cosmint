@@ -3,11 +3,14 @@ package com.github.cstroe.spendhawk.bean.transaction;
 import com.github.cstroe.spendhawk.bean.DateBean;
 import com.github.cstroe.spendhawk.entity.Account;
 import com.github.cstroe.spendhawk.entity.Transaction;
-import com.github.cstroe.spendhawk.mocks.BareAccountsMock;
+import com.github.cstroe.spendhawk.entity.Transfer;
+import com.github.cstroe.spendhawk.mocks.SeedAccounts;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import static org.hamcrest.Matchers.equalTo;
@@ -25,11 +28,11 @@ public class ChaseCSVParserTest {
     public void setUp() {
         parser = new ChaseCSVParser(new DateBean());
 
-        BareAccountsMock mock = new BareAccountsMock();
-        incomeAccount = mock.getIncomeAccount();
-        expenseAccount = mock.getExpenseAccount();
-        assetAccount = mock.getAssetAccount();
-        myBankAccount = mock.getMyBankAccount();
+        SeedAccounts accounts = new SeedAccounts();
+        incomeAccount = accounts.getIncomeAccount();
+        expenseAccount = accounts.getExpenseAccount();
+        assetAccount = accounts.getAssetAccount();
+        myBankAccount = accounts.getMyBankAccount();
     }
 
     @Test
@@ -44,20 +47,21 @@ public class ChaseCSVParserTest {
 
         Transaction generatedTransaction = transactions.get(0);
 
-//        assertThat(generatedTransaction.getDescription(),
-//            is(equalTo("MARIANOS FRESH00085043 CHICAGO IL            08/30")));
+        assertThat(generatedTransaction.getDescription(),
+            is(equalTo("MARIANOS FRESH00085043 CHICAGO IL            08/30")));
         assertThat(generatedTransaction.getNotes(),
             is(equalTo("Testing the notes")));
-//        assertThat(generatedTransaction.getCashFlows().size(), is(2));
+        assertThat(generatedTransaction.getTransfers().size(), is(2));
 
-//        Date effectiveDate = generatedTransaction.getEffectiveDate();
-//        Calendar cal = Calendar.getInstance();
-//        cal.setTime(effectiveDate);
+        Date effectiveDate = generatedTransaction.getEffectiveDate();
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(effectiveDate);
 
-//        assertThat(cal.get(Calendar.YEAR), is(equalTo(2012)));
-//        assertThat(cal.get(Calendar.MONTH), is(equalTo(Calendar.AUGUST)));
-//        assertThat(cal.get(Calendar.DAY_OF_MONTH), is(equalTo(31)));
+        assertThat(cal.get(Calendar.YEAR), is(equalTo(2012)));
+        assertThat(cal.get(Calendar.MONTH), is(equalTo(Calendar.AUGUST)));
+        assertThat(cal.get(Calendar.DAY_OF_MONTH), is(equalTo(31)));
 
+        Transfer tr = generatedTransaction.getTransfers().get(0);
 //        CashFlow accountCf = generatedTransaction.getCashFlows().stream()
 //            .filter(cf -> cf.getAccount().equals(myBankAccount))
 //            .findFirst()

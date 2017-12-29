@@ -39,6 +39,7 @@ public class ChaseCSVParser implements TransactionParser {
     /**
      * @throws Exception thrown when invalid data exists in the fileContent
      */
+    @Override
     public List<Transaction> parse(InputStream fileContent, Account account,
            Account incomeAccount, Account expenseAccount) throws Exception {
         List<Transaction> generatedTransactions = new LinkedList<>();

@@ -3,7 +3,7 @@ package com.github.cstroe.spendhawk.bean;
 import com.github.cstroe.spendhawk.entity.Account;
 import com.github.cstroe.spendhawk.entity.Transaction;
 import com.github.cstroe.spendhawk.json.ExportBean;
-import com.github.cstroe.spendhawk.mocks.BareAccountsMock;
+import com.github.cstroe.spendhawk.mocks.SeedAccounts;
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 
@@ -22,7 +22,7 @@ public class ExportBean_v1Test {
         final InputStream bareExportStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("export/v1/bare.json");
         final String bareExport = IOUtils.toString(bareExportStream);
 
-        BareAccountsMock mock = new BareAccountsMock();
+        SeedAccounts mock = new SeedAccounts();
         ExportBean v1 = new ExportBean();
         final String s = v1.doExportJson(mock.getMockUser());
 
@@ -35,7 +35,7 @@ public class ExportBean_v1Test {
         final InputStream bareExportStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("export/v1/cashflow.json");
         final String cashFlowExport = IOUtils.toString(bareExportStream);
 
-        BareAccountsMock mock = new BareAccountsMock();
+        SeedAccounts mock = new SeedAccounts();
         Account bankAccount = mock.getMyBankAccount();
         bankAccount.setTransactions(new LinkedList<>());
         Account expenseAccount = mock.getExpenseAccount();
@@ -57,7 +57,7 @@ public class ExportBean_v1Test {
         final InputStream bareExportStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("export/v1/transaction.json");
         final String cashFlowExport = IOUtils.toString(bareExportStream);
 
-        BareAccountsMock mock = new BareAccountsMock();
+        SeedAccounts mock = new SeedAccounts();
         Account bankAccount = mock.getMyBankAccount();
 //        bankAccount.setCashFlows(new LinkedList<>());
         Account expenseAccount = mock.getExpenseAccount();
