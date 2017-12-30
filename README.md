@@ -164,3 +164,8 @@ Add user with username that matches `src/test/resources/arquillian.xml`.
 
 Then you can run any of the integration tests (classes that end in `IT`) from 
 any JUnit compatible IDE.
+
+## Links
+
+* [GNU Cash User Guide](http://gnucash.org/viewdoc.phtml?doc=guide)
+* [Debits and Credits](https://www.accountingtools.com/articles/2017/5/17/debits-and-credits)
