@@ -1,7 +1,5 @@
 package com.github.cstroe.spendhawk.accounting.api;
 
-import org.javamoney.moneta.Money;
-
 import javax.money.MonetaryAmount;
 import java.time.LocalDate;
 
