@@ -10,3 +10,6 @@ wildfly
 # Gradle
 /build/
 /.gradle/
+
+# IntelliJ
+/out/
