@@ -48,9 +48,9 @@ dependencies {
     compile "org.hsqldb:hsqldb:2.3.2"
 
     // JavaScript stuff
-    compile "org.webjars:webjars-locator:0.32-1"
-    compile "org.webjars:bootstrap:3.1.0"
-    compile "org.webjars:Semantic-UI:2.2.9"
+    compile 'org.webjars.bower:jquery:3.2.1'
+    compile 'org.webjars.bower:bootstrap:3.3.7'
+
     compile "org.apache.commons:commons-lang3:3.3.2"
     compile "org.apache.commons:commons-csv:1.5"
     compile "org.reflections:reflections:0.9.9-RC1"
