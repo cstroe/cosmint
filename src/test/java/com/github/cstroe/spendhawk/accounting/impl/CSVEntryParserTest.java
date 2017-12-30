@@ -1,6 +1,7 @@
 package com.github.cstroe.spendhawk.accounting.impl;
 
-import com.github.cstroe.spendhawk.accounting.api.Entry;
+import com.github.cstroe.spendhawk.api.Entry;
+import com.github.cstroe.spendhawk.impl.CSVEntryParser;
 import org.javamoney.moneta.Money;
 import org.junit.Test;
 

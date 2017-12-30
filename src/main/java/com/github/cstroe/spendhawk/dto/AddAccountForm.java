@@ -12,12 +12,12 @@ import javax.validation.constraints.Size;
 @Data
 public class AddAccountForm {
     @NotNull
-    @Min(value = 1, message = "User ID is invalid.")
+    @Min(value = 1, message = "UserDao ID is invalid.")
     private Long userId = -1L;
 
     @NotNull
-    @Size(min = 1, message = "Account name must be at least 1 charater long.")
+    @Size(min = 1, message = "AccountDao name must be at least 1 charater long.")
     @Pattern(regexp = "[a-zA-Z][a-zA-Z0-9 ]*[a-zA-Z0-9]?",
-            message = "Account name must contain only alphanumeric charaters, and spaces, and start with a letter.")
+            message = "AccountDao name must contain only alphanumeric charaters, and spaces, and start with a letter.")
     private String accountName = "";
 }

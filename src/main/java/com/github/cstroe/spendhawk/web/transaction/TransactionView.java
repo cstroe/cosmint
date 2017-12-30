@@ -1,6 +1,6 @@
 package com.github.cstroe.spendhawk.web.transaction;
 
-import com.github.cstroe.spendhawk.entity.Transaction;
+import com.github.cstroe.spendhawk.dao.TransactionDao;
 import com.github.cstroe.spendhawk.repository.TransactionRepository;
 import com.github.cstroe.spendhawk.util.Ex;
 import com.github.cstroe.spendhawk.util.HibernateUtil;
@@ -40,7 +40,7 @@ public class TransactionView extends HttpServlet {
                 // Begin unit of work
                 HibernateUtil.getSessionFactory().getCurrentSession().beginTransaction();
 
-                Transaction transaction = transactionRepository.findById(transactionId)
+                TransactionDao transaction = transactionRepository.findById(transactionId)
                     .orElseThrow(Ex::transactionNotFound);
 
                 request.setAttribute("fromAccountId", Long.parseLong(fromAccountId));
@@ -75,7 +75,7 @@ public class TransactionView extends HttpServlet {
             Integer fromAccountId = Integer.parseInt(request.getParameter("fromAccountId"));
             Integer transactionId = Integer.parseInt(request.getParameter("transactionId"));
 
-            Transaction transaction = transactionRepository.findById(transactionId)
+            TransactionDao transaction = transactionRepository.findById(transactionId)
                 .orElseThrow(Ex::transactionNotFound);
 
             response.sendRedirect(request.getContextPath() + servletPath(TransactionView.class,
@@ -132,7 +132,7 @@ public class TransactionView extends HttpServlet {
 
             // Begin unit of work
             HibernateUtil.getSessionFactory().getCurrentSession().beginTransaction();
-            Transaction transaction = transactionRepository.findById(transactionId)
+            TransactionDao transaction = transactionRepository.findById(transactionId)
                     .orElseThrow(Ex::transactionNotFound);
 
             // End unit of work

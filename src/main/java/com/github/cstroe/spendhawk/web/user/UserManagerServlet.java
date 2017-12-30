@@ -1,7 +1,7 @@
 package com.github.cstroe.spendhawk.web.user;
 
 import com.github.cstroe.spendhawk.bean.UserManagerBean;
-import com.github.cstroe.spendhawk.entity.User;
+import com.github.cstroe.spendhawk.dao.UserDao;
 import org.apache.commons.lang3.StringEscapeUtils;
 
 import javax.ejb.EJB;
@@ -32,9 +32,9 @@ public class UserManagerServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getParameter("action");
 
-        if("Add User".equals(action)) {
+        if("Add UserDao".equals(action)) {
             String username = StringEscapeUtils.escapeHtml4(request.getParameter("user.name"));
-            Optional<User> newUser = userManager.addUser(username);
+            Optional<UserDao> newUser = userManager.addUser(username);
             if(newUser.isPresent()) {
                 response.sendRedirect(request.getContextPath() +
                     servletPath(UserSummaryServlet.class, "user.id", newUser.get().getId()));

@@ -1,6 +1,6 @@
 package com.github.cstroe.spendhawk.web.transaction;
 
-import com.github.cstroe.spendhawk.entity.Account;
+import com.github.cstroe.spendhawk.dao.AccountDao;
 import com.github.cstroe.spendhawk.repository.AccountRepository;
 import com.github.cstroe.spendhawk.util.Ex;
 import com.github.cstroe.spendhawk.util.HibernateUtil;
@@ -48,8 +48,8 @@ public class ReplaceAccountServlet extends HttpServlet {
             .orElseThrow(Ex.ception("Query not defined."));
         try {
             HibernateUtil.getSessionFactory().getCurrentSession().beginTransaction();
-            Account account = accountRepository.findByIdAndUserId(accountId.longValue(), null)
-                .orElseThrow(Ex.ception("Account not found."));
+            AccountDao account = accountRepository.findByIdAndUserId(accountId.longValue(), null)
+                .orElseThrow(Ex.ception("AccountDao not found."));
             req.setAttribute("fromAccount", account);
             req.setAttribute("query", queryString);
             req.setAttribute("accountsAll", account.getUser().getAccounts());
@@ -83,13 +83,13 @@ public class ReplaceAccountServlet extends HttpServlet {
                 .map(Long::parseLong)
                 .collect(Collectors.toList());
 
-        Account account = accountRepository.findByIdAndUserId(fromAccountId.longValue(), null)
+        AccountDao account = accountRepository.findByIdAndUserId(fromAccountId.longValue(), null)
             .orElseThrow(Ex::accountNotFound);
 
-        Account toReplace = accountRepository.findByIdAndUserId(accountToReplaceId.longValue(), null)
+        AccountDao toReplace = accountRepository.findByIdAndUserId(accountToReplaceId.longValue(), null)
             .orElseThrow(Ex::accountNotFound);
 
-        Account replacement = accountRepository.findByIdAndUserId(replacementAccountId.longValue(), null)
+        AccountDao replacement = accountRepository.findByIdAndUserId(replacementAccountId.longValue(), null)
             .orElseThrow(Ex::accountNotFound);
 
         req.setAttribute("fromAccountId", fromAccountId);
@@ -109,13 +109,13 @@ public class ReplaceAccountServlet extends HttpServlet {
                 .map(Long::parseLong)
                 .collect(Collectors.toList());
 
-        Account account = accountRepository.findByIdAndUserId(fromAccountId.longValue(), null)
+        AccountDao account = accountRepository.findByIdAndUserId(fromAccountId.longValue(), null)
                 .orElseThrow(Ex::accountNotFound);
 
-        Account toReplace = accountRepository.findByIdAndUserId(accountToReplaceId.longValue(), null)
+        AccountDao toReplace = accountRepository.findByIdAndUserId(accountToReplaceId.longValue(), null)
                 .orElseThrow(Ex::accountNotFound);
 
-        Account replacement = accountRepository.findByIdAndUserId(replacementAccountId.longValue(), null)
+        AccountDao replacement = accountRepository.findByIdAndUserId(replacementAccountId.longValue(), null)
                 .orElseThrow(Ex::accountNotFound);
     }
 }

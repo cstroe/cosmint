@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.Version;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.module.SimpleModule;
-import com.github.cstroe.spendhawk.entity.User;
+import com.github.cstroe.spendhawk.dao.UserDao;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -24,14 +24,14 @@ public class ExportBean {
         return om;
     }
 
-    public String doExportJson(User u) throws Exception {
+    public String doExportJson(UserDao u) throws Exception {
         ObjectMapper om = getObjectMapper();
         StringWriter sw = new StringWriter();
         om.writeValue(sw, u);
         return sw.toString();
     }
 
-    public void doExportJson(User u, OutputStream os) throws IOException {
+    public void doExportJson(UserDao u, OutputStream os) throws IOException {
         ObjectMapper om = getObjectMapper();
         om.writeValue(os, u);
     }

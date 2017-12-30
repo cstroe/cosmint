@@ -1,6 +1,6 @@
-package com.github.cstroe.spendhawk.accounting.impl;
+package com.github.cstroe.spendhawk.impl;
 
-import com.github.cstroe.spendhawk.accounting.api.Entry;
+import com.github.cstroe.spendhawk.api.Entry;
 import lombok.Data;
 
 import javax.money.MonetaryAmount;

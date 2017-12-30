@@ -1,8 +1,8 @@
 package com.github.cstroe.spendhawk.bean.transaction;
 
 import com.github.cstroe.spendhawk.bean.DateBean;
-import com.github.cstroe.spendhawk.entity.Account;
-import com.github.cstroe.spendhawk.entity.Transaction;
+import com.github.cstroe.spendhawk.dao.AccountDao;
+import com.github.cstroe.spendhawk.dao.TransactionDao;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
 import org.jboss.logging.Logger;
@@ -40,9 +40,9 @@ public class ChaseCSVParser implements TransactionParser {
      * @throws Exception thrown when invalid data exists in the fileContent
      */
     @Override
-    public List<Transaction> parse(InputStream fileContent, Account account,
-           Account incomeAccount, Account expenseAccount) throws Exception {
-        List<Transaction> generatedTransactions = new LinkedList<>();
+    public List<TransactionDao> parse(InputStream fileContent, AccountDao account,
+                                      AccountDao incomeAccount, AccountDao expenseAccount) throws Exception {
+        List<TransactionDao> generatedTransactions = new LinkedList<>();
         try (InputStreamReader reader = new InputStreamReader(fileContent)){
             Iterable<CSVRecord> records = CSVFormat.newFormat(',')
                 .withQuote('"')
@@ -61,16 +61,16 @@ public class ChaseCSVParser implements TransactionParser {
         return generatedTransactions;
     }
 
-    private Transaction processRecord(CSVRecord record, Account bankAccount,
-                                      Account incomeAccount, Account expenseAccount) throws Exception {
+    private TransactionDao processRecord(CSVRecord record, AccountDao bankAccount,
+                                         AccountDao incomeAccount, AccountDao expenseAccount) throws Exception {
 
         final String flow = record.get(ROW_TYPE); // CREDIT or DEBIT
 
 
-        Transaction newTransaction = new Transaction();
+        TransactionDao newTransaction = new TransactionDao();
 
 //        newTransaction.setDescription(record.get(ROW_DESCRIPTION));
-        newTransaction.setNotes(record.get(ROW_NOTES));
+//        newTransaction.setNotes(record.get(ROW_NOTES));
 //        newTransaction.setEffectiveDate(dateBean.parse(record.get(ROW_DATE)));
 
 
@@ -78,7 +78,7 @@ public class ChaseCSVParser implements TransactionParser {
         Double amount = Double.parseDouble(record.get(ROW_AMOUNT)) + 0.0d;
 
         if(amount.compareTo(0d) == 0) {
-            throw new Exception("Transaction amount is zero.");
+            throw new Exception("TransactionDao amount is zero.");
         }
 
         if("CREDIT".equals(flow) || "DSLIP".equals(flow)) {

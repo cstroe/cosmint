@@ -1,6 +1,6 @@
 package com.github.cstroe.spendhawk.web;
 
-import com.github.cstroe.spendhawk.entity.User;
+import com.github.cstroe.spendhawk.dao.UserDao;
 import com.github.cstroe.spendhawk.json.ExportBean;
 import com.github.cstroe.spendhawk.util.HibernateUtil;
 import lombok.RequiredArgsConstructor;
@@ -35,7 +35,7 @@ public class ExportServlet extends HttpServlet {
             // Begin unit of work
             HibernateUtil.getSessionFactory().getCurrentSession().beginTransaction();
 
-            User currentUser = null; //User.findById(userId).orElseThrow(Ex::userNotFound);
+            UserDao currentUser = null; //UserDao.findById(userId).orElseThrow(Ex::userNotFound);
 
             resp.setContentType("application/x-gzip");
             resp.setHeader("Content-Disposition", "filename=\"" + currentUser.getName() + "-" + getDateTag() + ".json.gz\"");

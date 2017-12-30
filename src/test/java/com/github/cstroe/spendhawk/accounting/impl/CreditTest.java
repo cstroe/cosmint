@@ -1,5 +1,6 @@
 package com.github.cstroe.spendhawk.accounting.impl;
 
+import com.github.cstroe.spendhawk.impl.Credit;
 import org.junit.Test;
 
 import static org.junit.Assert.assertFalse;

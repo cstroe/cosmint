@@ -1,7 +1,7 @@
 package com.github.cstroe.spendhawk.bean;
 
-import com.github.cstroe.spendhawk.entity.Account;
-import com.github.cstroe.spendhawk.entity.User;
+import com.github.cstroe.spendhawk.dao.AccountDao;
+import com.github.cstroe.spendhawk.dao.UserDao;
 import com.github.cstroe.spendhawk.repository.AccountRepository;
 import com.github.cstroe.spendhawk.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -34,30 +34,30 @@ public class AccountService {
         return null;
     }
 
-    public Account createAccount(Long userId, String accountName) throws ServiceException {
+    public AccountDao createAccount(Long userId, String accountName) throws ServiceException {
         return createAccount(userId, accountName, null);
     }
 
-    public Account createAccount(Long userId, String accountName, Integer parentId) throws ServiceException {
+    public AccountDao createAccount(Long userId, String accountName, Integer parentId) throws ServiceException {
         if(janitor.isBlank(accountName)) {
-            throw new ServiceException("Account name cannot be blank.");
+            throw new ServiceException("AccountDao name cannot be blank.");
         }
 
         accountName = janitor.sanitize(accountName);
 
-        final User currentUser = getUser(userId, () -> new ServiceException(format("User not found, id = %d", userId)));
+        final UserDao currentUser = getUser(userId, () -> new ServiceException(format("UserDao not found, id = %d", userId)));
 
-        final Account theAccount = new Account();
+        final AccountDao theAccount = new AccountDao();
         theAccount.setName(accountName);
         theAccount.setUser(currentUser);
 
         if(parentId != null) {
-            Account parentAccount = accountRepository.findByIdAndUserId(parentId.longValue(), currentUser.getId())
+            AccountDao parentAccount = accountRepository.findByIdAndUserId(parentId.longValue(), currentUser.getId())
                 .orElseThrow(() -> new ServiceException(format("Parent account id is not valid, id = %d", parentId)));
 //            theAccount.setParent(parentAccount);
         }
 
-        Account saved = accountRepository.save(theAccount);
+        AccountDao saved = accountRepository.save(theAccount);
         if(saved.getId() == null) {
             throw new ServiceException("Could not save account.");
         }
@@ -65,19 +65,19 @@ public class AccountService {
         return theAccount;
     }
 
-    public Account nestAccount(Long userId, Integer parentAccountId, Integer subAccountId) throws ServiceException {
-        final User currentUser = getUser(userId,
-                () -> new ServiceException(format("User not found, id = %d", userId)));
+    public AccountDao nestAccount(Long userId, Integer parentAccountId, Integer subAccountId) throws ServiceException {
+        final UserDao currentUser = getUser(userId,
+                () -> new ServiceException(format("UserDao not found, id = %d", userId)));
 
-        final Account parentAccount = getAccount(currentUser, parentAccountId,
+        final AccountDao parentAccount = getAccount(currentUser, parentAccountId,
                 () -> new ServiceException("Parent account id is not valid."));
 
-        final Account subAccount = getAccount(currentUser, subAccountId,
+        final AccountDao subAccount = getAccount(currentUser, subAccountId,
                 () -> new ServiceException("Sub account id is not valid."));
 
 //        subAccount.setParent(parentAccount);
 
-        Account saved = accountRepository.save(subAccount);
+        AccountDao saved = accountRepository.save(subAccount);
         if(saved.getId() == null) {
             throw new ServiceException("Could not save account.");
         }
@@ -86,33 +86,33 @@ public class AccountService {
     }
 
     public void deleteAccount(Long userId, Integer accountId) throws ServiceException {
-        final User currentUser = getUser(userId,
-                () -> new ServiceException(format("User not found, id = %d", userId)));
+        final UserDao currentUser = getUser(userId,
+                () -> new ServiceException(format("UserDao not found, id = %d", userId)));
 
-        Account account = accountRepository.findByUserId(currentUser.getId()).stream()
+        AccountDao account = accountRepository.findByUserId(currentUser.getId()).stream()
                 .filter(a->a.getId().equals(accountId)).findFirst()
                 .orElseThrow(() -> new ServiceException(format("Could not find account with id = %d", accountId)));
 
         accountRepository.delete(account);
     }
 
-    private <T extends Exception> User getUser(Long userId, Supplier<T> exceptionSupplier) throws T {
+    private <T extends Exception> UserDao getUser(Long userId, Supplier<T> exceptionSupplier) throws T {
         return Optional.ofNullable(userRepository.findById(userId)).orElseThrow(exceptionSupplier);
     }
 
-    private <T extends Exception> Account getAccount(User user, Integer accountId, Supplier<T> exceptionSupplier) throws T {
+    private <T extends Exception> AccountDao getAccount(UserDao user, Integer accountId, Supplier<T> exceptionSupplier) throws T {
         return accountRepository.findByIdAndUserId(user.getId(), accountId.longValue()).orElseThrow(exceptionSupplier);
     }
 
-    public Optional<Account> getDefaultExpenseAccount() {
+    public Optional<AccountDao> getDefaultExpenseAccount() {
         return accountRepository.findByName(DEFAULT_EXPENSE_ACCOUNT_NAME);
     }
 
-    public Optional<Account> getDefaultIncomeAccount() {
+    public Optional<AccountDao> getDefaultIncomeAccount() {
         return accountRepository.findByName(DEFAULT_INCOME_ACCOUNT_NAME);
     }
 
-    public Optional<Account> getDefaultAssetAccount() {
+    public Optional<AccountDao> getDefaultAssetAccount() {
         return accountRepository.findByName(DEFAULT_ASSET_ACCOUNT_NAME);
     }
 }

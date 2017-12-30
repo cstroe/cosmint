@@ -1,9 +1,9 @@
 package com.github.cstroe.spendhawk.web;
 
 import com.github.cstroe.spendhawk.bean.TransactionManagerBean;
-import com.github.cstroe.spendhawk.entity.Account;
-import com.github.cstroe.spendhawk.entity.Transaction;
-import com.github.cstroe.spendhawk.entity.User;
+import com.github.cstroe.spendhawk.dao.AccountDao;
+import com.github.cstroe.spendhawk.dao.TransactionDao;
+import com.github.cstroe.spendhawk.dao.UserDao;
 import com.github.cstroe.spendhawk.repository.AccountRepository;
 import com.github.cstroe.spendhawk.util.Ex;
 import com.github.cstroe.spendhawk.util.HibernateUtil;
@@ -43,8 +43,8 @@ public class AddTransactionServlet extends HttpServlet {
                 .orElseThrow(Ex::accountIdRequired));
             // Begin unit of work
             transaction = HibernateUtil.getSessionFactory().getCurrentSession().beginTransaction();
-            User user = null; //User.findById(userId).orElseThrow(Ex::userNotFound);
-            Account account = accountRepository.findByIdAndUserId(accountId.longValue(), userId.longValue()).orElseThrow(Ex::accountNotFound);
+            UserDao user = null; //UserDao.findById(userId).orElseThrow(Ex::userNotFound);
+            AccountDao account = accountRepository.findByIdAndUserId(accountId.longValue(), userId.longValue()).orElseThrow(Ex::accountNotFound);
 
             request.setAttribute("user", user);
             request.setAttribute("account", account);
@@ -61,8 +61,8 @@ public class AddTransactionServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        Account account;
-        Transaction t;
+        AccountDao account;
+        TransactionDao t;
         try {
             // Begin unit of work
             HibernateUtil.getSessionFactory().getCurrentSession().beginTransaction();
@@ -80,7 +80,7 @@ public class AddTransactionServlet extends HttpServlet {
             account = accountRepository.findByIdAndUserId(accountId.longValue(), null)
                 .orElseThrow(Ex::accountNotFound);
 
-//            Optional<Transaction> newT = tMan.createTransaction(
+//            Optional<TransactionDao> newT = tMan.createTransaction(
 //                Long.parseLong(userIdRaw), date, description, notes,
 //                request.getParameterValues("cfaccount[]"),
 //                request.getParameterValues("cfamount[]"));

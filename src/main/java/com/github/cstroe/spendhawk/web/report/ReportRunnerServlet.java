@@ -1,6 +1,6 @@
 package com.github.cstroe.spendhawk.web.report;
 
-import com.github.cstroe.spendhawk.entity.User;
+import com.github.cstroe.spendhawk.dao.UserDao;
 import com.github.cstroe.spendhawk.report.ReportFormGenerator;
 import com.github.cstroe.spendhawk.report.ReportResultRenderer;
 import com.github.cstroe.spendhawk.report.ReportRunner;
@@ -40,7 +40,7 @@ public class ReportRunnerServlet extends HttpServlet {
 
         try {
             HibernateUtil.getSessionFactory().getCurrentSession().beginTransaction();
-            User currentUser = null; //User.findById(Long.parseLong(userId))
+            UserDao currentUser = null; //UserDao.findById(Long.parseLong(userId))
 //                .orElseThrow(Ex::userNotFound);
             req.setAttribute("user", currentUser);
             req.setAttribute("reports", getReports(currentUser));
@@ -59,7 +59,7 @@ public class ReportRunnerServlet extends HttpServlet {
         String userId = StringEscapeUtils.escapeHtml4(req.getParameter("user.id"));
         try {
             HibernateUtil.getSessionFactory().getCurrentSession().beginTransaction();
-            User currentUser = null; //User.findById(Long.parseLong(userId))
+            UserDao currentUser = null; //UserDao.findById(Long.parseLong(userId))
 //                .orElseThrow(Ex::userNotFound);
             ReportRunner report = getReportByName(currentUser, reportName)
                 .orElseThrow(Ex::reportNotFound);
@@ -87,7 +87,7 @@ public class ReportRunnerServlet extends HttpServlet {
         }
     }
 
-    private List<ReportRunner> getReports(User currentUser) {
+    private List<ReportRunner> getReports(UserDao currentUser) {
         Reflections reflections = new Reflections(ClasspathHelper.forPackage("com.github.cstroe.spendhawk"), new SubTypesScanner());
         Set<Class<? extends ReportRunner>> reportClasses = reflections.getSubTypesOf(ReportRunner.class);
 
@@ -95,7 +95,7 @@ public class ReportRunnerServlet extends HttpServlet {
         for (Class<? extends ReportRunner> reportClass : reportClasses) {
             try {
                 Constructor<? extends ReportRunner> reportRunnerConstructor =
-                    reportClass.getConstructor(User.class);
+                    reportClass.getConstructor(UserDao.class);
                 ReportRunner report = reportRunnerConstructor.newInstance(currentUser);
                 reportRunners.add(report);
             } catch( InvocationTargetException | NoSuchMethodException |
@@ -106,7 +106,7 @@ public class ReportRunnerServlet extends HttpServlet {
         return reportRunners;
     }
 
-    private Optional<ReportRunner> getReportByName(User currentUser, String name) {
+    private Optional<ReportRunner> getReportByName(UserDao currentUser, String name) {
         List<ReportRunner> reports = getReports(currentUser);
         for(ReportRunner report : reports) {
             if(report.getName().equals(name)) {

@@ -1,6 +1,7 @@
-package com.github.cstroe.spendhawk.entity;
+package com.github.cstroe.spendhawk.dao;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,9 +14,9 @@ import org.springframework.web.context.WebApplicationContext;
 
 import static org.junit.Assert.assertFalse;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
-@ImportAutoConfiguration( { FlywayAutoConfiguration.class })
+//@RunWith(SpringRunner.class)
+//@SpringBootTest
+//@ImportAutoConfiguration( { FlywayAutoConfiguration.class })
 public class UserEntityIT {
     private MockMvc mockMvc;
 
@@ -26,17 +27,19 @@ public class UserEntityIT {
     private ObjectMapper objectMapper;
 
 
+    @Ignore
     @Test
     public void testFindById() {
-//        User.findById(1L).orElseThrow(Ex::userNotFound);
+//        UserDao.findById(1L).orElseThrow(Ex::userNotFound);
     }
 
+    @Ignore
     @Test
     public void testFindByIdWithBadId() {
 //        assertFalse("Should not find non-existent user.",
-//            User.findById(2L).isPresent());
+//            UserDao.findById(2L).isPresent());
 //
 //        assertFalse("Should not find null id",
-//            User.findById(null).isPresent());
+//            UserDao.findById(null).isPresent());
     }
 }

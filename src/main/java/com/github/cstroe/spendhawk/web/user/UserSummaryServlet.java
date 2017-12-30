@@ -1,6 +1,6 @@
 package com.github.cstroe.spendhawk.web.user;
 
-import com.github.cstroe.spendhawk.entity.User;
+import com.github.cstroe.spendhawk.dao.UserDao;
 import com.github.cstroe.spendhawk.util.HibernateUtil;
 import com.github.cstroe.spendhawk.util.TemplateForwarder;
 import org.hibernate.criterion.Restrictions;
@@ -25,8 +25,8 @@ public class UserSummaryServlet extends HttpServlet {
 
         try {
             HibernateUtil.getSessionFactory().getCurrentSession().beginTransaction();
-            User user = (User) HibernateUtil.getSessionFactory().getCurrentSession()
-                    .createCriteria(User.class)
+            UserDao user = (UserDao) HibernateUtil.getSessionFactory().getCurrentSession()
+                    .createCriteria(UserDao.class)
                     .add(Restrictions.eq("id", userId))
                     .uniqueResult();
 

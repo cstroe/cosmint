@@ -2,6 +2,7 @@ package com.github.cstroe.spendhawk.web;
 
 import com.github.cstroe.spendhawk.testutil.web.SpyHttpServletRequest;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import javax.servlet.http.HttpServletRequest;
@@ -19,6 +20,7 @@ public class AccountServletTest {
         dateFormat = DateTimeFormatter.ofPattern("MM-dd-yyyy");
     }
 
+    @Ignore
     @Test
     public void testNavigationDates() {
         HttpServletRequest request = new SpyHttpServletRequest();
@@ -31,6 +33,7 @@ public class AccountServletTest {
         assertEquals("07-01-1982", request.getAttribute("nextMonth"));
     }
 
+    @Ignore
     @Test
     public void testNavigationDatesBeginningOfYear() {
         HttpServletRequest request = new SpyHttpServletRequest();
@@ -43,6 +46,7 @@ public class AccountServletTest {
         assertEquals("02-01-2001", request.getAttribute("nextMonth"));
     }
 
+    @Ignore
     @Test
     public void testNavidationDatesEndOfYear() {
         HttpServletRequest request = new SpyHttpServletRequest();
@@ -55,6 +59,7 @@ public class AccountServletTest {
         assertEquals("01-01-2011", request.getAttribute("nextMonth"));
     }
 
+    @Ignore
     @Test(expected = NullPointerException.class)
     public void testNavidationDatesWithNullInput() {
         HttpServletRequest request = new SpyHttpServletRequest();

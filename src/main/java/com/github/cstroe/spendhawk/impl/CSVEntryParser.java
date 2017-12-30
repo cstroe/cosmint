@@ -1,13 +1,12 @@
-package com.github.cstroe.spendhawk.accounting.impl;
+package com.github.cstroe.spendhawk.impl;
 
-import com.github.cstroe.spendhawk.accounting.api.Entry;
-import com.github.cstroe.spendhawk.accounting.api.EntryParser;
+import com.github.cstroe.spendhawk.api.Entry;
+import com.github.cstroe.spendhawk.api.EntryParser;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.lang3.StringUtils;
 import org.javamoney.moneta.Money;
 
-import javax.money.MonetaryAmount;
 import java.io.IOException;
 import java.io.Reader;
 import java.time.LocalDate;

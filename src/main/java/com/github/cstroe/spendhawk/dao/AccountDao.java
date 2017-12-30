@@ -1,19 +1,12 @@
-package com.github.cstroe.spendhawk.entity;
+package com.github.cstroe.spendhawk.dao;
 
-import com.github.cstroe.spendhawk.util.HibernateUtil;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
-import org.hibernate.criterion.MatchMode;
-import org.hibernate.criterion.Restrictions;
 
 import javax.annotation.Nonnull;
 import javax.persistence.*;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
-import java.util.Optional;
-import java.util.Set;
 
 /**
  * <p>
@@ -42,32 +35,34 @@ import java.util.Set;
  * </ul>
  */
 @Entity
-@Table(name = "accounts")
+@Table(name = "account")
 @Data
 @ToString(exclude = "user")
-public class Account implements Comparable<Account> {
+@NoArgsConstructor
+public class AccountDao implements Comparable<AccountDao> {
     private static final Double ZERO = 0d;
 
     @Id
     @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @Column
     private String name;
 
     @ManyToOne(cascade = CascadeType.REMOVE)
-    private User user;
+    @JoinColumn(name="user_id")
+    private UserDao user;
 
-    @OneToMany
-    private List<Transaction> transactions;
+//    @OneToMany
+//    private List<TransactionDao> transactions;
 
     public Double getBalance() {
         return ZERO;
     }
 
     @Override
-    public int compareTo(@Nonnull Account o) {
+    public int compareTo(@Nonnull AccountDao o) {
         return this.getName().compareTo(o.getName());
     }
 }

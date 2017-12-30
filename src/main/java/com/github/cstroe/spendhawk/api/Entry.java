@@ -1,4 +1,4 @@
-package com.github.cstroe.spendhawk.accounting.api;
+package com.github.cstroe.spendhawk.api;
 
 import javax.money.MonetaryAmount;
 import java.time.LocalDate;

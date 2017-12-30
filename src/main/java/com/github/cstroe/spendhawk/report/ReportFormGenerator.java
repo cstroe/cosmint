@@ -1,6 +1,6 @@
 package com.github.cstroe.spendhawk.report;
 
-import com.github.cstroe.spendhawk.entity.User;
+import com.github.cstroe.spendhawk.dao.UserDao;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -10,10 +10,10 @@ import java.util.List;
  */
 public class ReportFormGenerator {
 
-    private final User currentUser;
+    private final UserDao currentUser;
     private final List<ReportParameter> parameterList;
 
-    public ReportFormGenerator(User currentUser, List<ReportParameter> parameterList) {
+    public ReportFormGenerator(UserDao currentUser, List<ReportParameter> parameterList) {
         this.currentUser = currentUser;
         this.parameterList = parameterList;
     }

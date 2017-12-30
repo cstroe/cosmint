@@ -1,4 +1,6 @@
-package com.github.cstroe.spendhawk.accounting.api;
+package com.github.cstroe.spendhawk.api;
+
+import com.github.cstroe.spendhawk.api.Entry;
 
 import java.io.IOException;
 import java.io.Reader;

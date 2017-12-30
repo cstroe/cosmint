@@ -1,4 +1,4 @@
-package com.github.cstroe.spendhawk.entity;
+package com.github.cstroe.spendhawk.dao;
 
 import com.github.cstroe.spendhawk.util.Ex;
 
@@ -11,8 +11,8 @@ import java.util.List;
 
 public class EntityTestScenario {
 
-    private List<Account> accountsList = new ArrayList<>();
-    private List<Transaction> transactionList = new ArrayList<>();
+    private List<AccountDao> accountsList = new ArrayList<>();
+    private List<TransactionDao> transactionList = new ArrayList<>();
 
     protected final String[] accountsTemplate;
     protected final String[] transactionsTemplate;
@@ -32,7 +32,7 @@ public class EntityTestScenario {
                 String parentAccountIdRaw = accountsTemplate[i+2];
 
                 // create account
-                Account account = new Account();
+                AccountDao account = new AccountDao();
 
                 // set account properties
                 Field idField = account.getClass().getDeclaredField("id");
@@ -43,7 +43,7 @@ public class EntityTestScenario {
 //                account.setTransactions(new ArrayList<>());
                 if(parentAccountIdRaw != null) {
                     final Long parentAccountId = Long.parseLong(parentAccountIdRaw);
-                    Account parentAccount = accountsList.stream()
+                    AccountDao parentAccount = accountsList.stream()
                         .filter(a -> a.getId().equals(parentAccountId))
                         .findFirst().orElseThrow(Ex::accountNotFound);
 //                    account.setParent(parentAccount);
@@ -61,13 +61,13 @@ public class EntityTestScenario {
             for (int i = 0; i < transactionsTemplate.length; i += 5) {
                 Long transactionId = Long.parseLong(transactionsTemplate[i]);
                 Long accountId = Long.parseLong(transactionsTemplate[i+1]);
-                Account account = accountsList.stream().filter(a->a.getId().equals(accountId)).findFirst().get();
+                AccountDao account = accountsList.stream().filter(a->a.getId().equals(accountId)).findFirst().get();
                 Double amount = Double.parseDouble(transactionsTemplate[i+2]);
                 Date effectiveDate = dateFormat.parse(transactionsTemplate[i+3]);
                 String transactionName = transactionsTemplate[i+4];
 
                 // create transaction
-                Transaction transaction = new Transaction();
+                TransactionDao transaction = new TransactionDao();
 
                 // set transaction properties
                 Field idField = transaction.getClass().getDeclaredField("id");
@@ -78,7 +78,7 @@ public class EntityTestScenario {
 //                transaction.setAmount(amount);
 //                transaction.setEffectiveDate(effectiveDate);
 //                transaction.setDescription(transactionName);
-//                transaction.getAccount().getTransactions().add(transaction); // add the Transaction to the Account.
+//                transaction.getAccount().getTransactions().add(transaction); // add the TransactionDao to the AccountDao.
 
                 transactionList.add(transaction);
             }
@@ -87,7 +87,7 @@ public class EntityTestScenario {
         }
     }
 
-    public List<Account> getAccountsList() {
+    public List<AccountDao> getAccountsList() {
         return accountsList;
     }
 }

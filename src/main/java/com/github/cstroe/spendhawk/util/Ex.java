@@ -15,31 +15,31 @@ public final class Ex {
     }
 
     public static RuntimeException transactionIdRequired() {
-        return new RuntimeException("Transaction id is required.");
+        return new RuntimeException("TransactionDao id is required.");
     }
 
     public static RuntimeException accountNameRequired() {
-        return new RuntimeException("Account name is required.");
+        return new RuntimeException("AccountDao name is required.");
     }
 
     public static RuntimeException accountIdRequired() {
-        return new RuntimeException("Account id is required.");
+        return new RuntimeException("AccountDao id is required.");
     }
 
     public static RuntimeException transactionNotFound() {
-        return new RuntimeException("Transaction not found.");
+        return new RuntimeException("TransactionDao not found.");
     }
 
     public static RuntimeException accountNotFound() {
-        return new RuntimeException("Account not found.");
+        return new RuntimeException("AccountDao not found.");
     }
 
     public static RuntimeException userNotFound() {
-        return new RuntimeException("User not found.");
+        return new RuntimeException("UserDao not found.");
     }
 
     public static RuntimeException userIdRequired() {
-        return new RuntimeException("User id required.");
+        return new RuntimeException("UserDao id required.");
     }
 
     public static String getDescriptiveMessage(Throwable ex) {

@@ -1,4 +1,4 @@
-package com.github.cstroe.spendhawk.accounting.impl;
+package com.github.cstroe.spendhawk.impl;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;

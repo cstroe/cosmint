@@ -33,12 +33,14 @@
 
         <div class="row">
             <div class="column">
-                <form class="ui form" method="post">
+                <form class="ui form" th:action="@{/user/add}" method="post" th:object="${userForm}">
                     <div class="field">
                         <label>User name</label>
-                        <input name="username" placeholder="User Name" type="text"/>
+                        <input class="ui input error" type="text" th:field="*{username}" placeholder="User Name" />
+                        <p class="inline field error" th:if="${#fields.hasErrors('username')}" th:errors="*{username}">Invalid username</p>
                     </div>
                     <button class="ui button" type="submit">Submit</button>
+
                 </form>
             </div>
         </div>

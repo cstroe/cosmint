@@ -1,6 +1,6 @@
 package com.github.cstroe.spendhawk.web.it;
 
-import com.github.cstroe.spendhawk.entity.User;
+import com.github.cstroe.spendhawk.dao.UserDao;
 import org.junit.Test;
 
 /**
@@ -10,8 +10,8 @@ public class TransactionsIT {
 
     @Test
     public void seedDatabaseWorks() {
-        User currentUser = null; //User.findById(1).orElseThrow(Ex::userNotFound);
-//        List<Account> accounts = Account.findAll(currentUser);
+        UserDao currentUser = null; //UserDao.findById(1).orElseThrow(Ex::userNotFound);
+//        List<AccountDao> accounts = AccountDao.findAll(currentUser);
 //        assertEquals(3, accounts.size());
 
 //        Collections.sort(accounts);
@@ -23,8 +23,8 @@ public class TransactionsIT {
 
     @Test
     public void seedDatabaseWorks2() {
-        User currentUser = null; //User.findById(1L).orElseThrow(Ex::userNotFound);
-//        List<Account> accounts = Account.findAll(currentUser);
+        UserDao currentUser = null; //UserDao.findById(1L).orElseThrow(Ex::userNotFound);
+//        List<AccountDao> accounts = AccountDao.findAll(currentUser);
 //        assertEquals(3, accounts.size());
 //
 //        Collections.sort(accounts);
@@ -36,8 +36,8 @@ public class TransactionsIT {
 
     @Test
     public void find_cashflows() {
-//        User currentUser = null; //User.findById(3L).orElseThrow(Ex::userNotFound);
-//        Account userAccount = Account.findById(currentUser, 17).orElseThrow(Ex::accountNotFound);
+//        UserDao currentUser = null; //UserDao.findById(3L).orElseThrow(Ex::userNotFound);
+//        AccountDao userAccount = AccountDao.findById(currentUser, 17).orElseThrow(Ex::accountNotFound);
 //
 //        List<CashFlow> cashFlows = userAccount.findCashFlows("Park");
 //        assertThat(cashFlows.size(), is(1));

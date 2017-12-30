@@ -1,26 +1,22 @@
-package com.github.cstroe.spendhawk.entity;
+package com.github.cstroe.spendhawk.dao;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.List;
 
 /**
- * A user has:
- * <ul>
- *     <li>A unique database id.</li>
- *     <li>A user name.  Used for identification in the system.</li>
- *     <li>Many accounts.</li>
- *     <li>Many expense categories.</li>
- * </ul>
+ * A user of the application.
  */
 
 @Entity
-@Table(name = "users")
+@Table(name = "userinfo")
 @Data
+@NoArgsConstructor
 @AllArgsConstructor
-public class User {
+public class UserDao {
     @Id
     @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,5 +26,5 @@ public class User {
     private String name;
 
     @OneToMany(mappedBy = "user")
-    private List<Account> accounts;
+    private List<AccountDao> accounts;
 }

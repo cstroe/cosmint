@@ -1,14 +1,13 @@
 package com.github.cstroe.spendhawk.helper;
 
-import com.github.cstroe.spendhawk.entity.Account;
-import com.github.cstroe.spendhawk.entity.Transaction;
+import com.github.cstroe.spendhawk.dao.AccountDao;
+import com.github.cstroe.spendhawk.dao.TransactionDao;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.LinkedList;
 import java.util.List;
@@ -19,10 +18,10 @@ import java.util.List;
  * Currently supported formats are:
  * <ul>
  *     <li>Chase: (Type,Date,Description,Amount,Check or Slip #)</li>
- *     <li>Capital One: (Date,Account No.,Description,Debit Amount,Credit Amount)</li>
+ *     <li>Capital One: (Date,AccountDao No.,Description,Debit Amount,Credit Amount)</li>
  * </ul>
  *
- * Each of these is mapped to our {@link com.github.cstroe.spendhawk.entity.Transaction Transaction} class.
+ * Each of these is mapped to our {@link TransactionDao TransactionDao} class.
  *
  * Also, creates expenses for a set of transactions.
  */
@@ -34,7 +33,7 @@ public class TransactionsHelper {
     /**
      * @return A list of messages.
      */
-    public static List<String> processFile(InputStream fileContent, Account account, boolean duplicateCheck, String format) {
+    public static List<String> processFile(InputStream fileContent, AccountDao account, boolean duplicateCheck, String format) {
         if(CHASE.equals(format)) {
             return processChaseFile(fileContent, account, duplicateCheck);
         }
@@ -48,7 +47,7 @@ public class TransactionsHelper {
     }
 
 
-    public static List<String> processChaseFile(InputStream fileContent, Account account, boolean duplicateCheck) {
+    public static List<String> processChaseFile(InputStream fileContent, AccountDao account, boolean duplicateCheck) {
         List<String> messages = new LinkedList<>();
         try (InputStreamReader reader = new InputStreamReader(fileContent)){
             Iterable<CSVRecord> records = CSVFormat.newFormat(',')
@@ -61,12 +60,12 @@ public class TransactionsHelper {
                     continue;
                 }
                 try {
-                    Transaction newTransaction = new Transaction();
+                    TransactionDao newTransaction = new TransactionDao();
 //                    newTransaction.setAccount(account);
 //                    newTransaction.setAmount(Double.parseDouble(record.get("Amount")));
 //                    newTransaction.setEffectiveDate(dateFormatter.parse(record.get("Post Date")));
 //                    newTransaction.setDescription(record.get("Description"));
-                    newTransaction.setNotes(record.get("Check or Slip #"));
+//                    newTransaction.setNotes(record.get("Check or Slip #"));
 
 //                    if(duplicateCheck && newTransaction.isDuplicate()) {
 //                        messages.add(newTransaction.getDescription() + " is a duplicate");
@@ -89,7 +88,7 @@ public class TransactionsHelper {
         return messages;
     }
 
-    public static List<String> processCapitalOneFile(InputStream fileContent, Account account, boolean duplicateCheck) {
+    public static List<String> processCapitalOneFile(InputStream fileContent, AccountDao account, boolean duplicateCheck) {
         List<String> messages = new LinkedList<>();
         try (InputStreamReader reader = new InputStreamReader(fileContent)){
             Iterable<CSVRecord> records = CSVFormat.newFormat(',')
@@ -104,7 +103,7 @@ public class TransactionsHelper {
                     continue;
                 }
                 try {
-                    Transaction newTransaction = new Transaction();
+                    TransactionDao newTransaction = new TransactionDao();
 //                    newTransaction.setAccount(account);
 
 

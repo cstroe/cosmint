@@ -2,7 +2,7 @@ package com.github.cstroe.spendhawk.web;
 
 import com.github.cstroe.spendhawk.bean.DateBean;
 import com.github.cstroe.spendhawk.bean.transaction.ChaseCSVParser;
-import com.github.cstroe.spendhawk.entity.Account;
+import com.github.cstroe.spendhawk.dao.AccountDao;
 import com.github.cstroe.spendhawk.repository.AccountRepository;
 import com.github.cstroe.spendhawk.util.Ex;
 import com.github.cstroe.spendhawk.util.HibernateUtil;
@@ -33,7 +33,7 @@ public class TransactionsUploadServlet extends HttpServlet {
             HibernateUtil.getSessionFactory().getCurrentSession().beginTransaction();
 
             Integer accountId = Integer.parseInt(req.getParameter("id"));
-            Account account = accountRepository.findByIdAndUserId(accountId.longValue(), null)
+            AccountDao account = accountRepository.findByIdAndUserId(accountId.longValue(), null)
                 .orElseThrow(Ex::accountNotFound);
             req.setAttribute("messages", new LinkedList<String>());
             req.setAttribute("account", account);
@@ -58,22 +58,22 @@ public class TransactionsUploadServlet extends HttpServlet {
             List<String> messages = new ArrayList<>();
             HibernateUtil.getSessionFactory().getCurrentSession().beginTransaction();
             InputStream filecontent = filePart.getInputStream();
-            Account account = accountRepository.findByIdAndUserId(accountId.longValue(), null)
+            AccountDao account = accountRepository.findByIdAndUserId(accountId.longValue(), null)
                 .orElseThrow(Ex::accountNotFound);
 
-//            Account incomeAccount = account.getUser().getDefaultIncomeAccount()
+//            AccountDao incomeAccount = account.getUser().getDefaultIncomeAccount()
 //                .orElseGet(() -> {
-//                    Account ic = new Account();
-//                    ic.setName(User.DEFAULT_INCOME_ACCOUNT_NAME);
+//                    AccountDao ic = new AccountDao();
+//                    ic.setName(UserDao.DEFAULT_INCOME_ACCOUNT_NAME);
 //                    ic.setUser(account.getUser());
 //                    ic.save();
 //                    return ic;
 //                });
 //
-//            Account expenseAccount = account.getUser().getDefaultExpenseAccount()
+//            AccountDao expenseAccount = account.getUser().getDefaultExpenseAccount()
 //                .orElseGet(() -> {
-//                    Account ec = new Account();
-//                    ec.setName(User.DEFAULT_EXPENSE_ACCOUNT_NAME);
+//                    AccountDao ec = new AccountDao();
+//                    ec.setName(UserDao.DEFAULT_EXPENSE_ACCOUNT_NAME);
 //                    ec.setUser(account.getUser());
 //                    ec.save();
 //                    return ec;
@@ -82,8 +82,8 @@ public class TransactionsUploadServlet extends HttpServlet {
             if("chase".equals(fileFormat)) {
                 DateBean dateBean = new DateBean();
                 ChaseCSVParser parser = new ChaseCSVParser(dateBean);
-//                List<Transaction> transactions = parser.parse(filecontent, account, incomeAccount, expenseAccount);
-//                for(Transaction t : transactions) {
+//                List<TransactionDao> transactions = parser.parse(filecontent, account, incomeAccount, expenseAccount);
+//                for(TransactionDao t : transactions) {
 //                    t.save();
 //                    for(CashFlow f : t.getCashFlows()) {
 //                        f.save();

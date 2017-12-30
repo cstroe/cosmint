@@ -1,6 +1,6 @@
 package com.github.cstroe.spendhawk.bean;
 
-import com.github.cstroe.spendhawk.entity.User;
+import com.github.cstroe.spendhawk.dao.UserDao;
 import com.github.cstroe.spendhawk.util.HibernateUtil;
 import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
@@ -24,13 +24,13 @@ public class UserManagerBean {
         return message;
     }
 
-    public Optional<User> addUser(String username) {
+    public Optional<UserDao> addUser(String username) {
         if(username == null || StringUtils.isBlank(username)) {
-            message = "User name is blank.";
+            message = "UserDao name is blank.";
             return Optional.empty();
         }
 
-        User newUser = new User(-1l, username, Lists.newArrayList());
+        UserDao newUser = new UserDao(-1l, username, Lists.newArrayList());
 
         Session currentSession = HibernateUtil.getSessionFactory().getCurrentSession();
         try {

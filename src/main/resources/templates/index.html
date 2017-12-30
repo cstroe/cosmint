@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en">
+
+    <title>SpendHawk</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
+</head>
+<body>
+
+<h1><a href="/user/add">Add User</a></h1>
+
+<h1>Users:</h1>
+
+<h2 th:each="user : ${users}">
+    <a href="#" th:href="@{|/user/${user.id}|}" th:text="${user.name}">User 1</a>
+</h2>
+
+</body>
+</html>

@@ -1,11 +1,13 @@
 package com.github.cstroe.spendhawk.web.user;
 
+import com.github.cstroe.spendhawk.dao.UserDao;
 import com.github.cstroe.spendhawk.dto.AddUserForm;
-import com.github.cstroe.spendhawk.entity.User;
 import com.github.cstroe.spendhawk.repository.UserRepository;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -25,21 +27,22 @@ public class UserAddController {
     }
 
     @GetMapping("/add")
-    public String add() {
+    public String add(Model model) {
+        model.addAttribute("userForm", new AddUserForm());
         return "add-user";
     }
 
     @PostMapping("/add")
-    public String create(@Valid AddUserForm userForm, BindingResult bindingResult) {
+    public String create(@Valid @ModelAttribute("userForm") AddUserForm userForm, BindingResult bindingResult) {
         if(bindingResult.hasErrors()) {
             return "add-user";
         }
 
-        User newUser = userRepository.save(genUser(userForm));
+        UserDao newUser = userRepository.save(genUser(userForm));
         return format("redirect:/user/%d", newUser.getId());
     }
 
-    private User genUser(AddUserForm userForm) {
-        return new User(-1l, userForm.getUsername(), Collections.emptyList());
+    private UserDao genUser(AddUserForm userForm) {
+        return new UserDao(null, userForm.getUsername(), Collections.emptyList());
     }
 }

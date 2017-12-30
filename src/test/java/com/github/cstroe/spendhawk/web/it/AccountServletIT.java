@@ -8,6 +8,7 @@ import com.github.cstroe.spendhawk.web.user.UserSummaryServlet;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestWatcher;
@@ -36,6 +37,7 @@ public class AccountServletIT extends BaseClientIT {
 //        connect200(AccountServlet.class, "id", 10L, "relDate", "currentMonth");
 //    }
 
+    @Ignore
     @Test
     public void t0110_can_see_all_transactions() {
 //        response = connect(AccountServlet.class,
@@ -52,6 +54,7 @@ public class AccountServletIT extends BaseClientIT {
             transactionLinks.size(), is(3));
     }
 
+    @Ignore
     @Test
     public void t0200_display_correct_add_transaction_link() {
 //        response = connect(AccountServlet.class,
@@ -73,6 +76,7 @@ public class AccountServletIT extends BaseClientIT {
         assertThat(addTransactionLink.attr("href"), is(equalTo(correctLink)));
     }
 
+    @Ignore
     @Test
     public void t0300_display_correct_accounts_link() {
 //        response = connect(AccountServlet.class,

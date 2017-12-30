@@ -1,7 +1,7 @@
 package com.github.cstroe.spendhawk.web.account;
 
-import com.github.cstroe.spendhawk.entity.Account;
-import com.github.cstroe.spendhawk.entity.Transaction;
+import com.github.cstroe.spendhawk.dao.AccountDao;
+import com.github.cstroe.spendhawk.dao.TransactionDao;
 import com.github.cstroe.spendhawk.repository.AccountRepository;
 import com.github.cstroe.spendhawk.util.Ex;
 import com.google.common.collect.Lists;
@@ -28,7 +28,7 @@ public class AccountController {
             @PathVariable Long accountId,
             Model model)
     {
-        Account account = accountRepository.findByIdAndUserId(accountId, userId)
+        AccountDao account = accountRepository.findByIdAndUserId(accountId, userId)
                 .orElseThrow(Ex::userNotFound);
         model.addAttribute("user", account.getUser());
         model.addAttribute("account", account);
@@ -36,19 +36,17 @@ public class AccountController {
         return "transactions";
     }
 
-    private List<Transaction> stubTransactions() {
+    private List<TransactionDao> stubTransactions() {
         return Lists.newArrayList(
-                t(new Date(), 0.01, "Transaction 1"),
-                t(new Date(), 0.02, "Transaction 2"),
-                t(new Date(), 0.03, "Transaction 3")
+                t(new Date(), 0.01, "TransactionDao 1"),
+                t(new Date(), 0.02, "TransactionDao 2"),
+                t(new Date(), 0.03, "TransactionDao 3")
         );
     }
 
-    private Transaction t(Date effectiveDate, Double amount, String description) {
-        Transaction t = new Transaction();
-        t.setEffectiveDate(effectiveDate);
+    private TransactionDao t(Date effectiveDate, Double amount, String description) {
+        TransactionDao t = new TransactionDao();
         t.setDescription(description);
-        t.setAmount(amount);
         return t;
     }
 }

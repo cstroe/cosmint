@@ -1,10 +1,10 @@
-CREATE TABLE users (
+CREATE TABLE userinfo (
     id   SERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL
 );
 
-CREATE TABLE accounts (
+CREATE TABLE account (
     id      SERIAL PRIMARY KEY,
     name    VARCHAR(255),
-    user_id INTEGER NOT NULL REFERENCES users ON DELETE CASCADE
+    user_id INTEGER NOT NULL REFERENCES userinfo ON DELETE CASCADE
 );

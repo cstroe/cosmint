@@ -6,6 +6,7 @@ import com.github.cstroe.spendhawk.web.transaction.TransactionView;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -13,6 +14,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertThat;
 
 public class TransactionSearchServletIT extends BaseClientIT {
+    @Ignore
     @Test
     public void transaction_search_should_work() throws Exception {
 

@@ -1,6 +1,6 @@
 package com.github.cstroe.spendhawk.bean;
 
-import com.github.cstroe.spendhawk.entity.Transaction;
+import com.github.cstroe.spendhawk.dao.TransactionDao;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -11,12 +11,12 @@ public class TransactionManagerBean extends DatabaseBean {
 
     private String message;
 
-    public Optional<Transaction> createTransaction(Long userId,
-            Date effectiveDate, String description, String notes,
-            String[] cashflowAccounts, String[] cashflowAmounts) {
-//        User currentUser = null; //User.findById(userId).orElseThrow(Ex::userNotFound);
+    public Optional<TransactionDao> createTransaction(Long userId,
+                                                      Date effectiveDate, String description, String notes,
+                                                      String[] cashflowAccounts, String[] cashflowAmounts) {
+//        UserDao currentUser = null; //UserDao.findById(userId).orElseThrow(Ex::userNotFound);
 //
-//        Transaction newT = new Transaction();
+//        TransactionDao newT = new TransactionDao();
 //        newT.setNotes(notes);
 //
 //        if(cashflowAccounts.length != cashflowAmounts.length) {
@@ -33,7 +33,7 @@ public class TransactionManagerBean extends DatabaseBean {
 //                continue;
 //            }
 //            CashFlow newCashFlow = new CashFlow();
-//            Account account = Account.findById(currentUser, Long.parseLong(cashflowAccounts[i]))
+//            AccountDao account = AccountDao.findById(currentUser, Long.parseLong(cashflowAccounts[i]))
 //                .orElseThrow(Ex::accountNotFound);
 //            newCashFlow.setAccount(account);
 //            Double amount = Double.parseDouble(cashflowAmounts[i]);
