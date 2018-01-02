@@ -37,7 +37,7 @@
                     <div class="field">
                         <label>User name</label>
                         <input class="ui input error" type="text" th:field="*{username}" placeholder="User Name" />
-                        <p class="inline field error" th:if="${#fields.hasErrors('username')}" th:errors="*{username}">Invalid username</p>
+                        <p class="inline field error" style="color: red;" th:if="${#fields.hasErrors('username')}" th:errors="*{username}">Invalid username</p>
                     </div>
                     <button class="ui button" type="submit">Submit</button>
 
