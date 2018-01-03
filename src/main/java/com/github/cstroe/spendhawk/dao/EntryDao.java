@@ -7,6 +7,8 @@ import org.javamoney.moneta.Money;
 
 import javax.money.MonetaryAmount;
 import javax.persistence.*;
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.time.LocalDate;
 
 @Entity
@@ -14,6 +16,7 @@ import java.time.LocalDate;
 @Data
 @NoArgsConstructor
 public class EntryDao implements Entry {
+    private static final DecimalFormat FORMAT = new DecimalFormat("#,##0.00");
     private static final String CREDIT = "credit";
     private static final String DEBIT = "debit";
 
@@ -21,8 +24,8 @@ public class EntryDao implements Entry {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private Double value;
+    @Column(nullable = false, scale = 15, precision = 2)
+    private BigDecimal value;
 
     @Column(name = "currency_code", nullable = false)
     private String currency;
@@ -32,8 +35,12 @@ public class EntryDao implements Entry {
         return Money.of(getValue(), getCurrency());
     }
 
+    public String getDisplayAmount() {
+        return FORMAT.format(getValue());
+    }
+
     public void setAmount(MonetaryAmount amount) {
-        this.setValue(amount.getNumber().doubleValue());
+        this.setValue(new BigDecimal(amount.getNumber().doubleValue()));
         this.setCurrency(amount.getCurrency().getCurrencyCode());
     }
 
