@@ -1,14 +1,20 @@
 package com.github.cstroe.spendhawk.bean;
 
+import com.github.cstroe.spendhawk.api.Entry;
 import com.github.cstroe.spendhawk.dao.AccountDao;
+import com.github.cstroe.spendhawk.dao.EntryDao;
 import com.github.cstroe.spendhawk.dao.UserDao;
+import com.github.cstroe.spendhawk.dto.AddAccountForm;
 import com.github.cstroe.spendhawk.repository.AccountRepository;
+import com.github.cstroe.spendhawk.repository.EntryRepository;
 import com.github.cstroe.spendhawk.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -29,6 +35,8 @@ public class AccountService {
     private final JanitorBean janitor;
     private final UserRepository userRepository;
     private final AccountRepository accountRepository;
+    private final EntryService entryService;
+    private final EntryRepository entryRepository;
 
     public String getMessage() {
         return null;
@@ -114,5 +122,34 @@ public class AccountService {
 
     public Optional<AccountDao> getDefaultAssetAccount() {
         return accountRepository.findByName(DEFAULT_ASSET_ACCOUNT_NAME);
+    }
+
+    @Transactional
+    public AccountDao createAccount(UserDao currentUser, AddAccountForm form) {
+        switch(form.getAccountType()) {
+            case AddAccountForm.BLANK_ACCOUNT: {
+                AccountDao account = new AccountDao();
+                account.setName(form.getAccountName());
+                account.setUser(currentUser);
+                return accountRepository.save(account);
+            }
+            case AddAccountForm.CSV_IMPORT: {
+                List<Entry> entries = entryService.readFromFile(form.getCsvFile());
+                AccountDao account = new AccountDao();
+                account.setName(form.getAccountName());
+                account.setUser(currentUser);
+                AccountDao savedAccount = accountRepository.save(account);
+                saveEntries(savedAccount, entries);
+                return savedAccount;
+            }
+        }
+        return null;
+    }
+
+    private void saveEntries(AccountDao savedAccount, List<Entry> entries) {
+        entries.stream().map(EntryDao::create).forEach(e -> {
+            e.setAccount(savedAccount);
+            entryRepository.save(e);
+        });
     }
 }

@@ -37,6 +37,8 @@ dependencies {
     compile "org.springframework.boot:spring-boot-devtools:${springBootVersion}"
     compile "org.freemarker:freemarker:2.3.21"
 
+    compile 'org.hibernate:hibernate-java8:5.0.12.Final'
+
     testCompile("org.springframework.boot:spring-boot-starter-test:${springBootVersion}") {
         exclude(module: "commons-logging")
     }

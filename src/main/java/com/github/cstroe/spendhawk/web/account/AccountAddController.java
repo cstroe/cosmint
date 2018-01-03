@@ -1,10 +1,13 @@
 package com.github.cstroe.spendhawk.web.account;
 
+import com.github.cstroe.spendhawk.bean.AccountService;
 import com.github.cstroe.spendhawk.dao.AccountDao;
 import com.github.cstroe.spendhawk.dto.AddAccountForm;
 import com.github.cstroe.spendhawk.dao.UserDao;
 import com.github.cstroe.spendhawk.repository.AccountRepository;
 import com.github.cstroe.spendhawk.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -19,14 +22,10 @@ import static java.lang.String.format;
 
 @Controller
 @RequestMapping("/user/{userId}/account/add")
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class AccountAddController {
     private final UserRepository userRepository;
-    private final AccountRepository accountRepository;
-
-    public AccountAddController(UserRepository userRepository, AccountRepository accountRepository) {
-        this.userRepository = userRepository;
-        this.accountRepository = accountRepository;
-    }
+    private final AccountService accountService;
 
     @GetMapping
     public String add(@PathVariable Long userId, Model model) {
@@ -47,10 +46,7 @@ public class AccountAddController {
                 model.addAttribute("user", currentUser);
                 return "add-account";
             } else {
-                AccountDao account = new AccountDao();
-                account.setName(accountForm.getAccountName());
-                account.setUser(currentUser);
-                AccountDao newAccount = accountRepository.save(account);
+                AccountDao newAccount = accountService.createAccount(currentUser, accountForm);
                 return format("redirect:/user/%d/account/%d", currentUser.getId(), newAccount.getId());
             }
         } else {

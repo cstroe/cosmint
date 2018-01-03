@@ -15,7 +15,7 @@
             </div>
         </div>
 
-        <a th:href="@{/user/${user.id}}">
+        <a th:href="|/user/${user.id}|">
             <button class="ui basic button">
                 <i class="icon">
                     <div class="ui middle aligned image">
@@ -29,7 +29,7 @@
             </button>
         </a>
 
-        <form class="ui form" method="post">
+        <form class="ui form" method="post" enctype="multipart/form-data">
             <div class="row" style="margin-top: 20px; margin-bottom: 20px;">
                 <div class="ui column">
                     <div class="field">
