@@ -8,7 +8,6 @@ import org.javamoney.moneta.Money;
 import javax.money.MonetaryAmount;
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.text.DecimalFormat;
 import java.time.LocalDate;
 
 @Entity
@@ -16,7 +15,7 @@ import java.time.LocalDate;
 @Data
 @NoArgsConstructor
 public class EntryDao implements Entry {
-    private static final DecimalFormat FORMAT = new DecimalFormat("#,##0.00");
+    private static final BigDecimal NEGATIVE_ONE = new BigDecimal(-1);
     private static final String CREDIT = "credit";
     private static final String DEBIT = "debit";
 
@@ -31,12 +30,16 @@ public class EntryDao implements Entry {
     private String currency;
 
     @Override
-    public MonetaryAmount getAmount() {
-        return Money.of(getValue(), getCurrency());
-    }
+    public Money getAmount() {
+        if(isDebit()) {
+            return Money.of(getValue(), getCurrency());
+        }
 
-    public String getDisplayAmount() {
-        return FORMAT.format(getValue());
+        if(isCredit()) {
+            return Money.of(getValue().multiply(NEGATIVE_ONE), getCurrency());
+        }
+
+        return Money.of(0d, getCurrency());
     }
 
     public void setAmount(MonetaryAmount amount) {

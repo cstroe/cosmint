@@ -1,5 +1,7 @@
 package com.github.cstroe.spendhawk.api;
 
+import org.javamoney.moneta.Money;
+
 import javax.money.MonetaryAmount;
 import java.time.LocalDate;
 
@@ -7,7 +9,7 @@ import java.time.LocalDate;
  * An entry in an account.
  */
 public interface Entry {
-    MonetaryAmount getAmount();
+    Money getAmount();
     LocalDate getTransactionDate();
     LocalDate getPostedDate();
     String getDescription();
