@@ -18,10 +18,13 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static java.lang.String.format;
 
 @Controller
 @RequestMapping("/user/{userId}/account/{accountId}")
@@ -44,14 +47,39 @@ public class AccountController {
         model.addAttribute("account", account);
 
         List<EntryDao> daoList = entryRepository.findByAccountId(account.getId());
-
-        List<EntryDvo> dvoList = daoList.stream()
-                .map(entryService::format)
-                .collect(Collectors.toList());
+        List<EntryDvo> dvoList = convert(daoList);
 
         model.addAttribute("entries", dvoList);
         Money total = entryService.computeTotal(daoList);
         model.addAttribute("total", formatService.format(total));
         return "account";
+    }
+
+    @GetMapping(path = "/search")
+    public String search(
+            @PathVariable Long userId,
+            @PathVariable Long accountId,
+            @RequestParam("q") String searchTerm,
+            Model model)
+    {
+        AccountDao account = accountRepository.findByIdAndUserId(accountId, userId)
+                .orElseThrow(Ex::userNotFound);
+        model.addAttribute("user", account.getUser());
+        model.addAttribute("account", account);
+        model.addAttribute("query", searchTerm);
+
+        List<EntryDao> daoList = entryRepository.findByAccountIdAndDescriptionContainingIgnoreCase(account.getId(), searchTerm);
+        List<EntryDvo> dvoList = convert(daoList);
+
+        model.addAttribute("entries", dvoList);
+        Money total = entryService.computeTotal(daoList);
+        model.addAttribute("total", formatService.format(total));
+        return "account";
+    }
+
+    private List<EntryDvo> convert(List<EntryDao> daoList) {
+        return daoList.stream()
+                .map(entryService::format)
+                .collect(Collectors.toList());
     }
 }

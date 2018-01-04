@@ -32,6 +32,15 @@
         </a>
 
         <div class="row">
+            <div class="column">
+                <form method="get" th:action="|/user/${user.id}/account/${account.id}/search|">
+                    <input type="text" name="q" th:value="${query} ?: _" />
+                    <input type="submit" value="Search"/>
+                </form>
+            </div>
+        </div>
+
+        <div class="row">
             <div class="sixteen wide column">
                 <table class="ui celled striped table">
                     <thead>
