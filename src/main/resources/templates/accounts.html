@@ -7,13 +7,21 @@
 </head>
 <body>
 
+<div class="container">
+    <ol class="breadcrumb">
+        <li><a href="#" th:href="@{/user}">SpendHawk</a></li>
+        <li class="active"><a href="#"
+               th:href="@{|/user/${user.id}|}"
+               th:text="${user.name}">User</a></li>
+    </ol>
+
+    <div class="page-header">
+        <h1>Chart of Accounts</h1>
+    </div>
+</div>
+
 <div class="ui grid container">
     <div class="ui four column grid">
-        <div class="row">
-            <div class="column">
-                <h1 class="ui header">Chart of Accounts:</h1>
-            </div>
-        </div>
         <div class="row">
             <div class="column">
                 <a th:href="@{/user}">

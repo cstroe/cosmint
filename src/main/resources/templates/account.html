@@ -7,14 +7,22 @@
 </head>
 <body>
 
+<div class="container">
+    <ol class="breadcrumb">
+        <li><a href="#" th:href="@{/user}">SpendHawk</a></li>
+        <li><a href="#"
+               th:href="@{|/user/${user.id}|}"
+               th:text="${user.name}">User</a></li>
+        <li class="active" th:text="${account.name}">My Account</li>
+    </ol>
+
+    <div class="page-header">
+        <h1 th:text="${account.name}">My Account</h1>
+    </div>
+</div>
+
 <div class="ui grid container">
     <div class="ui four column grid">
-        <div class="row">
-            <div class="column">
-                <h1 class="ui header" th:text="${account.name}">My Account</h1>
-            </div>
-        </div>
-
         <a th:href="@{|/user/${user.id}|}">
             <button class="ui basic button">
                 <i class="icon">
@@ -50,15 +58,15 @@
                         </tr>
                     </thead>
                     <tbody>
+                        <tr>
+                            <td colspan="3">TOTAL</td>
+                            <td align="right" style="border-botton: solid 1px black;" th:text="${total}">$0.00</td>
+                        </tr>
                         <tr th:each="entry : ${entries}">
                             <td th:text="${entry.transactionDate}">2001/12/01</td>
                             <td th:text="${entry.postedDate}">2001/12/01</td>
                             <td th:text="${entry.description}">Stuff</td>
                             <td align="right" th:text="${entry.amount}">$0.00</td>
-                        </tr>
-                        <tr>
-                            <td colspan="3">&nbsp;</td>
-                            <td align="right" th:text="${total}">$0.00</td>
                         </tr>
                     </tbody>
                 </table>
