@@ -39,6 +39,10 @@ dependencies {
 
     compile 'org.hibernate:hibernate-java8:5.0.12.Final'
 
+    compile 'org.thymeleaf:thymeleaf:3.0.9.RELEASE'
+    compile 'org.thymeleaf:thymeleaf-spring4:3.0.9.RELEASE'
+    compile 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:2.2.2'
+
     testCompile("org.springframework.boot:spring-boot-starter-test:${springBootVersion}") {
         exclude(module: "commons-logging")
     }
