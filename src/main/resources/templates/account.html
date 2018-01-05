@@ -4,74 +4,56 @@
     <title>SpendHawk</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <link rel="stylesheet" type="text/css" media="all" href="/webjars/bootstrap/3.3.7/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" media="all" href="/css/breadcrumb-tweak.css" />
 </head>
 <body>
 
 <div class="container">
-    <ol class="breadcrumb">
-        <li><a href="#" th:href="@{/user}">SpendHawk</a></li>
-        <li><a href="#"
-               th:href="@{|/user/${user.id}|}"
-               th:text="${user.name}">User</a></li>
-        <li class="active" th:text="${account.name}">My Account</li>
-    </ol>
+    <nav class="navbar navbar-static-top" role="navigation">
+        <ul class="nav navbar-nav navbar-left">
+            <ol class="breadcrumb">
+                <li><a href="#" th:href="@{/user}">SpendHawk</a></li>
+                <li><a href="#"
+                       th:href="@{|/user/${user.id}|}"
+                       th:text="${user.name}">User</a></li>
+                <li class="active" th:text="${account.name}">My Account</li>
+            </ol>
+        </ul>
 
-    <div class="page-header">
-        <h1 th:text="${account.name}">My Account</h1>
-    </div>
-</div>
+        <form class="navbar-form navbar-right" method="get"
+              th:action="|/user/${user.id}/account/${account.id}/search|">
 
-<div class="ui grid container">
-    <div class="ui four column grid">
-        <a th:href="@{|/user/${user.id}|}">
-            <button class="ui basic button">
-                <i class="icon">
-                    <div class="ui middle aligned image">
-                        <svg width="1.18em" height="1.18em">
-                            <image xlink:href="/images/back.svg" x="0" y="0" width="100%" height="100%">
-                            </image>
-                        </svg>
-                    </div>
-                </i>
-                Back
-            </button>
-        </a>
-
-        <div class="row">
-            <div class="column">
-                <form method="get" th:action="|/user/${user.id}/account/${account.id}/search|">
-                    <input type="text" name="q" th:value="${query} ?: _" />
-                    <input type="submit" value="Search"/>
-                </form>
+            <div class="form-group">
+                <input type="text" class="form-control" name="q" th:value="${query} ?: _">
             </div>
-        </div>
 
-        <div class="row">
-            <div class="sixteen wide column">
-                <table class="ui celled striped table">
-                    <thead>
-                        <tr>
-                            <th>Transaction Date</th>
-                            <th>Posted Date</th>
-                            <th>Description</th>
-                            <th>Amount</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td colspan="3">TOTAL</td>
-                            <td align="right" style="border-botton: solid 1px black;" th:text="${total}">$0.00</td>
-                        </tr>
-                        <tr th:each="entry : ${entries}">
-                            <td th:text="${entry.transactionDate}">2001/12/01</td>
-                            <td th:text="${entry.postedDate}">2001/12/01</td>
-                            <td th:text="${entry.description}">Stuff</td>
-                            <td align="right" th:text="${entry.amount}">$0.00</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+            <button type="submit" class="btn btn-default">Search</button>
+        </form>
+    </nav>
+
+    <div class="panel panel-default">
+        <table class="table table-bordered table-condensed">
+            <thead>
+            <tr>
+                <th>Transaction Date</th>
+                <th>Posted Date</th>
+                <th>Description</th>
+                <th>Amount</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td colspan="3">TOTAL</td>
+                <td align="right" style="border-botton: solid 1px black;" th:text="${total}">$0.00</td>
+            </tr>
+            <tr th:each="entry : ${entries}">
+                <td th:text="${entry.transactionDate}">2001/12/01</td>
+                <td th:text="${entry.postedDate}">2001/12/01</td>
+                <td th:text="${entry.description}">Stuff</td>
+                <td align="right" th:text="${entry.amount}">$0.00</td>
+            </tr>
+            </tbody>
+        </table>
     </div>
 </div>
 
