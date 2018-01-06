@@ -4,62 +4,44 @@
     <title>SpendHawk</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <link rel="stylesheet" type="text/css" media="all" href="/webjars/bootstrap/3.3.7/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" media="all" href="/css/breadcrumb-tweak.css" />
 </head>
 <body>
 
 <div class="container">
-    <ol class="breadcrumb">
-        <li><a href="#" th:href="@{/user}">SpendHawk</a></li>
-        <li class="active"><a href="#"
-               th:href="@{|/user/${user.id}|}"
-               th:text="${user.name}">User</a></li>
-    </ol>
+    <nav class="navbar navbar-static-top" role="navigation">
+        <ul class="nav navbar-nav navbar-left">
+            <ol class="breadcrumb">
+                <li><a href="#" th:href="@{/user}">SpendHawk</a></li>
+                <li><a href="#" th:href="@{|/user/${user.id}|}" th:text="${user.name}">User</a></li>
+                <li class="active">Accounts</li>
+            </ol>
+        </ul>
 
-    <div class="page-header">
-        <h1>Chart of Accounts</h1>
-    </div>
-</div>
+        <a class="btn btn-default navbar-btn" role="button" th:href="@{|/user/${user.id}/account/add|}">
+            Add Account
+        </a>
+    </nav>
 
-<div class="ui grid container">
-    <div class="ui four column grid">
-        <div class="row">
-            <div class="column">
-                <a th:href="@{/user}">
-                <button class="ui basic left floated button">
-                    <i class="icon arrow left"></i>
-                    Users
-                </button>
-                </a>
-                <a th:href="@{|/user/${user.id}/account/add|}">
-                    <button class="ui basic right floated button">
-                        <i class="icon add circle"></i>
-                        Add Account
-                    </button>
-                </a>
-            </div>
-        </div>
-        <div class="row">
-            <div class="column">
-                <table class="ui celled striped table">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Balance</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr th:each="account : ${user.accounts}">
-                            <td class="account_cell">
-                                <a href="#"
-                                   th:href="@{|/user/${user.id}/account/${account.id}|}"
-                                   th:text="${account.name}">Account 1</a>
-                            </td>
-                            <td class="coa_balance" th:text="${account.balance}">0.00</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+    <div class="panel panel-default">
+        <table class="table table-bordered table-condensed">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Balance</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="account : ${user.accounts}">
+                    <td class="account_cell">
+                        <a href="#"
+                           th:href="@{|/user/${user.id}/account/${account.id}|}"
+                           th:text="${account.name}">Account 1</a>
+                    </td>
+                    <td class="coa_balance" th:text="${account.balance}">0.00</td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 </div>
 

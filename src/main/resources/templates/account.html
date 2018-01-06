@@ -20,14 +20,19 @@
             </ol>
         </ul>
 
-        <form class="navbar-form navbar-right" method="get"
+        <form class="navbar-form navbar-right" style="margin: 0px;" method="get"
               th:action="|/user/${user.id}/account/${account.id}/search|">
 
             <div class="form-group">
-                <input type="text" class="form-control" name="q" th:value="${query} ?: _">
+                <label class="sr-only" for="searchTerm">Search Transactions</label>
+                <input id="searchTerm" type="text" class="form-control" name="q" th:value="${query} ?: _">
             </div>
 
             <button type="submit" class="btn btn-default">Search</button>
+            <a class="btn btn-default navbar-btn" role="button"
+               th:if="${query}" th:href="@{|/user/${user.id}/account/${account.id}|}">
+                Clear
+            </a>
         </form>
     </nav>
 
