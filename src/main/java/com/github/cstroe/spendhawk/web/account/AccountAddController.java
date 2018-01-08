@@ -11,10 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -28,7 +25,8 @@ public class AccountAddController {
     private final AccountService accountService;
 
     @GetMapping
-    public String add(@PathVariable Long userId, Model model) {
+    public String add(@ModelAttribute("accountForm") AddAccountForm accountForm,
+                      @PathVariable Long userId, Model model) {
         UserDao currentUser = userRepository.findById(userId);
         if(currentUser != null) {
             model.addAttribute("user", currentUser);
@@ -39,7 +37,8 @@ public class AccountAddController {
     }
 
     @PostMapping
-    public String create(@Valid AddAccountForm accountForm, BindingResult bindingResult, Model model) {
+    public String create(@ModelAttribute("accountForm") @Valid AddAccountForm accountForm,
+                         BindingResult bindingResult, Model model) {
         UserDao currentUser = userRepository.findById(accountForm.getUserId());
         if(currentUser != null) {
             if(bindingResult.hasErrors()) {

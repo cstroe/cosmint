@@ -4,69 +4,58 @@
     <title>SpendHawk</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <link rel="stylesheet" type="text/css" media="all" href="/webjars/bootstrap/3.3.7/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" media="all" href="/css/breadcrumb-tweak.css" />
 </head>
 <body>
 
-<div class="ui grid container">
-    <div class="ui four column grid">
-        <div class="row">
-            <div class="column">
-                <h1 class="ui header">Create account:</h1>
-            </div>
+<div class="container">
+    <nav class="navbar navbar-static-top" role="navigation">
+        <ul class="nav navbar-nav navbar-left">
+            <ol class="breadcrumb">
+                <li><a href="#" th:href="@{/user}">SpendHawk</a></li>
+                <li><a href="#"
+                       th:href="@{|/user/${user.id}|}"
+                       th:text="${user.name}">User</a></li>
+                <li class="active">Create Account</li>
+            </ol>
+        </ul>
+    </nav>
+
+    <form method="post" enctype="multipart/form-data" th:object="${accountForm}">
+        <div class="form-group">
+            <label for="formAccountName">Account Name</label>
+            <input class="form-control"
+                   id="formAccountName"
+                   name="accountName" placeholder="Account Name" type="text"
+                   th:field="*{accountName}" />
         </div>
 
-        <a th:href="|/user/${user.id}|">
-            <button class="ui basic button">
-                <i class="icon">
-                    <div class="ui middle aligned image">
-                        <svg width="1.18em" height="1.18em">
-                            <image xlink:href="/images/back.svg" x="0" y="0" width="100%" height="100%">
-                            </image>
-                        </svg>
-                    </div>
-                </i>
-                Back
-            </button>
-        </a>
 
-        <form class="ui form" method="post" enctype="multipart/form-data">
-            <div class="row" style="margin-top: 20px; margin-bottom: 20px;">
-                <div class="ui column">
-                    <div class="field">
-                        <label>Account Name</label>
-                        <input name="accountName" placeholder="Account Name" type="text"/>
-                        <input name="userId" type="hidden" th:value="${user.id}"/>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="ui column">
-                    <div class="ui top attached tabular menu">
-                        <div class="active item">Add Transactions</div>
-                    </div>
-                    <div class="ui bottom attached active tab segment">
-                        <div class="field">
-                            <div class="ui radio checkbox">
-                                <input name="accountType" tabindex="0" class="hidden" type="radio" value="blank"/>
-                                <label>Account with no transactions</label>
-                            </div>
-                        </div>
-                        <div class="field">
-                            <div class="ui radio checkbox">
-                                <input name="accountType" tabindex="0" class="hidden" type="radio" value="csv"/>
-                                <label>Import transactions from CSV</label>
-                            </div>
-                        </div>
-                        <div class="field">
-                            <input name="csvFile" type="file"/>
-                        </div>
-                    </div>
+        <h3>Transaction Import</h3>
 
-                    <button class="ui button" type="submit">Submit</button>
-                </div>
+        <div class="form-group">
+            <div class="radio">
+                <label>
+                    <input name="accountType" tabindex="0" type="radio" value="blank"/>
+                    Account with no transactions
+                </label>
             </div>
-        </form>
-    </div>
+
+            <div class="radio">
+                <label>
+                    <input name="accountType" tabindex="0" type="radio" value="csv"/>
+                    Import transactions from CSV
+                </label>
+            </div>
+
+            <label for="csvFileInput">CSV file:</label>
+            <input type="file" id="csvFileInput" name="csvFile"/>
+        </div>
+
+        <input name="userId" type="hidden" th:value="${user.id}"/>
+
+        <button class="btn btn-default" type="submit">Create Account</button>
+    </form>
 </div>
 
 <script src="/webjars/jquery/3.2.1/dist/jquery.min.js"></script>
