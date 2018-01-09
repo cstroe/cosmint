@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en">
+    <title>SpendHawk</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" type="text/css" media="all" href="/webjars/bootstrap/3.3.7/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" media="all" href="/css/breadcrumb-tweak.css" />
+</head>
+<body>
+
+<div class="container">
+    <nav class="navbar navbar-static-top" role="navigation">
+        <ul class="nav navbar-nav navbar-left">
+            <ol class="breadcrumb">
+                <li><a href="#" th:href="@{/user}">SpendHawk</a></li>
+                <li><a href="#" th:href="@{|/user/${user.id}|}" th:text="${user.name}">User</a></li>
+                <li class="active">Accounts</li>
+            </ol>
+        </ul>
+
+        <a class="btn btn-default navbar-btn" role="button" th:href="@{|/user/${user.id}/account/add|}">
+            Add Account
+        </a>
+    </nav>
+
+    <div class="panel panel-default">
+        <table class="table table-bordered table-condensed">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Balance</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="account : ${user.accounts}">
+                    <td class="account_cell">
+                        <a href="#"
+                           th:href="@{|/user/${user.id}/account/${account.id}|}"
+                           th:text="${account.name}">Account 1</a>
+                    </td>
+                    <td class="coa_balance" th:text="${account.balance}">0.00</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script src="/webjars/jquery/3.2.1/dist/jquery.min.js"></script>
+<script src="/webjars/bootstrap/3.3.7/dist/js/bootstrap.min.js"></script>
+
+</body>
+</html>

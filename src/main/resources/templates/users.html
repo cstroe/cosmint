@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en">
+    <title>SpendHawk</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" type="text/css" media="all" href="/webjars/bootstrap/3.3.7/dist/css/bootstrap.min.css" />
+</head>
+<body>
+
+<div class="container">
+    <ol class="breadcrumb">
+        <li class="active"><a href="#" th:href="@{/user}">SpendHawk</a></li>
+    </ol>
+
+    <div class="page-header">
+        <h1>Users in database:</h1>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-4">
+            <a th:href="@{/user/add}">
+                <button class="ui basic button">
+                    <i class="icon add user"></i>
+                    Add User
+                </button>
+            </a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="column">
+            <table class="ui celled striped table">
+                <thead>
+                    <tr>
+                        <th>User Name</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr th:each="user : ${users}">
+                        <td>
+                            <a class="userLink" th:href="@{|/user/${user.id}|}" th:text="${user.name}">User Name</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script src="/webjars/jquery/3.2.1/dist/jquery.min.js"></script>
+<script src="/webjars/bootstrap/3.3.7/dist/js/bootstrap.min.js"></script>
+
+</body>
+</html>

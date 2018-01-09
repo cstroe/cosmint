@@ -1,0 +1,12 @@
+.nav .breadcrumb {
+    margin: 0 7px;
+    margin-left: 0;
+}
+
+@media (min-width: 768px) {
+    .nav .breadcrumb {
+        float: left;
+        margin: 7px 10px;
+        margin-left: 0;
+    }
+}

@@ -1,0 +1,18 @@
+version: "2.1"
+services:
+  postgres:
+    image: "postgres:latest"
+    healthcheck:
+      test: ["CMD", "psql", "postgresql://localhost:5432/postgres", "-U", "postgres", "-c", "SELECT 1;"]
+      interval: 2s
+      timeout: 1s
+      retries: 20
+    ports:
+      - "5433:5432"
+  spendhawk:
+    build: .
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "8080:8080"

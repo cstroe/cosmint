@@ -6,3 +6,10 @@ target/
 *.iml
 data
 wildfly
+
+# Gradle
+/build/
+/.gradle/
+
+# IntelliJ
+/out/
