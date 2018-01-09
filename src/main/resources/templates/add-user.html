@@ -4,49 +4,32 @@
     <title>SpendHawk</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <link rel="stylesheet" type="text/css" media="all" href="/webjars/bootstrap/3.3.7/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" media="all" href="/css/breadcrumb-tweak.css" />
 </head>
 <body>
 
-<div class="ui grid container">
-    <div class="ui four column grid">
-        <div class="row">
-            <div class="column">
-                <h1 class="ui header">Add user:</h1>
-            </div>
+<div class="container">
+    <nav class="navbar navbar-static-top" role="navigation">
+        <ul class="nav navbar-nav navbar-left">
+            <ol class="breadcrumb">
+                <li><a href="#" th:href="@{/user}">SpendHawk</a></li>
+                <li class="active">Add User</li>
+            </ol>
+        </ul>
+    </nav>
+
+    <form method="post" th:object="${userForm}">
+        <div class="form-group" th:classappend="${#fields.hasErrors('username')}? has-error">
+            <label for="usernameField" class="control-label">Username</label>
+            <input id="usernameField" class="form-control" type="text"
+                   th:field="*{username}" placeholder="Username" />
+            <p class="help-block"
+               th:if="${#fields.hasErrors('username')}"
+               th:errors="*{username}">Invalid username</p>
         </div>
+        <button class="btn btn-default" type="submit">Submit</button>
 
-        <a th:href="@{/user}">
-            <button class="ui basic button">
-                <i class="icon">
-                    <div class="ui middle aligned image">
-                        <svg width="1.18em" height="1.18em">
-                            <image xlink:href="/images/back.svg" x="0" y="0" width="100%" height="100%">
-                            </image>
-                        </svg>
-                    </div>
-                </i>
-                Back
-            </button>
-        </a>
-
-        <div class="row">
-            <div class="column">
-                <form class="ui form" th:action="@{/user/add}" method="post" th:object="${userForm}">
-                    <div class="field">
-                        <label>User name</label>
-                        <input class="ui input error" type="text" th:field="*{username}" placeholder="User Name" />
-                        <!-- TODO: Use Bootstrap styling for the red color -->
-                        <p class="inline field error"
-                           style="color: red;"
-                           th:if="${#fields.hasErrors('username')}"
-                           th:errors="*{username}">Invalid username</p>
-                    </div>
-                    <button class="ui button" type="submit">Submit</button>
-
-                </form>
-            </div>
-        </div>
-    </div>
+    </form>
 </div>
 
 <script src="/webjars/jquery/3.2.1/dist/jquery.min.js"></script>

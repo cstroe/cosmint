@@ -27,13 +27,12 @@ public class UserAddController {
     }
 
     @GetMapping("/add")
-    public String add(Model model) {
-        model.addAttribute("userForm", new AddUserForm());
+    public String add(@ModelAttribute("userForm") AddUserForm userForm, Model model) {
         return "add-user";
     }
 
     @PostMapping("/add")
-    public String create(@Valid @ModelAttribute("userForm") AddUserForm userForm, BindingResult bindingResult) {
+    public String create(@ModelAttribute("userForm") @Valid AddUserForm userForm, BindingResult bindingResult) {
         if(bindingResult.hasErrors()) {
             return "add-user";
         }
