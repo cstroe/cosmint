@@ -22,33 +22,42 @@
     </nav>
 
     <form method="post" enctype="multipart/form-data" th:object="${accountForm}">
-        <div class="form-group">
-            <label for="formAccountName">Account Name</label>
+        <div class="form-group" th:classappend="${#fields.hasErrors('accountName')}? has-error">
+            <label for="formAccountName" class="control-label">Account Name</label>
             <input class="form-control"
                    id="formAccountName"
                    name="accountName" placeholder="Account Name" type="text"
                    th:field="*{accountName}" />
+            <p class="help-block" th:if="${#fields.hasErrors('accountName')}"
+               th:errors="*{accountName}">Incorrect account name</p>
         </div>
 
 
         <h3>Transaction Import</h3>
 
-        <div class="form-group">
+        <div class="form-group" th:classappend="${#fields.hasErrors('accountType')}? has-error">
             <div class="radio">
-                <label>
-                    <input name="accountType" tabindex="0" type="radio" value="blank"/>
+                <label class="control-label">
+                    <input name="accountType" tabindex="0" type="radio"
+                           th:value="blank" th:field="*{accountType}"/>
                     Account with no transactions
                 </label>
             </div>
 
             <div class="radio">
-                <label>
-                    <input name="accountType" tabindex="0" type="radio" value="csv"/>
+                <label class="control-label">
+                    <input name="accountType" tabindex="0" type="radio"
+                           th:value="csv" th:field="*{accountType}"/>
                     Import transactions from CSV
                 </label>
             </div>
 
-            <label for="csvFileInput">CSV file:</label>
+            <p class="help-block" th:if="${#fields.hasErrors('accountType')}"
+               th:errors="*{accountType}">Incorrect account name</p>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label" for="csvFileInput">CSV file:</label>
             <input type="file" id="csvFileInput" name="csvFile"/>
         </div>
 

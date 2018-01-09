@@ -20,13 +20,13 @@ public class AddAccountForm {
     @Min(value = 1, message = "User ID is invalid.")
     private Long userId = -1L;
 
-    @NotNull
+    @NotNull(message = "Account name must be entered.")
     @Size(min = 1, message = "Account name must be at least 1 character long.")
     @Pattern(regexp = "[a-zA-Z][a-zA-Z0-9 ]*[a-zA-Z0-9]?",
             message = "Account name must contain only alphanumeric characters, and spaces, and start with a letter.")
     private String accountName = "";
 
-    @NotNull
+    @NotNull(message = "Please select an import option.")
     @Pattern(regexp = "(blank|csv)")
     private String accountType;
 
