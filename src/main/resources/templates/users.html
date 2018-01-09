@@ -4,47 +4,40 @@
     <title>SpendHawk</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <link rel="stylesheet" type="text/css" media="all" href="/webjars/bootstrap/3.3.7/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" media="all" href="/css/breadcrumb-tweak.css" />
 </head>
 <body>
 
 <div class="container">
-    <ol class="breadcrumb">
-        <li class="active"><a href="#" th:href="@{/user}">SpendHawk</a></li>
-    </ol>
+    <nav class="navbar navbar-static-top" role="navigation">
+        <ul class="nav navbar-nav navbar-left">
+            <ol class="breadcrumb">
+                <li><a href="#" th:href="@{/user}">SpendHawk</a></li>
+                <li class="active">Users</li>
+            </ol>
+        </ul>
 
-    <div class="page-header">
-        <h1>Users in database:</h1>
-    </div>
+        <a class="btn btn-default navbar-btn" role="button" th:href="@{/user/add}">
+            Add User
+        </a>
+    </nav>
 
-    <div class="row">
-        <div class="col-lg-4">
-            <a th:href="@{/user/add}">
-                <button class="ui basic button">
-                    <i class="icon add user"></i>
-                    Add User
-                </button>
-            </a>
-        </div>
-    </div>
+    <div class="panel panel-default">
+        <table class="table table-bordered table-condensed">
+            <thead>
+            <tr>
+                <th>User Name</th>
+            </tr>
+            </thead>
 
-    <div class="row">
-        <div class="column">
-            <table class="ui celled striped table">
-                <thead>
-                    <tr>
-                        <th>User Name</th>
-                    </tr>
-                </thead>
-
-                <tbody>
-                    <tr th:each="user : ${users}">
-                        <td>
-                            <a class="userLink" th:href="@{|/user/${user.id}|}" th:text="${user.name}">User Name</a>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+            <tbody>
+            <tr th:each="user : ${users}">
+                <td>
+                    <a class="userLink" th:href="@{|/user/${user.id}|}" th:text="${user.name}">User Name</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
     </div>
 </div>
 
