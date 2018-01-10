@@ -5,6 +5,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <link rel="stylesheet" type="text/css" media="all" href="/webjars/bootstrap/3.3.7/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" type="text/css" media="all" href="/css/breadcrumb-tweak.css" />
+    <link rel="stylesheet" type="text/css" media="all" href="/css/tiny-tables.css" />
 </head>
 <body>
 
@@ -55,7 +56,7 @@
                     <td align="right" style="border-botton: solid 1px black;" th:text="${total}">$0.00</td>
                 </tr>
                 <tr th:each="entry : ${entries}">
-                    <td>
+                    <td class="tiny-td">
                         <div class="checkbox">
                             <label>
                                 <input type="checkbox" name="selectedEntries"
@@ -63,10 +64,10 @@
                             </label>
                         </div>
                     </td>
-                    <td th:text="${entry.transactionDate}">2001/12/01</td>
-                    <td th:text="${entry.postedDate}">2001/12/01</td>
-                    <td th:text="${entry.description}">Stuff</td>
-                    <td align="right" th:text="${entry.amount}">$0.00</td>
+                    <td class="tiny-td" th:text="${entry.transactionDate}">2001/12/01</td>
+                    <td class="tiny-td" th:text="${entry.postedDate}">2001/12/01</td>
+                    <td class="tiny-td" th:text="${entry.description}">Stuff</td>
+                    <td class="tiny-td" align="right" th:text="${entry.amount}">$0.00</td>
                 </tr>
                 </tbody>
             </table>
