@@ -49,6 +49,7 @@ public class EntryService {
 
     public EntryDvo format(EntryDao dao) {
         return new EntryDvo(
+                dao.getId(),
                 formatService.format(dao.getAmount()),
                 dao.getTransactionDate().toString(),
                 dao.getPostedDate().toString(),

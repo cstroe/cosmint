@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class EntryDvo {
+    private Long id;
     private String amount;
     private String transactionDate;
     private String postedDate;
