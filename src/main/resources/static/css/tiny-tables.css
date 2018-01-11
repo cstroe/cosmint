@@ -8,3 +8,7 @@ td.tiny-td {
     padding-bottom: 0px !important;
     vertical-align: middle !important;
 }
+
+tr.total-row {
+    font-weight: bold;
+}
