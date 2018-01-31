@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en">
+    <title>SpendHawk</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" type="text/css" media="all" href="/webjars/bootstrap/3.3.7/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" media="all" href="/css/breadcrumb-tweak.css" />
+</head>
+<body>
+
+<div class="container">
+    <nav class="navbar navbar-static-top" role="navigation">
+        <ul class="nav navbar-nav navbar-left">
+            <ol class="breadcrumb">
+                <li><a href="#" th:href="@{/user}">SpendHawk</a></li>
+                <li><a href="#"
+                       th:href="@{|/user/${user.id}|}"
+                       th:text="${user.name}">User</a></li>
+                <li><a href="#"
+                       th:href="@{|/user/${user.id}/account/${account.id}|}"
+                       th:text="${account.name}">My Account</a></li>
+                <li class="active" th:text="${entry.id}">1</li>
+            </ol>
+        </ul>
+    </nav>
+
+    <div class="panel panel-default">
+        <table>
+            <tr>
+                <td>ID:</td>
+                <td th:text="${entry.id}"></td>
+            </tr>
+            <tr>
+                <td>Amount:</td>
+                <td th:text="${entry.amount}"></td>
+            </tr>
+            <tr>
+                <td>Transaction Date:</td>
+                <td th:text="${entry.transactionDate}"></td>
+            </tr>
+            <tr>
+                <td>Posted Date:</td>
+                <td th:text="${entry.postedDate}"></td>
+            </tr>
+            <tr>
+                <td>Description:</td>
+                <td th:text="${entry.description}"></td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<script src="/webjars/jquery/3.2.1/dist/jquery.min.js"></script>
+<script src="/webjars/bootstrap/3.3.7/dist/js/bootstrap.min.js"></script>
+
+</body>
+</html>
