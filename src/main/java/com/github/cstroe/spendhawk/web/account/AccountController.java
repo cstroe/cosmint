@@ -47,7 +47,7 @@ public class AccountController {
         model.addAttribute("account", account);
 
         List<EntryDao> daoList = entryRepository.findByAccountId(account.getId());
-        List<EntryDvo> dvoList = convert(daoList);
+        List<EntryDvo> dvoList = entryService.convert(daoList);
 
         model.addAttribute("entries", dvoList);
         Money total = entryService.computeTotal(daoList);
@@ -69,17 +69,11 @@ public class AccountController {
         model.addAttribute("query", searchTerm);
 
         List<EntryDao> daoList = entryRepository.findByAccountIdAndDescriptionContainingIgnoreCase(account.getId(), searchTerm);
-        List<EntryDvo> dvoList = convert(daoList);
+        List<EntryDvo> dvoList = entryService.convert(daoList);
 
         model.addAttribute("entries", dvoList);
         Money total = entryService.computeTotal(daoList);
         model.addAttribute("total", formatService.format(total));
         return "account";
-    }
-
-    private List<EntryDvo> convert(List<EntryDao> daoList) {
-        return daoList.stream()
-                .map(entryService::format)
-                .collect(Collectors.toList());
     }
 }

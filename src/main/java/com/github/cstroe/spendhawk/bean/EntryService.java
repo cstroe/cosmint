@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -55,5 +56,11 @@ public class EntryService {
                 dao.getPostedDate().toString(),
                 dao.getDescription()
         );
+    }
+
+    public List<EntryDvo> convert(List<EntryDao> daoList) {
+        return daoList.stream()
+                .map(this::format)
+                .collect(Collectors.toList());
     }
 }
