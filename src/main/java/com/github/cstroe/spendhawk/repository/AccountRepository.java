@@ -10,4 +10,5 @@ public interface AccountRepository extends CrudRepository<AccountDao, Integer> {
     Optional<AccountDao> findByIdAndUserId(Long accountId, Long userId);
     Optional<AccountDao> findByName(String name);
     List<AccountDao> findByUserId(Long userId);
+    List<String> getNames(Long userId);
 }
