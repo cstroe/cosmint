@@ -35,8 +35,6 @@ import java.util.List;
  * </ul>
  */
 @Entity
-@NamedQuery(name = "AccountDao.getNames",
-    query = "select acct.name from AccountDao acct where acct.user.id = ?1")
 @Table(name = "account")
 @Data
 @ToString(exclude = "user")

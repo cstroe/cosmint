@@ -2,9 +2,8 @@ package com.github.cstroe.spendhawk.web.account;
 
 import com.github.cstroe.spendhawk.bean.AccountService;
 import com.github.cstroe.spendhawk.dao.AccountDao;
-import com.github.cstroe.spendhawk.dto.AddAccountForm;
 import com.github.cstroe.spendhawk.dao.UserDao;
-import com.github.cstroe.spendhawk.repository.AccountRepository;
+import com.github.cstroe.spendhawk.dto.AddAccountForm;
 import com.github.cstroe.spendhawk.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +13,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Optional;
 
 import static java.lang.String.format;
 
@@ -27,9 +27,9 @@ public class AccountAddController {
     @GetMapping
     public String add(@ModelAttribute("accountForm") AddAccountForm accountForm,
                       @PathVariable Long userId, Model model) {
-        UserDao currentUser = userRepository.findById(userId);
-        if(currentUser != null) {
-            model.addAttribute("user", currentUser);
+        Optional<UserDao> currentUser = userRepository.findById(userId);
+        if(currentUser.isPresent()) {
+            model.addAttribute("user", currentUser.get());
             return "add-account";
         } else {
             return "error";
@@ -39,8 +39,9 @@ public class AccountAddController {
     @PostMapping
     public String create(@ModelAttribute("accountForm") @Valid AddAccountForm accountForm,
                          BindingResult bindingResult, Model model) {
-        UserDao currentUser = userRepository.findById(accountForm.getUserId());
-        if(currentUser != null) {
+        Optional<UserDao> optUser = userRepository.findById(accountForm.getUserId());
+        if(optUser.isPresent()) {
+            UserDao currentUser = optUser.get();
             if(bindingResult.hasErrors()) {
                 model.addAttribute("user", currentUser);
                 return "add-account";

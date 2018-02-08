@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.Optional;
+
 @Controller
 @RequestMapping("/user")
 public class UserController {
@@ -28,8 +30,9 @@ public class UserController {
 
     @GetMapping("/{userId}")
     public String view(@PathVariable Long userId, Model model) {
-        UserDao user = userRepository.findById(userId);
-        if(user != null) {
+        Optional<UserDao> optUser = userRepository.findById(userId);
+        if(optUser.isPresent()) {
+            UserDao user = optUser.get();
             model.addAttribute("user", user);
             return "accounts";
         } else {

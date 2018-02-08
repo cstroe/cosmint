@@ -93,11 +93,11 @@ public class AccountService {
         return subAccount;
     }
 
-    public void deleteAccount(Long userId, Integer accountId) throws ServiceException {
+    public void deleteAccount(Long userId, Long accountId) throws ServiceException {
         final UserDao currentUser = getUser(userId,
                 () -> new ServiceException(format("UserDao not found, id = %d", userId)));
 
-        AccountDao account = accountRepository.findByUserId(currentUser.getId()).stream()
+        AccountDao account = accountRepository.findByUserId(currentUser.getId(), AccountDao.class).stream()
                 .filter(a->a.getId().equals(accountId)).findFirst()
                 .orElseThrow(() -> new ServiceException(format("Could not find account with id = %d", accountId)));
 
@@ -105,7 +105,7 @@ public class AccountService {
     }
 
     private <T extends Exception> UserDao getUser(Long userId, Supplier<T> exceptionSupplier) throws T {
-        return Optional.ofNullable(userRepository.findById(userId)).orElseThrow(exceptionSupplier);
+        return userRepository.findById(userId).orElseThrow(exceptionSupplier);
     }
 
     private <T extends Exception> AccountDao getAccount(UserDao user, Integer accountId, Supplier<T> exceptionSupplier) throws T {

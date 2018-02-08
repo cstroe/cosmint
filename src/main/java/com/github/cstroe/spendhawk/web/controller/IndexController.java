@@ -9,6 +9,6 @@ import static java.lang.String.format;
 public class IndexController {
     @RequestMapping("/")
     String index() {
-        return format("redirect:/user");
+        return "redirect:/user";
     }
 }

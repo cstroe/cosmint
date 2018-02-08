@@ -1,0 +1,1 @@
+* Add UNIQUE (transaction_id, entry_id) constraint to transaction_to_entry table

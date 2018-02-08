@@ -1,6 +1,5 @@
 package com.github.cstroe.spendhawk.dao;
 
-import com.github.cstroe.spendhawk.api.Entry;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -9,18 +8,21 @@ import java.util.Collection;
 /**
  * A monetary transaction against accounts.
  */
-//@Entity
-//@Table(name = "transactions")
+@Entity
+@NamedQuery(name = "TransactionDao.getNames",
+        query = "select acct.name from AccountDao acct where acct.user.id = ?1")
+@Table(name = "transaction")
 @Data
 public class TransactionDao {
     @Id
     @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-
-    @Column
-    private String description;
+    private Long id;
 
     @OneToMany(targetEntity = EntryDao.class)
-    private Collection<Entry> transfers;
+    @JoinTable(name = "transaction_to_entry",
+        joinColumns = { @JoinColumn(name = "transaction_id", referencedColumnName = "id") },
+        inverseJoinColumns = { @JoinColumn(name = "entry_id", referencedColumnName = "id") }
+    )
+    private Collection<EntryDao> entries;
 }

@@ -36,7 +36,7 @@ public class TransactionView extends HttpServlet {
             }
 
             if(transactionIdRaw != null) {
-                Integer transactionId = Integer.parseInt(transactionIdRaw);
+                Long transactionId = Long.parseLong(transactionIdRaw);
                 // Begin unit of work
                 HibernateUtil.getSessionFactory().getCurrentSession().beginTransaction();
 
@@ -72,8 +72,8 @@ public class TransactionView extends HttpServlet {
         try {
             String description = Optional.ofNullable(request.getParameter("description"))
                 .orElseThrow(() -> new RuntimeException("Description required."));
-            Integer fromAccountId = Integer.parseInt(request.getParameter("fromAccountId"));
-            Integer transactionId = Integer.parseInt(request.getParameter("transactionId"));
+            Long fromAccountId = Long.parseLong(request.getParameter("fromAccountId"));
+            Long transactionId = Long.parseLong(request.getParameter("transactionId"));
 
             TransactionDao transaction = transactionRepository.findById(transactionId)
                 .orElseThrow(Ex::transactionNotFound);
@@ -128,7 +128,7 @@ public class TransactionView extends HttpServlet {
             String fromAccountIdRaw = Optional.ofNullable(request.getParameter("fromAccountId"))
                     .orElseThrow(Ex::accountIdRequired);
             accountId = Long.parseLong(fromAccountIdRaw);
-            Integer transactionId = Integer.parseInt(transactionIdRaw);
+            Long transactionId = Long.parseLong(transactionIdRaw);
 
             // Begin unit of work
             HibernateUtil.getSessionFactory().getCurrentSession().beginTransaction();
