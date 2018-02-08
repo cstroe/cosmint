@@ -12,4 +12,8 @@ public class FormatService {
     public String format(Money money) {
         return FORMAT.format(money.getNumber().doubleValueExact());
     }
+
+    public String format(double value) {
+        return FORMAT.format(value);
+    }
 }

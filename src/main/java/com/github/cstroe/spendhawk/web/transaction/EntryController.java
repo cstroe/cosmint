@@ -1,10 +1,12 @@
 package com.github.cstroe.spendhawk.web.transaction;
 
 import com.github.cstroe.spendhawk.bean.EntryService;
+import com.github.cstroe.spendhawk.bean.TransactionService;
 import com.github.cstroe.spendhawk.dao.AccountDao;
 import com.github.cstroe.spendhawk.dao.EntryDao;
 import com.github.cstroe.spendhawk.dao.TransactionDao;
 import com.github.cstroe.spendhawk.dvo.EntryDvo;
+import com.github.cstroe.spendhawk.dvo.TransactionDvo;
 import com.github.cstroe.spendhawk.repository.AccountRepository;
 import com.github.cstroe.spendhawk.repository.EntryRepository;
 import com.github.cstroe.spendhawk.repository.TransactionRepository;
@@ -27,6 +29,7 @@ public class EntryController {
     private final EntryRepository entryRepository;
     private final EntryService entryService;
     private final TransactionRepository transactionRepository;
+    private final TransactionService transactionService;
 
     @GetMapping
     public String view(
@@ -47,7 +50,8 @@ public class EntryController {
 
         Optional<TransactionDao> transaction = transactionRepository.findByEntry(entry.getId());
         if(transaction.isPresent()) {
-            model.addAttribute("transaction", transaction);
+            TransactionDvo dvo = transactionService.toDvo(transaction.get());
+            model.addAttribute("transaction", dvo);
         }
 
         return "entry";

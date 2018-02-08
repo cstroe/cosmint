@@ -2,7 +2,9 @@ package com.github.cstroe.spendhawk.bean;
 
 import com.github.cstroe.spendhawk.api.Entry;
 import com.github.cstroe.spendhawk.dao.EntryDao;
+import com.github.cstroe.spendhawk.dvo.AccountDvo;
 import com.github.cstroe.spendhawk.dvo.EntryDvo;
+import com.github.cstroe.spendhawk.dvo.EntryWithAccountDvo;
 import com.github.cstroe.spendhawk.impl.CSVEntryParser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,8 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.money.CurrencyUnit;
-import javax.money.MonetaryAmount;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -55,6 +55,17 @@ public class EntryService {
                 dao.getTransactionDate().toString(),
                 dao.getPostedDate().toString(),
                 dao.getDescription()
+        );
+    }
+
+    public EntryWithAccountDvo formatWithAccount(EntryDao dao) {
+        return new EntryWithAccountDvo(
+                dao.getId(),
+                formatService.format(dao.getAmount()),
+                dao.getTransactionDate().toString(),
+                dao.getPostedDate().toString(),
+                dao.getDescription(),
+                new AccountDvo(dao.getAccount().getId(), dao.getAccount().getName())
         );
     }
 
