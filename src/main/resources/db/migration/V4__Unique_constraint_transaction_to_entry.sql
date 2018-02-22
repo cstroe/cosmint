@@ -1,0 +1,1 @@
+ALTER TABLE transaction_to_entry ADD CONSTRAINT transaction_to_entry_unique_constraint UNIQUE (transaction_id, entry_id);
