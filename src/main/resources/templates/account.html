@@ -37,45 +37,7 @@
         </form>
     </nav>
 
-    <div class="panel panel-default">
-        <form>
-            <table class="table table-bordered table-condensed">
-                <thead>
-                <tr>
-                    <th>&nbsp;</th>
-                    <th>Transaction Date</th>
-                    <th>Posted Date</th>
-                    <th>Description</th>
-                    <th>Amount</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr class="total-row">
-                    <td>&nbsp;</td>
-                    <td colspan="3">TOTAL</td>
-                    <td align="right" style="border-botton: solid 1px black;" th:text="${total}">$0.00</td>
-                </tr>
-                <tr th:each="entry : ${entries}">
-                    <td class="tiny-td">
-                        <div class="checkbox">
-                            <label>
-                                <input type="checkbox" name="selectedEntries"
-                                       th:value="${entry.id}"/>
-                            </label>
-                        </div>
-                    </td>
-                    <td class="tiny-td" th:text="${entry.transactionDate}">2001/12/01</td>
-                    <td class="tiny-td" th:text="${entry.postedDate}">2001/12/01</td>
-                    <td class="tiny-td">
-                        <a href="#" th:href="@{|/user/${user.id}/account/${account.id}/entry/${entry.id}|}"
-                           th:text="${entry.description}">Stuff</a>
-                    </td>
-                    <td class="tiny-td" align="right" th:text="${entry.amount}">$0.00</td>
-                </tr>
-                </tbody>
-            </table>
-        </form>
-    </div>
+    <div th:insert="fragments :: entry-table" class="panel panel-default">&nbsp;</div>
 </div>
 
 <script src="/webjars/jquery/3.2.1/dist/jquery.min.js"></script>
