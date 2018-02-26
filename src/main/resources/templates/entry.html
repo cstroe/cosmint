@@ -55,6 +55,12 @@
     <div class="panel panel-default">
         <div class="panel-heading">Transaction</div>
         <div class="panel-body">
+            <a href="#"
+               class="btn btn-default"
+               th:href="@{|/user/${user.id}/account/${account.id}/entry/${entry.id}/transaction/reconcileExisting/selectAccount|}">
+                Reconcile with existing entry
+            </a>
+
             <table th:if="${transaction != null}" class="table">
                 <thead>
                 <tr>
@@ -91,7 +97,8 @@
 
             </table>
             <div th:if="${transaction == null}">
-                <form method="post" enctype="multipart/form-data" th:object="${transactionForm}"
+                <form method="post" enctype="multipart/form-data"
+                      th:object="${transactionForm}"
                       th:action="@{|/user/${user.id}/transaction/create|}">
                     <input type="hidden" name="accountId" th:value="${account.id}"/>
                     <input type="hidden" name="entryId" th:value="${entry.id}"/>

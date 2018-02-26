@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en">
+    <title>SpendHawk</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" type="text/css" media="all" href="/webjars/bootstrap/3.3.7/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" media="all" href="/css/breadcrumb-tweak.css" />
+</head>
+<body>
+
+<div class="container">
+    <nav class="navbar navbar-static-top" role="navigation">
+        <ul class="nav navbar-nav navbar-left">
+            <ol class="breadcrumb">
+                <li><a href="#" th:href="@{/user}">SpendHawk</a></li>
+                <li>
+                    <a href="#"
+                       th:href="@{|/user/${user.id}|}"
+                       th:text="${user.name}">User</a>
+                </li>
+                <li>
+                    <a href="#"
+                       th:href="@{|/user/${user.id}/account/${account.id}|}"
+                       th:text="${account.name}">My Account</a>
+                </li>
+                <li>
+                    <a href="#"
+                       th:href="@{|/user/${user.id}/account/${account.id}/entry/${entry.id}|}"
+                       th:text="${entry.id}">1234</a>
+                </li>
+                <li>Reconcile</li>
+                <li class="active">Select account</li>
+            </ol>
+        </ul>
+    </nav>
+
+    <div>
+        <form class="form-inline">
+            <div class="form-group">
+                <label>Select Reconciliation Account:</label>
+                <br/>
+                <select class="form-control">
+                    <option th:each="accountName : ${accountNames}"
+                            th:value="${accountName.id}"
+                            th:text="${accountName.name}">Account Name</option>
+                </select>
+                <button type="submit" class="btn btn-default">Select</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="/webjars/jquery/3.2.1/dist/jquery.min.js"></script>
+<script src="/webjars/bootstrap/3.3.7/dist/js/bootstrap.min.js"></script>
+
+</body>
+</html>
