@@ -23,6 +23,11 @@ import java.util.Optional;
 @RequestMapping("/user/{userId}/account/{accountId}/entry/{entryId}/transaction/reconcileExisting")
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class ReconcileWithExistingEntryController {
+    public static final String USER = "user";
+    public static final String ACCOUNT = "account";
+    public static final String ENTRY = "entry";
+    public static final String ACCOUNT_NAMES = "accountNames";
+
     private final UserRepository userRepository;
     private final AccountRepository accountRepository;
     private final EntryRepository entryRepository;
@@ -37,7 +42,7 @@ public class ReconcileWithExistingEntryController {
             return "error";
         }
 
-        model.addAttribute("user", optUser.get());
+        model.addAttribute(USER, optUser.get());
 
         Optional<AccountDao> optAccount = accountRepository.findByIdAndUserId(accountId, optUser.get().getId());
 
@@ -45,7 +50,7 @@ public class ReconcileWithExistingEntryController {
             return "error";
         }
 
-        model.addAttribute("account", optAccount.get());
+        model.addAttribute(ACCOUNT, optAccount.get());
 
         Optional<EntryDao> optEntry = entryRepository.findByIdAndAccountId(entryId, optAccount.get().getId());
 
@@ -53,10 +58,10 @@ public class ReconcileWithExistingEntryController {
             return "error";
         }
 
-        model.addAttribute("entry", optEntry.get());
+        model.addAttribute(ENTRY, optEntry.get());
 
         Collection<AccountNameOnly> accountNames = accountRepository.findByUserId(optUser.get().getId());
-        model.addAttribute("accountNames", accountNames);
+        model.addAttribute(ACCOUNT_NAMES, accountNames);
 
         return "transaction/reconcile-select-account";
     }
