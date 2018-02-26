@@ -23,9 +23,9 @@ import java.util.Optional;
 @RequestMapping("/user/{userId}/account/{accountId}/entry/{entryId}/transaction/reconcileExisting")
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class ReconcileWithExistingEntryController {
-    public final UserRepository userRepository;
-    public final AccountRepository accountRepository;
-    public final EntryRepository entryRepository;
+    private final UserRepository userRepository;
+    private final AccountRepository accountRepository;
+    private final EntryRepository entryRepository;
 
     @GetMapping("/selectAccount")
     public String add(@PathVariable Long userId,
@@ -60,4 +60,6 @@ public class ReconcileWithExistingEntryController {
 
         return "transaction/reconcile-select-account";
     }
+
+
 }
